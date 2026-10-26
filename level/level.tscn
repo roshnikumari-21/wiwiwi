@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://coin/coin.tscn" id="3_coin"]
 [ext_resource type="PackedScene" path="res://hazard/spikes.tscn" id="4_spikes"]
 [ext_resource type="PackedScene" path="res://level/moving_platform.tscn" id="5_moving"]
+[ext_resource type="PackedScene" path="res://enemy/slime.tscn" id="6_slime"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(2400, 48)
@@ -136,6 +137,17 @@ position = Vector2(1560, 564)
 
 [node name="Spikes4" parent="Hazards" instance=ExtResource("4_spikes")]
 position = Vector2(2080, 564)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Slime1" parent="Enemies" instance=ExtResource("6_slime")]
+position = Vector2(760, 562)
+
+[node name="Slime2" parent="Enemies" instance=ExtResource("6_slime")]
+position = Vector2(1300, 562)
+
+[node name="Slime3" parent="Enemies" instance=ExtResource("6_slime")]
+position = Vector2(2230, 456)
 
 [node name="LeftWall" type="StaticBody2D" parent="."]
 position = Vector2(-10, 0)

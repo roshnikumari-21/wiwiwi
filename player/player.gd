@@ -50,6 +50,11 @@ func squash(target_scale: Vector2) -> void:
 	squash_tween.tween_property($Sprite2D, "scale", target_scale, 0.08)
 	squash_tween.tween_property($Sprite2D, "scale", Vector2.ONE, 0.15)
 
+# Called by an enemy we stomped: a small hop upward.
+func bounce() -> void:
+	velocity.y = jump_velocity * 0.7
+	squash(Vector2(0.8, 1.2))
+
 # Called by hazards. Sends the cat back to the start.
 func die() -> void:
 	global_position = spawn_position
