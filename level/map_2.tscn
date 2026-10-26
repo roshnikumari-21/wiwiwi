@@ -9,158 +9,211 @@
 [ext_resource type="PackedScene" path="res://milk/milk_bowl.tscn" id="7_milk"]
 [ext_resource type="PackedScene" path="res://owner/owner.tscn" id="8_owner"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
-size = Vector2(2400, 48)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground1"]
+size = Vector2(700, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground2"]
+size = Vector2(680, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground3"]
+size = Vector2(760, 48)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
 size = Vector2(20, 2000)
 
-[node name="Level" type="Node2D"]
+[node name="Map2" type="Node2D"]
+
+[node name="Sky" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="SunsetColor" type="ColorRect" parent="Sky"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.87, 0.84, 1)
 
 [node name="Clouds" type="Node2D" parent="."]
+modulate = Color(1, 0.94, 0.95, 1)
 
 [node name="Cloud1" type="Sprite2D" parent="Clouds"]
-position = Vector2(250, 120)
+position = Vector2(400, 110)
+scale = Vector2(0.9, 0.9)
 texture = ExtResource("2_cloud")
 
 [node name="Cloud2" type="Sprite2D" parent="Clouds"]
-position = Vector2(800, 80)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("2_cloud")
-
-[node name="Cloud3" type="Sprite2D" parent="Clouds"]
-position = Vector2(1350, 140)
+position = Vector2(1050, 160)
 scale = Vector2(1.2, 1.2)
 texture = ExtResource("2_cloud")
 
+[node name="Cloud3" type="Sprite2D" parent="Clouds"]
+position = Vector2(1650, 90)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2_cloud")
+
 [node name="Cloud4" type="Sprite2D" parent="Clouds"]
-position = Vector2(1900, 90)
-scale = Vector2(0.8, 0.8)
+position = Vector2(2150, 140)
 texture = ExtResource("2_cloud")
 
-[node name="Cloud5" type="Sprite2D" parent="Clouds"]
-position = Vector2(2300, 160)
-texture = ExtResource("2_cloud")
+[node name="Ground" type="Node2D" parent="."]
 
-[node name="Ground" type="StaticBody2D" parent="."]
-position = Vector2(1200, 600)
+[node name="Ground1" type="StaticBody2D" parent="Ground"]
+position = Vector2(350, 600)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
-shape = SubResource("RectangleShape2D_ground")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Ground1"]
+shape = SubResource("RectangleShape2D_ground1")
 
-[node name="Dirt" type="ColorRect" parent="Ground"]
-offset_left = -1200.0
+[node name="Dirt" type="ColorRect" parent="Ground/Ground1"]
+offset_left = -350.0
 offset_top = -24.0
-offset_right = 1200.0
+offset_right = 350.0
 offset_bottom = 120.0
 color = Color(0.93, 0.8, 0.68, 1)
 
-[node name="Grass" type="ColorRect" parent="Ground"]
-offset_left = -1200.0
+[node name="Grass" type="ColorRect" parent="Ground/Ground1"]
+offset_left = -350.0
 offset_top = -24.0
-offset_right = 1200.0
+offset_right = 350.0
+offset_bottom = -12.0
+color = Color(0.6, 0.85, 0.65, 1)
+
+[node name="Ground2" type="StaticBody2D" parent="Ground"]
+position = Vector2(1160, 600)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Ground2"]
+shape = SubResource("RectangleShape2D_ground2")
+
+[node name="Dirt" type="ColorRect" parent="Ground/Ground2"]
+offset_left = -340.0
+offset_top = -24.0
+offset_right = 340.0
+offset_bottom = 120.0
+color = Color(0.93, 0.8, 0.68, 1)
+
+[node name="Grass" type="ColorRect" parent="Ground/Ground2"]
+offset_left = -340.0
+offset_top = -24.0
+offset_right = 340.0
+offset_bottom = -12.0
+color = Color(0.6, 0.85, 0.65, 1)
+
+[node name="Ground3" type="StaticBody2D" parent="Ground"]
+position = Vector2(2020, 600)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Ground3"]
+shape = SubResource("RectangleShape2D_ground3")
+
+[node name="Dirt" type="ColorRect" parent="Ground/Ground3"]
+offset_left = -380.0
+offset_top = -24.0
+offset_right = 380.0
+offset_bottom = 120.0
+color = Color(0.93, 0.8, 0.68, 1)
+
+[node name="Grass" type="ColorRect" parent="Ground/Ground3"]
+offset_left = -380.0
+offset_top = -24.0
+offset_right = 380.0
 offset_bottom = -12.0
 color = Color(0.6, 0.85, 0.65, 1)
 
 [node name="Platforms" type="Node2D" parent="."]
 
 [node name="Platform1" parent="Platforms" instance=ExtResource("1_platform")]
-position = Vector2(400, 502)
+position = Vector2(300, 492)
 
 [node name="Platform2" parent="Platforms" instance=ExtResource("1_platform")]
-position = Vector2(620, 402)
+position = Vector2(520, 402)
 
 [node name="Platform3" parent="Platforms" instance=ExtResource("1_platform")]
-position = Vector2(880, 482)
+position = Vector2(950, 482)
 
 [node name="Platform4" parent="Platforms" instance=ExtResource("1_platform")]
 position = Vector2(1150, 392)
 
 [node name="Platform5" parent="Platforms" instance=ExtResource("1_platform")]
-position = Vector2(1400, 302)
+position = Vector2(1350, 312)
 
 [node name="Platform6" parent="Platforms" instance=ExtResource("1_platform")]
-position = Vector2(1700, 432)
+position = Vector2(1800, 482)
 
 [node name="Platform7" parent="Platforms" instance=ExtResource("1_platform")]
-position = Vector2(1950, 342)
+position = Vector2(2000, 392)
 
 [node name="Platform8" parent="Platforms" instance=ExtResource("1_platform")]
-position = Vector2(2200, 482)
+position = Vector2(2180, 482)
 
-[node name="MovingPlatform1" parent="Platforms" instance=ExtResource("5_moving")]
-position = Vector2(1560, 212)
+[node name="BridgePlatform" parent="Platforms" instance=ExtResource("5_moving")]
+position = Vector2(1460, 552)
 
 [node name="Coins" type="Node2D" parent="."]
 
 [node name="Coin1" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(250, 546)
+position = Vector2(150, 546)
 
 [node name="Coin2" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(400, 460)
+position = Vector2(300, 450)
 
 [node name="Coin3" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(620, 360)
+position = Vector2(520, 360)
 
 [node name="Coin4" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(880, 440)
+position = Vector2(760, 470)
 
 [node name="Coin5" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(1150, 350)
+position = Vector2(950, 440)
 
 [node name="Coin6" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(1400, 260)
+position = Vector2(1150, 350)
 
 [node name="Coin7" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(1700, 390)
+position = Vector2(1350, 270)
 
 [node name="Coin8" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(1950, 300)
+position = Vector2(1570, 480)
 
 [node name="Coin9" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(2200, 440)
+position = Vector2(1800, 440)
 
 [node name="Coin10" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(2270, 546)
+position = Vector2(2000, 350)
 
 [node name="Coin11" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(1760, 170)
+position = Vector2(2180, 440)
+
+[node name="Coin12" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(2240, 546)
 
 [node name="Hazards" type="Node2D" parent="."]
 
 [node name="Spikes1" parent="Hazards" instance=ExtResource("4_spikes")]
-position = Vector2(520, 564)
+position = Vector2(1250, 564)
 
 [node name="Spikes2" parent="Hazards" instance=ExtResource("4_spikes")]
-position = Vector2(1020, 564)
-
-[node name="Spikes3" parent="Hazards" instance=ExtResource("4_spikes")]
-position = Vector2(1560, 564)
-
-[node name="Spikes4" parent="Hazards" instance=ExtResource("4_spikes")]
-position = Vector2(2080, 564)
+position = Vector2(1950, 564)
 
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="Slime1" parent="Enemies" instance=ExtResource("6_slime")]
-position = Vector2(760, 562)
+position = Vector2(300, 466)
 
 [node name="Slime2" parent="Enemies" instance=ExtResource("6_slime")]
-position = Vector2(1300, 562)
+position = Vector2(1100, 562)
 
 [node name="Slime3" parent="Enemies" instance=ExtResource("6_slime")]
-position = Vector2(2230, 456)
+position = Vector2(1800, 456)
 
 [node name="MilkBowls" type="Node2D" parent="."]
 
 [node name="MilkBowl1" parent="MilkBowls" instance=ExtResource("7_milk")]
-position = Vector2(925, 457)
+position = Vector2(565, 377)
 
 [node name="MilkBowl2" parent="MilkBowls" instance=ExtResource("7_milk")]
-position = Vector2(1355, 277)
+position = Vector2(1395, 287)
 
 [node name="MilkBowl3" parent="MilkBowls" instance=ExtResource("7_milk")]
-position = Vector2(1830, 563)
+position = Vector2(1700, 563)
 
 [node name="Owner" parent="." instance=ExtResource("8_owner")]
 position = Vector2(2350, 576)

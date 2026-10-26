@@ -5,6 +5,12 @@ signal finished
 
 # preload loads the picture once, when the game starts.
 const HEART_TEXTURE := preload("res://owner/heart.svg")
+const TITLE_SCREEN := "res://title/title_screen.tscn"
+
+# Which level to go to after the hug. Leave empty on the last level.
+@export_file("*.tscn") var next_level: String = ""
+# How long to enjoy the hug before moving on (seconds).
+@export var celebrate_time: float = 4.5
 
 var has_finished: bool = false
 
@@ -21,6 +27,10 @@ func _on_finish_zone_body_entered(body: Node2D) -> void:
 	$CheerSound.play()
 	spawn_hearts()
 	finished.emit()
+
+	# Wait, then load the next level (or go back to the title after the last one).
+	await get_tree().create_timer(celebrate_time).timeout
+	get_tree().change_scene_to_file(next_level if next_level != "" else TITLE_SCREEN)
 
 # Three hearts float up and fade, one after another.
 func spawn_hearts() -> void:

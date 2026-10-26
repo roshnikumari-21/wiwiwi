@@ -1,0 +1,213 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://title/title_screen.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://level/cloud.svg" id="2_cloud"]
+[ext_resource type="Texture2D" path="res://player/cat.svg" id="3_cat"]
+[ext_resource type="Texture2D" path="res://owner/heart.svg" id="4_heart"]
+[ext_resource type="Texture2D" path="res://owner/girl.svg" id="5_girl"]
+[ext_resource type="Texture2D" path="res://owner/arms_open.svg" id="6_arms"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_normal"]
+bg_color = Color(0.97, 0.62, 0.75, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hover"]
+bg_color = Color(0.99, 0.72, 0.82, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pressed"]
+bg_color = Color(0.88, 0.5, 0.65, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_focus"]
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.45, 0.33, 0.5, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Cloud1" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 50.0
+offset_right = 220.0
+offset_bottom = 130.0
+texture = ExtResource("2_cloud")
+
+[node name="Cloud2" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 90.0
+offset_right = -100.0
+offset_bottom = 170.0
+grow_horizontal = 0
+texture = ExtResource("2_cloud")
+
+[node name="Dirt" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -48.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.93, 0.8, 0.68, 1)
+
+[node name="Grass" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -60.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.6, 0.85, 0.65, 1)
+
+[node name="Menu" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -290.0
+offset_right = 260.0
+offset_bottom = 270.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Menu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.45, 0.6, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 84
+text = "Cozy Cat"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Menu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.33, 0.5, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 26
+text = "Help the cat find her way home!"
+horizontal_alignment = 1
+
+[node name="Pictures" type="HBoxContainer" parent="Menu"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="CatHolder" type="Control" parent="Menu/Pictures"]
+custom_minimum_size = Vector2(110, 124)
+layout_mode = 2
+
+[node name="CatPic" type="TextureRect" parent="Menu/Pictures/CatHolder"]
+layout_mode = 0
+offset_top = 14.0
+offset_right = 110.0
+offset_bottom = 124.0
+texture = ExtResource("3_cat")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeartPic" type="TextureRect" parent="Menu/Pictures"]
+custom_minimum_size = Vector2(42, 40)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_heart")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GirlHolder" type="Control" parent="Menu/Pictures"]
+custom_minimum_size = Vector2(80, 124)
+layout_mode = 2
+
+[node name="GirlPic" type="TextureRect" parent="Menu/Pictures/GirlHolder"]
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 124.0
+texture = ExtResource("5_girl")
+
+[node name="ArmsPic" type="TextureRect" parent="Menu/Pictures/GirlHolder"]
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 124.0
+texture = ExtResource("6_arms")
+
+[node name="StartButton" type="Button" parent="Menu"]
+custom_minimum_size = Vector2(240, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxFlat_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_focus")
+text = "Start"
+
+[node name="QuitButton" type="Button" parent="Menu"]
+custom_minimum_size = Vector2(240, 52)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_focus")
+text = "Quit"
+
+[node name="Hint" type="Label" parent="Menu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.33, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "Arrow keys or A / D to move    Space or Up to jump"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Menu/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="Menu/QuitButton" to="." method="_on_quit_button_pressed"]

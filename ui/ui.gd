@@ -1,7 +1,11 @@
 extends CanvasLayer
 
+# Shown in the top-right corner. Each level sets its own (see the UI node in level_1.tscn).
+@export var level_title: String = "Level 1"
+
 var score: int = 0
 var total_coins: int = 0
+var owner_node: Node = null
 
 # @onready grabs the node once the scene is ready, so we don't repeat $ScoreLabel.
 @onready var score_label: Label = $ScoreLabel
@@ -12,6 +16,8 @@ const ENERGY_OK_COLOR := Color(0.62, 0.86, 0.7)    # minty green
 const ENERGY_LOW_COLOR := Color(0.96, 0.55, 0.55)  # soft red
 
 func _ready() -> void:
+	$LevelLabel.text = level_title
+
 	# Find every coin (they're all in the "coins" group) and listen to its signal.
 	var coins := get_tree().get_nodes_in_group("coins")
 	total_coins = coins.size()
@@ -25,14 +31,16 @@ func _ready() -> void:
 	_on_energy_changed(player.energy, player.max_energy)
 
 	# Listen for the cat reaching her owner (only if this level has one).
-	var owner_node = get_tree().get_first_node_in_group("owner")
+	owner_node = get_tree().get_first_node_in_group("owner")
 	if owner_node:
 		owner_node.finished.connect(_on_finished)
 
 func _on_finished() -> void:
 	win_label.hide()  # the finish message replaces the coins message
 	var finish_label: Label = $FinishLabel
-	finish_label.text = "Home at last!\nCoins: %d / %d" % [score, total_coins]
+	# Is there another level after this one?
+	var last_line := "On to the next level..." if owner_node.next_level != "" else "Thanks for playing!"
+	finish_label.text = "Home at last!\nCoins: %d / %d\n%s" % [score, total_coins, last_line]
 	finish_label.modulate.a = 0.0
 	finish_label.show()
 	var tween := create_tween()

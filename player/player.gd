@@ -58,6 +58,11 @@ func _physics_process(delta: float) -> void:
 	# Move using velocity, sliding along floors and walls instead of passing through.
 	move_and_slide()
 
+	# Fell into a pit (far below the screen)? Back to the start.
+	if global_position.y > 900:
+		die()
+		return
+
 	# Just landed? (on the floor now, but not last frame)
 	if is_on_floor() and not was_on_floor:
 		squash(Vector2(1.2, 0.8))  # squish short and wide on landing
