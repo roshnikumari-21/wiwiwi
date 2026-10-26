@@ -12,6 +12,8 @@ signal energy_changed(current: float, maximum: float)
 @export var energy_drain: float = 2.0
 
 var energy: float
+# True once the cat reaches her owner: no more moving or getting tired.
+var is_hugging: bool = false
 
 # Remembers if we were on the floor last frame, so we can detect landing.
 var was_on_floor: bool = true
@@ -26,6 +28,9 @@ func _ready() -> void:
 
 # Runs every physics frame (60 times per second).
 func _physics_process(delta: float) -> void:
+	if is_hugging:
+		return  # skip all controls, gravity and energy while being hugged
+
 	# Energy slowly runs out. At zero, the cat is too sleepy and naps (respawns).
 	energy -= energy_drain * delta
 	energy_changed.emit(energy, max_energy)
@@ -70,6 +75,15 @@ func squash(target_scale: Vector2) -> void:
 func bounce() -> void:
 	velocity.y = jump_velocity * 0.7
 	squash(Vector2(0.8, 1.2))
+
+# Called by the owner at the finish: leap into her arms.
+func start_hug(hug_spot: Vector2) -> void:
+	is_hugging = true
+	velocity = Vector2.ZERO
+	$Sprite2D.flip_h = hug_spot.x < global_position.x  # face the owner
+	squash(Vector2(0.8, 1.2))
+	var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "global_position", hug_spot, 0.35)
 
 # Called by a milk bowl. min() stops energy going above the maximum.
 func drink_milk(amount: float) -> void:

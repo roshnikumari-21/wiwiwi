@@ -1,0 +1,74 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://owner/owner.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://owner/girl.svg" id="2_girl"]
+[ext_resource type="Texture2D" path="res://owner/arms_open.svg" id="3_open"]
+[ext_resource type="Texture2D" path="res://owner/arms_hug.svg" id="4_hug"]
+[ext_resource type="AudioStream" path="res://owner/hug_jingle.wav" id="5_jingle"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_finish"]
+size = Vector2(40, 80)
+
+[sub_resource type="Gradient" id="Gradient_colors"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8)
+colors = PackedColorArray(0.96, 0.6, 0.75, 1, 0.62, 0.86, 0.7, 1, 0.97, 0.84, 0.45, 1, 0.66, 0.78, 0.96, 1, 0.8, 0.7, 0.95, 1)
+
+[sub_resource type="Gradient" id="Gradient_fade"]
+offsets = PackedFloat32Array(0, 0.75, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="Owner" type="Node2D" groups=["owner"]]
+script = ExtResource("1_script")
+
+[node name="Girl" type="Sprite2D" parent="."]
+position = Vector2(0, -62)
+texture = ExtResource("2_girl")
+
+[node name="ArmsOpen" type="Sprite2D" parent="."]
+position = Vector2(0, -62)
+texture = ExtResource("3_open")
+
+[node name="ArmsHug" type="Sprite2D" parent="."]
+visible = false
+z_index = 1
+position = Vector2(0, -62)
+texture = ExtResource("4_hug")
+
+[node name="HugSpot" type="Marker2D" parent="."]
+position = Vector2(-7, -55)
+
+[node name="FinishZone" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FinishZone"]
+position = Vector2(-25, -40)
+shape = SubResource("RectangleShape2D_finish")
+
+[node name="Confetti" type="CPUParticles2D" parent="."]
+z_index = 2
+position = Vector2(0, -130)
+emitting = false
+amount = 160
+lifetime = 3.0
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, -1)
+spread = 75.0
+gravity = Vector2(0, 400)
+initial_velocity_min = 250.0
+initial_velocity_max = 550.0
+angular_velocity_min = -540.0
+angular_velocity_max = 540.0
+damping_min = 60.0
+damping_max = 120.0
+scale_amount_min = 4.0
+scale_amount_max = 8.0
+color_ramp = SubResource("Gradient_fade")
+color_initial_ramp = SubResource("Gradient_colors")
+
+[node name="CheerSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_jingle")
+volume_db = -4.0
+
+[connection signal="body_entered" from="FinishZone" to="." method="_on_finish_zone_body_entered"]

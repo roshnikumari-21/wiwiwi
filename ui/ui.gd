@@ -24,6 +24,21 @@ func _ready() -> void:
 	player.energy_changed.connect(_on_energy_changed)
 	_on_energy_changed(player.energy, player.max_energy)
 
+	# Listen for the cat reaching her owner (only if this level has one).
+	var owner_node = get_tree().get_first_node_in_group("owner")
+	if owner_node:
+		owner_node.finished.connect(_on_finished)
+
+func _on_finished() -> void:
+	win_label.hide()  # the finish message replaces the coins message
+	var finish_label: Label = $FinishLabel
+	finish_label.text = "Home at last!\nCoins: %d / %d" % [score, total_coins]
+	finish_label.modulate.a = 0.0
+	finish_label.show()
+	var tween := create_tween()
+	tween.tween_interval(0.6)  # let the hug happen first
+	tween.tween_property(finish_label, "modulate:a", 1.0, 0.6)
+
 # The signal hands us two values: the current energy and the maximum.
 func _on_energy_changed(current: float, maximum: float) -> void:
 	energy_bar.max_value = maximum

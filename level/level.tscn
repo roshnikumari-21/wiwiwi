@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://level/moving_platform.tscn" id="5_moving"]
 [ext_resource type="PackedScene" path="res://enemy/slime.tscn" id="6_slime"]
 [ext_resource type="PackedScene" path="res://milk/milk_bowl.tscn" id="7_milk"]
+[ext_resource type="PackedScene" path="res://owner/owner.tscn" id="8_owner"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(2400, 48)
@@ -120,7 +121,7 @@ position = Vector2(1950, 300)
 position = Vector2(2200, 440)
 
 [node name="Coin10" parent="Coins" instance=ExtResource("3_coin")]
-position = Vector2(2320, 546)
+position = Vector2(2270, 546)
 
 [node name="Coin11" parent="Coins" instance=ExtResource("3_coin")]
 position = Vector2(1760, 170)
@@ -160,6 +161,9 @@ position = Vector2(1355, 277)
 
 [node name="MilkBowl3" parent="MilkBowls" instance=ExtResource("7_milk")]
 position = Vector2(1830, 563)
+
+[node name="Owner" parent="." instance=ExtResource("8_owner")]
+position = Vector2(2350, 576)
 
 [node name="LeftWall" type="StaticBody2D" parent="."]
 position = Vector2(-10, 0)
