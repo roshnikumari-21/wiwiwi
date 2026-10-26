@@ -1,0 +1,28 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://milk/milk_bowl.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://milk/bowl.svg" id="2_bowl"]
+[ext_resource type="Texture2D" path="res://milk/milk.svg" id="3_milk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bowl"]
+size = Vector2(40, 26)
+
+[node name="MilkBowl" type="Area2D" groups=["milk"]]
+collision_mask = 2
+script = ExtResource("1_script")
+
+[node name="Bowl" type="Sprite2D" parent="."]
+texture = ExtResource("2_bowl")
+
+[node name="Milk" type="Sprite2D" parent="."]
+texture = ExtResource("3_milk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_bowl")
+
+[node name="RefillTimer" type="Timer" parent="."]
+wait_time = 12.0
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="RefillTimer" to="." method="_on_refill_timer_timeout"]

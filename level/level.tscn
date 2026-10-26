@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://hazard/spikes.tscn" id="4_spikes"]
 [ext_resource type="PackedScene" path="res://level/moving_platform.tscn" id="5_moving"]
 [ext_resource type="PackedScene" path="res://enemy/slime.tscn" id="6_slime"]
+[ext_resource type="PackedScene" path="res://milk/milk_bowl.tscn" id="7_milk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(2400, 48)
@@ -148,6 +149,17 @@ position = Vector2(1300, 562)
 
 [node name="Slime3" parent="Enemies" instance=ExtResource("6_slime")]
 position = Vector2(2230, 456)
+
+[node name="MilkBowls" type="Node2D" parent="."]
+
+[node name="MilkBowl1" parent="MilkBowls" instance=ExtResource("7_milk")]
+position = Vector2(925, 457)
+
+[node name="MilkBowl2" parent="MilkBowls" instance=ExtResource("7_milk")]
+position = Vector2(1355, 277)
+
+[node name="MilkBowl3" parent="MilkBowls" instance=ExtResource("7_milk")]
+position = Vector2(1830, 563)
 
 [node name="LeftWall" type="StaticBody2D" parent="."]
 position = Vector2(-10, 0)
