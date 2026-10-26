@@ -4,4 +4,5 @@ extends Area2D
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		# We know exactly who to talk to, so we call the cat's function directly.
-		body.die()
+		# Spikes are serious: sad meow, then the whole level starts over.
+		body.hit_spikes()

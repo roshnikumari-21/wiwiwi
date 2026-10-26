@@ -10,10 +10,14 @@ signal energy_changed(current: float, maximum: float)
 # Energy: full is max_energy; it drains by energy_drain every second.
 @export var max_energy: float = 100.0
 @export var energy_drain: float = 2.0
+# How long the sad meow plays before the level restarts (it fades out at the end).
+@export var sad_meow_length: float = 1.0
 
 var energy: float
 # True once the cat reaches her owner: no more moving or getting tired.
 var is_hugging: bool = false
+# True while the "ouch" meow plays before the level restarts.
+var is_restarting: bool = false
 
 # Remembers if we were on the floor last frame, so we can detect landing.
 var was_on_floor: bool = true
@@ -25,11 +29,12 @@ func _ready() -> void:
 	# Remember wherever the cat was placed in the level as its starting point.
 	spawn_position = global_position
 	energy = max_energy
+	$HappyMeow.play()  # "Hello!" at the start of every level (and after a restart)
 
 # Runs every physics frame (60 times per second).
 func _physics_process(delta: float) -> void:
-	if is_hugging:
-		return  # skip all controls, gravity and energy while being hugged
+	if is_hugging or is_restarting:
+		return  # frozen: no controls, gravity or energy drain
 
 	# Energy slowly runs out. At zero, the cat is too sleepy and naps (respawns).
 	energy -= energy_drain * delta
@@ -87,6 +92,7 @@ func start_hug(hug_spot: Vector2) -> void:
 	velocity = Vector2.ZERO
 	$Sprite2D.flip_h = hug_spot.x < global_position.x  # face the owner
 	squash(Vector2(0.8, 1.2))
+	$HappyMeow.play()
 	var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "global_position", hug_spot, 0.35)
 
@@ -96,7 +102,23 @@ func drink_milk(amount: float) -> void:
 	energy_changed.emit(energy, max_energy)
 	squash(Vector2(1.15, 0.85))  # a happy little wiggle
 
-# Called by hazards, enemies, or running out of energy. Sends the cat back to the start, rested.
+# Called by spikes: "meow!", then the whole level starts fresh (coins, energy, everything).
+func hit_spikes() -> void:
+	if is_restarting or is_hugging:
+		return  # already restarting; ignore extra spike touches
+	is_restarting = true
+	velocity = Vector2.ZERO
+	squash(Vector2(1.3, 0.7))
+	$Sprite2D.modulate = Color(1, 0.55, 0.55)  # flash red: ouch!
+	$SadMeow.play()
+	# Fade the meow out during its last 0.25 s, so cutting it short sounds smooth.
+	var fade := create_tween()
+	fade.tween_interval(max(sad_meow_length - 0.25, 0.0))
+	fade.tween_property($SadMeow, "volume_db", -40.0, 0.25)
+	await fade.finished
+	get_tree().reload_current_scene()
+
+# Called by enemies, pits, or running out of energy. Sends the cat back to the start, rested.
 func die() -> void:
 	global_position = spawn_position
 	velocity = Vector2.ZERO

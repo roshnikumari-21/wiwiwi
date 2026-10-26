@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://player/cat.svg" id="2_cat"]
+[ext_resource type="AudioStream" path="res://player/meow_happy.wav" id="3_happy"]
+[ext_resource type="AudioStream" path="res://player/meow_sad.wav" id="4_sad"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(36, 50)
@@ -27,3 +29,11 @@ limit_right = 2400
 limit_bottom = 648
 position_smoothing_enabled = true
 position_smoothing_speed = 6.0
+
+[node name="HappyMeow" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_happy")
+volume_db = -3.0
+
+[node name="SadMeow" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_sad")
+volume_db = -3.0
