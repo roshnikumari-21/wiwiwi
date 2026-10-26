@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" path="res://level/cloud.svg" id="2_cloud"]
 [ext_resource type="PackedScene" path="res://coin/coin.tscn" id="3_coin"]
 [ext_resource type="PackedScene" path="res://hazard/spikes.tscn" id="4_spikes"]
+[ext_resource type="PackedScene" path="res://level/moving_platform.tscn" id="5_moving"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(2400, 48)
@@ -84,6 +85,9 @@ position = Vector2(1950, 342)
 [node name="Platform8" parent="Platforms" instance=ExtResource("1_platform")]
 position = Vector2(2200, 482)
 
+[node name="MovingPlatform1" parent="Platforms" instance=ExtResource("5_moving")]
+position = Vector2(1560, 212)
+
 [node name="Coins" type="Node2D" parent="."]
 
 [node name="Coin1" parent="Coins" instance=ExtResource("3_coin")]
@@ -115,6 +119,9 @@ position = Vector2(2200, 440)
 
 [node name="Coin10" parent="Coins" instance=ExtResource("3_coin")]
 position = Vector2(2320, 546)
+
+[node name="Coin11" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(1760, 170)
 
 [node name="Hazards" type="Node2D" parent="."]
 
