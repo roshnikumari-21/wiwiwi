@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://player/player.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://player/cat.svg" id="2_cat"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(36, 50)
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 32)
+texture = ExtResource("2_cat")
+offset = Vector2(0, -32)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2, 6)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+limit_left = 0
+limit_top = -400
+limit_right = 2400
+limit_bottom = 648
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0

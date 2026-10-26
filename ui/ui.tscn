@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/ui.gd" id="1_script"]
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("1_script")
+
+[node name="ScoreLabel" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 260.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(0.45, 0.33, 0.5, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 32
+text = "Coins: 0"
+
+[node name="WinLabel" type="Label" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.45, 0.6, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 48
+text = "You collected all coins!"
+horizontal_alignment = 1
+vertical_alignment = 1

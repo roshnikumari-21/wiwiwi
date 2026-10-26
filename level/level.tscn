@@ -1,0 +1,143 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://level/platform.tscn" id="1_platform"]
+[ext_resource type="Texture2D" path="res://level/cloud.svg" id="2_cloud"]
+[ext_resource type="PackedScene" path="res://coin/coin.tscn" id="3_coin"]
+[ext_resource type="PackedScene" path="res://hazard/spikes.tscn" id="4_spikes"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
+size = Vector2(2400, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(20, 2000)
+
+[node name="Level" type="Node2D"]
+
+[node name="Clouds" type="Node2D" parent="."]
+
+[node name="Cloud1" type="Sprite2D" parent="Clouds"]
+position = Vector2(250, 120)
+texture = ExtResource("2_cloud")
+
+[node name="Cloud2" type="Sprite2D" parent="Clouds"]
+position = Vector2(800, 80)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2_cloud")
+
+[node name="Cloud3" type="Sprite2D" parent="Clouds"]
+position = Vector2(1350, 140)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("2_cloud")
+
+[node name="Cloud4" type="Sprite2D" parent="Clouds"]
+position = Vector2(1900, 90)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("2_cloud")
+
+[node name="Cloud5" type="Sprite2D" parent="Clouds"]
+position = Vector2(2300, 160)
+texture = ExtResource("2_cloud")
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(1200, 600)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="Dirt" type="ColorRect" parent="Ground"]
+offset_left = -1200.0
+offset_top = -24.0
+offset_right = 1200.0
+offset_bottom = 120.0
+color = Color(0.93, 0.8, 0.68, 1)
+
+[node name="Grass" type="ColorRect" parent="Ground"]
+offset_left = -1200.0
+offset_top = -24.0
+offset_right = 1200.0
+offset_bottom = -12.0
+color = Color(0.6, 0.85, 0.65, 1)
+
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="Platform1" parent="Platforms" instance=ExtResource("1_platform")]
+position = Vector2(400, 502)
+
+[node name="Platform2" parent="Platforms" instance=ExtResource("1_platform")]
+position = Vector2(620, 402)
+
+[node name="Platform3" parent="Platforms" instance=ExtResource("1_platform")]
+position = Vector2(880, 482)
+
+[node name="Platform4" parent="Platforms" instance=ExtResource("1_platform")]
+position = Vector2(1150, 392)
+
+[node name="Platform5" parent="Platforms" instance=ExtResource("1_platform")]
+position = Vector2(1400, 302)
+
+[node name="Platform6" parent="Platforms" instance=ExtResource("1_platform")]
+position = Vector2(1700, 432)
+
+[node name="Platform7" parent="Platforms" instance=ExtResource("1_platform")]
+position = Vector2(1950, 342)
+
+[node name="Platform8" parent="Platforms" instance=ExtResource("1_platform")]
+position = Vector2(2200, 482)
+
+[node name="Coins" type="Node2D" parent="."]
+
+[node name="Coin1" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(250, 546)
+
+[node name="Coin2" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(400, 460)
+
+[node name="Coin3" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(620, 360)
+
+[node name="Coin4" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(880, 440)
+
+[node name="Coin5" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(1150, 350)
+
+[node name="Coin6" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(1400, 260)
+
+[node name="Coin7" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(1700, 390)
+
+[node name="Coin8" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(1950, 300)
+
+[node name="Coin9" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(2200, 440)
+
+[node name="Coin10" parent="Coins" instance=ExtResource("3_coin")]
+position = Vector2(2320, 546)
+
+[node name="Hazards" type="Node2D" parent="."]
+
+[node name="Spikes1" parent="Hazards" instance=ExtResource("4_spikes")]
+position = Vector2(520, 564)
+
+[node name="Spikes2" parent="Hazards" instance=ExtResource("4_spikes")]
+position = Vector2(1020, 564)
+
+[node name="Spikes3" parent="Hazards" instance=ExtResource("4_spikes")]
+position = Vector2(1560, 564)
+
+[node name="Spikes4" parent="Hazards" instance=ExtResource("4_spikes")]
+position = Vector2(2080, 564)
+
+[node name="LeftWall" type="StaticBody2D" parent="."]
+position = Vector2(-10, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="RightWall" type="StaticBody2D" parent="."]
+position = Vector2(2410, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
+shape = SubResource("RectangleShape2D_wall")

@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://coin/coin.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://coin/coin.svg" id="2_coin"]
+[ext_resource type="AudioStream" path="res://coin/coin_pickup.wav" id="3_sound"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_coin"]
+radius = 13.0
+
+[node name="Coin" type="Area2D" groups=["coins"]]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_coin")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_coin")
+
+[node name="PickupSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_sound")
+volume_db = -6.0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
