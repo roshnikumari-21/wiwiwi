@@ -1,0 +1,74 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://dev/m0_device_check.gd" id="1_script"]
+[ext_resource type="Script" path="res://ui/components/safe_area.gd" id="2_safe"]
+
+[node name="M0DeviceCheck" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="UnsafeBorder" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.969, 0.627, 0.753, 1)
+
+[node name="SafeArea" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_safe")
+padding = 0
+
+[node name="Panel" type="PanelContainer" parent="SafeArea"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Margin" type="MarginContainer" parent="SafeArea/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 32
+
+[node name="VBox" type="VBoxContainer" parent="SafeArea/Panel/Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="Heading" type="Label" parent="SafeArea/Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 56
+text = "Homeward Paws"
+
+[node name="Info" type="Label" parent="SafeArea/Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+
+[node name="Touch" type="Label" parent="SafeArea/Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+
+[node name="FadeButton" type="Button" parent="SafeArea/Panel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 96)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 36

@@ -1,0 +1,11 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Build output
+/builds/
+
+# Signing keys and secrets: never commit these
+*.keystore
+*.jks
+export_credentials.cfg
