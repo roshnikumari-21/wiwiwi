@@ -25,6 +25,9 @@ var squash_tween: Tween
 # Where the cat goes back to after touching a hazard.
 var spawn_position: Vector2
 
+# The flipbook of cat pictures (idle, walk, jump, fall, hurt).
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+
 func _ready() -> void:
 	# Remember wherever the cat was placed in the level as its starting point.
 	spawn_position = global_position
@@ -58,7 +61,7 @@ func _physics_process(delta: float) -> void:
 
 	# Face the way we're running.
 	if direction != 0:
-		$Sprite2D.flip_h = direction < 0
+		sprite.flip_h = direction < 0
 
 	# Move using velocity, sliding along floors and walls instead of passing through.
 	move_and_slide()
@@ -73,13 +76,25 @@ func _physics_process(delta: float) -> void:
 		squash(Vector2(1.2, 0.8))  # squish short and wide on landing
 	was_on_floor = is_on_floor()
 
+	update_animation()
+
+# Pick the animation that matches what the cat is doing right now.
+# (play() on the animation that's already playing just keeps it going.)
+func update_animation() -> void:
+	if not is_on_floor():
+		sprite.play("jump" if velocity.y < 0 else "fall")
+	elif abs(velocity.x) > 1.0:
+		sprite.play("walk")  # only when actually moving, not when pushing a wall
+	else:
+		sprite.play("idle")
+
 # Quickly change the sprite's shape, then bounce back to normal.
 func squash(target_scale: Vector2) -> void:
 	if squash_tween:
 		squash_tween.kill()  # stop any squash already playing
 	squash_tween = create_tween()
-	squash_tween.tween_property($Sprite2D, "scale", target_scale, 0.08)
-	squash_tween.tween_property($Sprite2D, "scale", Vector2.ONE, 0.15)
+	squash_tween.tween_property(sprite, "scale", target_scale, 0.08)
+	squash_tween.tween_property(sprite, "scale", Vector2.ONE, 0.15)
 
 # Called by an enemy we stomped: a small hop upward.
 func bounce() -> void:
@@ -90,8 +105,9 @@ func bounce() -> void:
 func start_hug(hug_spot: Vector2) -> void:
 	is_hugging = true
 	velocity = Vector2.ZERO
-	$Sprite2D.flip_h = hug_spot.x < global_position.x  # face the owner
+	sprite.flip_h = hug_spot.x < global_position.x  # face the owner
 	squash(Vector2(0.8, 1.2))
+	sprite.play("idle")  # happy tail swish in her arms
 	$HappyMeow.play()
 	var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "global_position", hug_spot, 0.35)
@@ -109,7 +125,8 @@ func hit_spikes() -> void:
 	is_restarting = true
 	velocity = Vector2.ZERO
 	squash(Vector2(1.3, 0.7))
-	$Sprite2D.modulate = Color(1, 0.55, 0.55)  # flash red: ouch!
+	sprite.modulate = Color(1, 0.55, 0.55)  # flash red: ouch!
+	sprite.play("hurt")  # > < face
 	$SadMeow.play()
 	# Fade the meow out during its last 0.25 s, so cutting it short sounds smooth.
 	var fade := create_tween()
@@ -127,5 +144,5 @@ func die() -> void:
 	$Camera2D.reset_smoothing()  # jump the camera straight there instead of sliding across the level
 	# Blink 3 times so it's clear something happened.
 	var blink := create_tween().set_loops(3)
-	blink.tween_property($Sprite2D, "modulate:a", 0.2, 0.08)
-	blink.tween_property($Sprite2D, "modulate:a", 1.0, 0.08)
+	blink.tween_property(sprite, "modulate:a", 0.2, 0.08)
+	blink.tween_property(sprite, "modulate:a", 1.0, 0.08)
