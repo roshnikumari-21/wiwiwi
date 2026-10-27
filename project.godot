@@ -15,6 +15,10 @@ run/main_scene="res://title/title_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Music="*res://music/music.tscn"
+
 [display]
 
 window/stretch/mode="canvas_items"

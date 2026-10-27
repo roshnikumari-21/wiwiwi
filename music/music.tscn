@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="AudioStream" path="res://music/homeward_paws.mp3" id="1_theme"]
+
+[node name="Music" type="AudioStreamPlayer"]
+process_mode = 3
+stream = ExtResource("1_theme")
+volume_db = -10.0
+autoplay = true
