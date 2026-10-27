@@ -6,6 +6,11 @@ func _ready() -> void:
 	# Focus the Start button so pressing Enter or Space starts the game.
 	$Menu/StartButton.grab_focus()
 
+	# On phones: apps don't have a Quit button, and there's no keyboard.
+	if OS.has_feature("mobile"):
+		$Menu/QuitButton.hide()
+		$Menu/Hint.text = "Tap the arrows to move and the paw to jump"
+
 	# The cat gently bobs up and down while you wait.
 	var cat: TextureRect = $Menu/Pictures/CatHolder/CatPic
 	var tween := create_tween().set_loops().set_trans(Tween.TRANS_SINE)

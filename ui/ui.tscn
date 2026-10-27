@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://ui/ui.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://ui/touch/touch_controls.tscn" id="2_touch"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
 bg_color = Color(1, 1, 1, 0.85)
@@ -100,3 +101,5 @@ theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 32
 text = "Level 1"
 horizontal_alignment = 2
+
+[node name="TouchControls" parent="." instance=ExtResource("2_touch")]
