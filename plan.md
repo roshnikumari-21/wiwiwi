@@ -684,16 +684,16 @@ Each level_w1_XX.tscn **inherits** level_base.tscn and only adds tiles + objects
 
 ### M0 — Setup and export test (≈ 30 h)
 - [ ] Fill in game name, studio, package ID; decide account type (2 h)
-- [ ] Create fresh Godot 4.7.2 project + new Git repo; keep the prototype repo as reference (2 h)
-- [ ] Project settings: 1920×1080, canvas_items/expand, Sensor Landscape, Compatibility, `quit_on_go_back=false`, translation CSV hooked up (2 h)
-- [ ] Folder structure (§11.8) + empty autoloads (`Events`, `GameState`, `SaveManager`, `AudioManager`, `SceneTransition`, `PlayServices`) (3 h)
-- [ ] Android toolchain: templates, JDK 17, SDK 36 (4 h)
+- [x] Create fresh Godot 4.7.2 project + new Git repo; keep the prototype repo as reference (2 h) — `C:\Godot\Projects\homeward-paws` (local repo; GitHub repo still to create)
+- [x] Project settings: 1920×1080, canvas_items/expand, Sensor Landscape, Compatibility, `quit_on_go_back=false`, translation CSV hooked up (2 h)
+- [x] Folder structure (§11.8) + empty autoloads (`Events`, `GameState`, `SaveManager`, `AudioManager`, `SceneTransition`, `PlayServices`) (3 h)
+- [x] Android toolchain: templates, JDK 17, SDK 36 (4 h) — JDK 17.0.14, build-tools 35.0.1, platforms 35+36, cmdline-tools, CMake 3.10.2, NDK r28b, Godot 4.7.2 templates (checksums verified)
 - [ ] Release keystore created + backed up (1 h)
-- [ ] Debug APK runs on our phone; FPS overlay visible (3 h)
+- [ ] Debug APK runs on our phone; FPS overlay visible (3 h) — APK builds (targetSdk 36, no permissions, landscape-only verified); not yet installed on a phone
 - [ ] Play Console account + app created; AAB uploaded to **Internal testing** (4 h)
 - [ ] **De-risk:** install Play Games plugin, configure Play Games project, sign in on device (6 h)
 - [ ] Verify ElevenLabs license for existing audio; save proof (1 h)
-- [ ] SafeArea container tested on a notched/edge-to-edge phone (2 h)
+- [ ] SafeArea container tested on a notched/edge-to-edge phone (2 h) — built (`ui/components/safe_area.gd`) and checked on PC with a simulated notch; phone test pending
 
 ### M1 — Prototype / greybox (≈ 70 h)
 - [ ] Player controller v2: accel/decel, variable jump, coyote time, jump buffer, max fall (10 h)
