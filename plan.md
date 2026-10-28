@@ -1,7 +1,7 @@
-# [GAME NAME] — Production Plan (v1)
+# wiwiwi — Production Plan (v1)
 
-**Studio:** [STUDIO NAME] · **Engine:** Godot 4.7.2 (GDScript) · **Platform:** Android (Google Play)
-**Package ID:** `com.[studio].[game]` — cannot change after the first upload. Placeholder until then: `com.example.homewardpaws`.
+**Game:** wiwiwi · **Studio:** [STUDIO NAME] · **Engine:** Godot 4.7.2 (GDScript) · **Platform:** Android (Google Play)
+**Package ID:** `com.[studio].wiwiwi` — cannot change after the first upload. Placeholder until then: `com.example.wiwiwi`.
 
 > Facts marked **⚠ Verify** can change (store rules, plugin versions). Re-check before acting.
 > Colors, fonts and art style are decided during development, not in this document.
@@ -177,7 +177,8 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 - [x] APK runs on a real phone (Galaxy M11): 60 FPS, landscape lock, punch-hole detected and avoided, fade works
 - [x] Multi-touch check on the M11 (3 fingers detected)
 - [ ] Emulator check for 20:9 + tablet shapes
-- [ ] Real game/studio name → package ID
+- [x] Game name: **wiwiwi**
+- [ ] Studio name → final package ID `com.[studio].wiwiwi`
 - [ ] Release keystore + Play Console account + internal testing upload (AAB via Gradle)
 - [x] Gradle build + Play Games plugin v3.4.0 (MIT) loads on the phone with Godot 4.7.2; `PlayServices` wrapper reports signed_out gracefully (dummy game ID)
 - [ ] Play Games: real sign-in on the phone (needs Play Console + real game ID)
