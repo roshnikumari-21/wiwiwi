@@ -147,7 +147,9 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - [x] Godot 4.7.2 export templates · JDK 17 · Android SDK (platform-tools, build-tools 35.0.1, platforms 35 + 36, command-line tools, CMake 3.10.2, NDK r28b)
 - [x] Export preset: package, version code/name, arm64 + armv7, immersive, landscape
 - [x] Gradle build on (needed for plugins and AAB)
-- [ ] Release (upload) keystore created by us, backed up in 2 places, never in Git
+- [x] Release (upload) keystore `C:\Godot\Keys\wiwiwi-upload.keystore`, alias `upload`, valid to 2054; password only in Godot's ignored `export_credentials.cfg` (back up the file in 2 places)
+- Certificate SHA-1 (public, for Play Games credentials): upload `3A:5B:4F:6F:9C:87:32:A5:99:D1:B2:3A:B7:A0:06:88:2B:F6:E4:49` · Godot debug `76:EA:46:81:AC:A0:5C:A5:6A:D6:A1:7E:D3:DA:E8:64:8F:E3:12:08` · app signing key: from Play Console after the first upload
+- [x] Signed release AAB builds (`Android Release (AAB)` preset, ~53 MB)
 - [ ] Play App Signing enrolled on first upload
 - [ ] Debug build adds x86_64 only for the emulator; release stays ARM
 
