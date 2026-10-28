@@ -175,7 +175,8 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 - [x] Android toolchain + debug APK (target SDK 36, landscape, no permissions)
 - [x] SafeArea container + device-check screen
 - [x] APK runs on a real phone (Galaxy M11): 60 FPS, landscape lock, punch-hole detected and avoided, fade works
-- [ ] Multi-touch check on the M11; emulator check for 20:9 + tablet shapes
+- [x] Multi-touch check on the M11 (3 fingers detected)
+- [ ] Emulator check for 20:9 + tablet shapes
 - [ ] Real game/studio name → package ID
 - [ ] Release keystore + Play Console account + internal testing upload (AAB via Gradle)
 - [ ] Play Games plugin: sign in on a device with Godot 4.7.2
