@@ -182,7 +182,8 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 - [x] Game name: **wiwiwi**
 - [x] Studio name **digicraft** → package ID `com.digicraft.wiwiwi` (not used on Google Play as of 29 Oct 2026)
 - [ ] Release keystore + Play Console account + internal testing upload (AAB via Gradle)
-- [x] Gradle build + Play Games plugin v3.4.0 (MIT) loads on the phone with Godot 4.7.2; `PlayServices` wrapper reports signed_out gracefully (dummy game ID)
+- [x] Gradle build + Play Games plugin v3.4.0 (MIT) loads on the phone with Godot 4.7.2; `PlayServices` wrapper reports signed_out gracefully
+- [x] Play Games project created (Cloud project "wiwiwi"); game ID `254276654194` in both export presets
 - [ ] Play Games: real sign-in on the phone (needs Play Console + real game ID)
 - [ ] First AAB export (with real package ID + release keystore)
 - [ ] Check ElevenLabs commercial rights for existing audio
