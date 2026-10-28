@@ -152,8 +152,8 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - [ ] Debug build adds x86_64 only for the emulator; release stays ARM
 
 ## 9. Testing
-- **Devices:** Android Emulator for daily development (phone 20:9 with a simulated notch, plus a tablet-shaped virtual device). Real hardware comes from the Play Console **pre-launch report** (Google runs our build on real devices) and the **closed-test testers' phones**. If we can borrow any real phone, do one short touch/performance check before the closed test.
-- **Emulator limits:** FPS is not realistic (uses the laptop GPU), and the mouse is one finger only. Performance and multi-touch are signed off on real devices in M4.
+- **Devices:** **Samsung Galaxy M11** (Android 12, 720×1560, punch-hole camera, Adreno 506) = our real low-end test phone, connected by wireless debugging. Android Emulator for other shapes (20:9, tablet). Play Console **pre-launch report** and **closed-test testers' phones** before release.
+- **Emulator limits:** FPS is not realistic (uses the laptop GPU), and the mouse is one finger only. Performance and multi-touch are checked on the M11.
 - **Each milestone:** feel test with 3–5 players, level checks (completable, no soft-locks), save tests (kill app mid-save, migrations), interruption tests (home button, screen off → auto-pause), Play Games signed in/out/offline, 10-min performance run on the slowest device.
 - **Before release:** Play Console pre-launch report.
 
@@ -173,8 +173,9 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 - [x] Fresh project + local Git repo
 - [x] Project settings, folders, empty autoloads, translation CSV
 - [x] Android toolchain + debug APK (target SDK 36, landscape, no permissions)
-- [x] SafeArea container + device-check screen (PC test done)
-- [ ] Run the APK on the emulator (phone with simulated notch + tablet shape)
+- [x] SafeArea container + device-check screen
+- [x] APK runs on a real phone (Galaxy M11): 60 FPS, landscape lock, punch-hole detected and avoided, fade works
+- [ ] Multi-touch check on the M11; emulator check for 20:9 + tablet shapes
 - [ ] Real game/studio name → package ID
 - [ ] Release keystore + Play Console account + internal testing upload (AAB via Gradle)
 - [ ] Play Games plugin: sign in on a device with Godot 4.7.2
