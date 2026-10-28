@@ -1,7 +1,7 @@
 # wiwiwi — Production Plan (v1)
 
-**Game:** wiwiwi · **Studio:** [STUDIO NAME] · **Engine:** Godot 4.7.2 (GDScript) · **Platform:** Android (Google Play)
-**Package ID:** `com.[studio].wiwiwi` — cannot change after the first upload. Placeholder until then: `com.example.wiwiwi`.
+**Game:** wiwiwi · **Studio:** digicraft · **Engine:** Godot 4.7.2 (GDScript) · **Platform:** Android (Google Play)
+**Package ID:** `com.digicraft.wiwiwi` — cannot change after the first upload.
 
 > Facts marked **⚠ Verify** can change (store rules, plugin versions). Re-check before acting.
 > Colors, fonts and art style are decided during development, not in this document.
@@ -178,7 +178,7 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 - [x] Multi-touch check on the M11 (3 fingers detected)
 - [ ] Emulator check for 20:9 + tablet shapes
 - [x] Game name: **wiwiwi**
-- [ ] Studio name → final package ID `com.[studio].wiwiwi`
+- [x] Studio name **digicraft** → package ID `com.digicraft.wiwiwi` (not used on Google Play as of 29 Oct 2026)
 - [ ] Release keystore + Play Console account + internal testing upload (AAB via Gradle)
 - [x] Gradle build + Play Games plugin v3.4.0 (MIT) loads on the phone with Godot 4.7.2; `PlayServices` wrapper reports signed_out gracefully (dummy game ID)
 - [ ] Play Games: real sign-in on the phone (needs Play Console + real game ID)
@@ -232,4 +232,4 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 | No real device | Emulator for development; Play pre-launch report + closed-test phones for real-device checks (M4) |
 | Art bottleneck / scope creep | CC0 bases; new ideas go to a v1.1 list |
 
-**Open:** game + studio name · hours per week · target audience (13+ or including kids) · ElevenLabs plan · who owns art vs code · privacy policy hosting.
+**Open:** hours per week · target audience (13+ or including kids) · ElevenLabs plan · who owns art vs code · privacy policy hosting.
