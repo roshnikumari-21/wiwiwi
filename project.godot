@@ -29,6 +29,7 @@ GameState="*res://autoload/game_state.gd"
 SaveManager="*res://autoload/save_manager.gd"
 AudioManager="*res://autoload/audio_manager.gd"
 SceneTransition="*res://autoload/scene_transition.tscn"
+GodotPlayGameServices="*uid://b66cpk0eh6mso"
 PlayServices="*res://autoload/play_services.gd"
 
 [display]
@@ -40,6 +41,10 @@ window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=4
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/GodotPlayGameServices/plugin.cfg")
 
 [input]
 
@@ -83,10 +88,6 @@ locale/translations=PackedStringArray("res://localization/strings.en.translation
 2d_physics/layer_3="enemies"
 2d_physics/layer_4="pickups"
 2d_physics/layer_5="hazards"
-
-[physics]
-
-common/physics_ticks_per_second=60
 
 [rendering]
 

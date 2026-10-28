@@ -30,6 +30,7 @@ func _refresh() -> void:
 		"Device: %s · %s %s" % [OS.get_model_name(), OS.get_name(), OS.get_version()],
 		"GPU: %s" % RenderingServer.get_video_adapter_name(),
 		"Godot %s" % Engine.get_version_info().string,
+		"Play Games: plugin %s · %s" % ["loaded" if GodotPlayGameServices.android_plugin else "not loaded", PlayServices.status],
 	])
 
 func _input(event: InputEvent) -> void:

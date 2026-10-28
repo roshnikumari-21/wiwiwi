@@ -135,7 +135,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - **What it's for:** sign-in, achievements, leaderboards, cloud save. **Not for payments.**
 - **Sign-in:** automatic at launch (PGS v2); a manual "Sign in" button only if it fails or the player declines. The game works fully when signed out.
 - **v1:** sign-in, ~12 achievements, 2 leaderboards. **v1.1:** cloud save (Saved Games/snapshots) using our existing save file.
-- **Plugin:** `godot-play-game-services` (github.com/godot-sdk-integrations). Maintained, but documented for Godot 4.5 — **⚠ must be proven on Godot 4.7.2 in M0.** Needs a Gradle build.
+- **Plugin:** `godot-play-game-services` v3.4.0 (github.com/godot-sdk-integrations, MIT). **Verified on Godot 4.7.2 on a real phone (M0).** Needs a Gradle build and a Play Games game ID in the export preset.
 - **Setup:** create the app in Play Console → upload a build to internal testing → create the Play Games project → add credentials (SHA-1 of signing keys) → create achievements/leaderboards → add testers → put the game ID in export settings → publish with the release.
 
 ### 7.2 Google Play Billing — future slot (not in v1)
@@ -146,7 +146,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 ## 8. Android Export
 - [x] Godot 4.7.2 export templates · JDK 17 · Android SDK (platform-tools, build-tools 35.0.1, platforms 35 + 36, command-line tools, CMake 3.10.2, NDK r28b)
 - [x] Export preset: package, version code/name, arm64 + armv7, immersive, landscape
-- [ ] Gradle build on (needed for plugins and AAB)
+- [x] Gradle build on (needed for plugins and AAB)
 - [ ] Release (upload) keystore created by us, backed up in 2 places, never in Git
 - [ ] Play App Signing enrolled on first upload
 - [ ] Debug build adds x86_64 only for the emulator; release stays ARM
@@ -179,7 +179,9 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 - [ ] Emulator check for 20:9 + tablet shapes
 - [ ] Real game/studio name → package ID
 - [ ] Release keystore + Play Console account + internal testing upload (AAB via Gradle)
-- [ ] Play Games plugin: sign in on a device with Godot 4.7.2
+- [x] Gradle build + Play Games plugin v3.4.0 (MIT) loads on the phone with Godot 4.7.2; `PlayServices` wrapper reports signed_out gracefully (dummy game ID)
+- [ ] Play Games: real sign-in on the phone (needs Play Console + real game ID)
+- [ ] First AAB export (with real package ID + release keystore)
 - [ ] Check ElevenLabs commercial rights for existing audio
 - [ ] GitHub repo for the new project
 
@@ -222,7 +224,7 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 ## 12. Risks and Open Questions
 | Risk | Mitigation |
 |---|---|
-| Play Games plugin not yet proven on Godot 4.7 | Test in M0; fallback Godot 4.5.x or patch |
+| Play Games plugin breaks in a future Godot update | Proven on 4.7.2 (M0); pin Godot 4.7.x until launch |
 | 14-day / 12-tester closed test | Recruit 15–20 testers early; start in M4 |
 | Keystore loss | Play App Signing + 2 backups |
 | AI audio not licensed for commercial use | Check in M0; regenerate or replace |
