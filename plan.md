@@ -137,7 +137,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - **v1:** sign-in, ~12 achievements, 2 leaderboards. **v1.1:** cloud save (Saved Games/snapshots) using our existing save file.
 - **Plugin:** `godot-play-game-services` v3.4.0 (github.com/godot-sdk-integrations, MIT). **Verified on Godot 4.7.2 on a real phone (M0).** Needs a Gradle build and a Play Games game ID in the export preset.
 - **Setup:** create the app in Play Console → upload a build to internal testing → create the Play Games project → add credentials (SHA-1 of signing keys) → create achievements/leaderboards → add testers → put the game ID in export settings → publish with the release.
-- **Status:** Play Games project created, linked to Google Cloud project **"wiwiwi"**, game ID **`254276654194`** (in both export presets). Next: credentials with the app-signing SHA-1 (after first upload) + Godot debug SHA-1, then add testers.
+- **Status:** Play Games project created, linked to Google Cloud project **"wiwiwi"**, game ID **`254276654194`** (in both export presets). Credentials, testers and the real sign-in test happen in **M2**, after the first Internal testing upload.
 
 ### 7.2 Google Play Billing — future slot (not in v1)
 - **What it's for:** real-money purchases (e.g. cosmetic packs) and subscriptions. **Not used in v1.**
@@ -176,26 +176,23 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 ## 11. Milestones M0–M5
 Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈ 22 weeks at 20 h/week).
 
-### M0 — Setup and export test (≈ 30 h)
+### M0 — Setup and export test (≈ 30 h) — ✅ closed 29 Oct 2026
+Decision: build the game first; store upload and Play Games sign-in test move to M2 (when there is something to test).
 - [x] Fresh project + local Git repo
 - [x] Project settings, folders, empty autoloads, translation CSV
 - [x] Android toolchain + debug APK (target SDK 36, landscape, no permissions)
 - [x] SafeArea container + device-check screen
 - [x] APK runs on a real phone (Galaxy M11): 60 FPS, landscape lock, punch-hole detected and avoided, fade works
 - [x] Multi-touch check on the M11 (3 fingers detected)
-- [ ] Emulator check for 20:9 + tablet shapes
 - [x] Game name: **wiwiwi**
 - [x] Studio name **digicraft** → package ID `com.digicraft.wiwiwi` (not used on Google Play as of 29 Oct 2026)
 - [x] Release keystore (see §8) · Play Console app created in the DigiCraft Innovation account
 - [x] Official website live: https://wiwiwi.digicraft.one/ (privacy, terms, support, data deletion)
-- [ ] Internal testing upload of `builds/wiwiwi-release.aab`
 - [x] Gradle build + Play Games plugin v3.4.0 (MIT) loads on the phone with Godot 4.7.2; `PlayServices` wrapper reports signed_out gracefully
 - [x] Play Games project created (Cloud project "wiwiwi"); game ID `254276654194` in both export presets
-- [ ] Play Games: real sign-in on the phone (needs Play Console + real game ID)
 - [x] First AAB export (real package ID, real game ID, signed with the upload key)
 - [x] Project folder renamed to `C:\Godot\Projects\wiwiwi`
-- [ ] Check ElevenLabs commercial rights for existing audio
-- [ ] GitHub repo for the new project
+- Carried forward (not blocking M1): ElevenLabs commercial rights check · GitHub repo for the project · emulator check for 20:9 + tablet shapes (in M1 performance check)
 
 ### M1 — Prototype, greybox (≈ 70 h)
 - [ ] Player controller v2 + camera
@@ -203,13 +200,15 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 - [ ] Hearts, checkpoints, respawn, coins, golden yarn, goal, stars
 - [ ] Energy + milk; slime, spikes, pits, platforms
 - [ ] Touch controls in SafeArea
-- [ ] 3 greybox levels; playtest and tune; performance check
+- [ ] 3 greybox levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
 
 ### M2 — Vertical slice (≈ 110 h)
 - [ ] Art direction decided (colors, fonts, style); Theme resource
 - [ ] Final cat animations, World 1 tileset + parallax, core objects
 - [ ] All screens + transitions + Back button
 - [ ] SaveManager v1, AudioManager + core SFX, juice pass
+- [ ] First Internal testing upload (claims the package, enrolls Play App Signing) → copy app-signing SHA-1
+- [ ] Play Games credentials (app-signing + debug SHA-1) and testers → real sign-in on the phone
 - [ ] Play Games: sign-in + 1 leaderboard + 2 achievements
 - [ ] 3 polished World 1 levels; playtest
 
