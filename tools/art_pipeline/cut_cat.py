@@ -2,6 +2,8 @@
 
 Run:  python tools/art_pipeline/cut_cat.py
 """
+from pathlib import Path
+
 import numpy as np
 from PIL import Image
 from scipy import ndimage
@@ -121,8 +123,12 @@ def main():
     cell_h = int(max(a.shape[0] for a in scaled.values())) + pad
     print("cell size:", cell_w, "x", cell_h)
 
-    for old in list(OUT_DIR.glob("cat_*.png")) + list(OUT_DIR.glob("cat_*.png.import")):
-        old.unlink()
+    # Remove only frames that are no longer used (keeps Godot's .import files, and their IDs, stable).
+    wanted = {f"cat_{fid}.png" for fid in used}
+    for old in OUT_DIR.glob("cat_*.png"):
+        if old.name not in wanted:
+            old.unlink()
+            Path(str(old) + ".import").unlink(missing_ok=True)
     save_frames([(f"cat_{fid}", scaled[fid]) for fid in used], OUT_DIR, cell_w, cell_h)
     write_sprite_frames(used)
     print("wrote", len(used), "frames to", OUT_DIR)
