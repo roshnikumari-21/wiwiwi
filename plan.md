@@ -27,7 +27,7 @@
 - **Carried over from the prototype:** gentle energy + milk, owner reunion at the end of each world, stompable slimes, moving platforms.
 - **New:** 3 hearts per level, checkpoints, 3-star rating, level select, settings, Play Games.
 - **Not in v1:** coin shop, real-money purchases, ads, World 3, Hindi.
-- **Prototype** (`cozy-cat-platformer`) is reference only. v1 is built fresh in `homeward-paws`.
+- **Prototype** (`cozy-cat-platformer`) is reference only. v1 is built fresh in `C:\Godot\Projects\wiwiwi`.
 - **Design references:** level select + star reveal (Angry Birds), one-thumb controls + coin loop (Hill Climb Racing), themed worlds + hidden collectibles + checkpoints (Lep's World). Structure only, nothing copied.
 
 ## 2. Platform and Tech
