@@ -17,7 +17,13 @@ extends CharacterBody2D
 @export var coyote_time: float = 0.12      ## can still jump this long after walking off a ledge
 @export var jump_buffer: float = 0.12      ## a jump pressed this long before landing still counts
 
+@export_group("Idle")
+@export var breath_amount: float = 0.012   ## how much she rises when breathing (1.2 %)
+@export var breath_period: float = 2.6     ## seconds per breath
+
 @onready var sprite: AnimatedSprite2D = $Sprite
+
+var _breath_time := 0.0
 
 var _coyote_left := 0.0
 var _buffer_left := 0.0
@@ -34,6 +40,9 @@ func _ready() -> void:
 	_base_scale = sprite.scale
 	_rise_gravity = 2.0 * jump_height / (time_to_apex * time_to_apex)
 	_jump_speed = -2.0 * jump_height / time_to_apex
+
+func _process(delta: float) -> void:
+	_breathe(delta)
 
 func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
@@ -91,6 +100,19 @@ func _update_animation() -> void:
 		sprite.play("walk")
 	else:
 		sprite.play("idle")
+
+# Gentle breathing while standing still, done by scaling (no extra frames, so nothing can wobble).
+func _breathe(delta: float) -> void:
+	var squashing := _squash != null and _squash.is_running()
+	if squashing:
+		return
+	if sprite.animation == "idle" and is_on_floor():
+		_breath_time += delta
+		var s := sin(_breath_time * TAU / breath_period)
+		sprite.scale = _base_scale * Vector2(1.0 - breath_amount * 0.5 * s, 1.0 + breath_amount * s)
+	elif _breath_time != 0.0:
+		_breath_time = 0.0
+		sprite.scale = _base_scale
 
 func _do_squash(amount: Vector2) -> void:
 	if _squash:
