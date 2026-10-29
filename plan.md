@@ -209,6 +209,7 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 ### M0 — Setup and export test (≈ 30 h) — ✅ closed 29 Oct 2026
 Decision: build the game first; store upload and Play Games sign-in test move to M2 (when there is something to test).
 - [x] Fresh project + local Git repo
+- [x] GitHub (30 Oct 2026): private repo `roshnikumari-21/wiwiwi` (the renamed prototype repo). `main` = this game; the old prototype is kept on the `prototype` branch
 - [x] Project settings, folders, empty autoloads, translation CSV
 - [x] Android toolchain + debug APK (target SDK 36, landscape, no permissions)
 - [x] SafeArea container + device-check screen
@@ -222,7 +223,7 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] Play Games project created (Cloud project "wiwiwi"); game ID `254276654194` in both export presets
 - [x] First AAB export (real package ID, real game ID, signed with the upload key)
 - [x] Project folder renamed to `C:\Godot\Projects\wiwiwi`
-- Carried forward (not blocking M1): ElevenLabs commercial rights check · GitHub repo for the project · emulator check for 20:9 + tablet shapes (in M1 performance check)
+- Carried forward (not blocking M1): ElevenLabs commercial rights check · emulator check for 20:9 + tablet shapes (in M1 performance check)
 
 ### M1 — Prototype, greybox (≈ 70 h)
 - [x] Concept art: `.gdignore` on `raw_assets_idea`; asset pipeline (`tools/art_pipeline/`: `cut_cat.py`, `cut_pieces.py`); 20 aligned cat frames → 8 animations (idle, walk, jump, fall, land, hurt, cheer, sleepy) + touch-button art
