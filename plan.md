@@ -161,9 +161,10 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - **Before release:** Play Console pre-launch report.
 
 ## 10. Release on Google Play
-- **Account:** existing developer account **"DigiCraft Innovation"** (also publishes StoreMitr, `com.digicraft.storemitr`). Owned by the co-founder: uploads go through them, or they invite the developer under *Users and permissions* with wiwiwi-only access (no password sharing). The keystore and its password stay with the developer.
+- **Account:** existing developer account **"DigiCraft Innovation"** (also publishes StoreMitr, `com.digicraft.storemitr`), owned by the co-founder. **The developer has Play Console access (granted 29 Oct 2026)** and uploads builds directly. The keystore and its password stay with the developer.
+- **Official website:** **https://wiwiwi.digicraft.one/** — pages: `/privacy` (privacy policy, used in Play Console), `/terms`, `/support`, `/delete-data`. Any change to how the game handles data (cloud save, purchases, new SDKs) must be reflected in `/privacy` and the Data safety form in the same release.
 - [x] App **wiwiwi** created in Play Console (Game, Free)
-- [x] Privacy policy URL set (required even with no data collected). Optional game domain later: `wiwiwi.com`/`.app` are taken; `playwiwiwi.com`, `wiwiwi.games`, `wiwiwi.in` were free (29 Oct 2026)
+- [x] Privacy policy URL set: https://wiwiwi.digicraft.one/privacy (required even with no data collected)
 - **Decisions:** App access = **"No restricted access"** (sign-in optional, no purchases; revisit if paid content is added). Store category = **Adventure** (recommended), with tags such as Platformer, Casual, Cute, Single player, Offline.
 - [ ] Internal testing release (first upload claims the package and enrolls Play App Signing)
 - [ ] Data safety form (we collect nothing ourselves; include what the Play Games SDK does)
@@ -186,7 +187,8 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 - [x] Game name: **wiwiwi**
 - [x] Studio name **digicraft** → package ID `com.digicraft.wiwiwi` (not used on Google Play as of 29 Oct 2026)
 - [x] Release keystore (see §8) · Play Console app created in the DigiCraft Innovation account
-- [ ] Internal testing upload of `builds/wiwiwi-release.aab` (by the co-founder / account owner)
+- [x] Official website live: https://wiwiwi.digicraft.one/ (privacy, terms, support, data deletion)
+- [ ] Internal testing upload of `builds/wiwiwi-release.aab`
 - [x] Gradle build + Play Games plugin v3.4.0 (MIT) loads on the phone with Godot 4.7.2; `PlayServices` wrapper reports signed_out gracefully
 - [x] Play Games project created (Cloud project "wiwiwi"); game ID `254276654194` in both export presets
 - [ ] Play Games: real sign-in on the phone (needs Play Console + real game ID)
@@ -237,7 +239,6 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 | Play Games plugin breaks in a future Godot update | Proven on 4.7.2 (M0); pin Godot 4.7.x until launch |
 | 14-day / 12-tester closed test (if the account is personal) | Check account type; if needed, recruit 15–20 testers early and start in M4 |
 | Keystore loss | Play App Signing + 2 backups; a business backup with the co-founder (file and password via separate channels) |
-| Only the co-founder can access Play Console | Invite the developer with wiwiwi-only permissions |
 | AI audio not licensed for commercial use | Check in M0; regenerate or replace |
 | Only one real test phone (Galaxy M11) | Emulator for other shapes; Play pre-launch report + closed-test phones (M4) |
 | Art bottleneck / scope creep | CC0 bases; new ideas go to a v1.1 list |
