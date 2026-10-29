@@ -1,65 +1,54 @@
 [gd_resource type="SpriteFrames" format=3]
 
 [ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A0.png" id="1_A0"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A1.png" id="2_A1"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A10.png" id="3_A10"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A11.png" id="4_A11"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A12.png" id="5_A12"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A13.png" id="6_A13"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A14.png" id="7_A14"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A2.png" id="8_A2"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A3.png" id="9_A3"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A4.png" id="10_A4"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A5.png" id="11_A5"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A6.png" id="12_A6"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A7.png" id="13_A7"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A8.png" id="14_A8"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L0.png" id="15_L0"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L1.png" id="16_L1"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L2.png" id="17_L2"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L3.png" id="18_L3"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L4.png" id="19_L4"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S0.png" id="20_S0"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S1.png" id="21_S1"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S2.png" id="22_S2"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A10.png" id="2_A10"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A11.png" id="3_A11"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A12.png" id="4_A12"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A13.png" id="5_A13"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A14.png" id="6_A14"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A3.png" id="7_A3"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A4.png" id="8_A4"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A5.png" id="9_A5"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A6.png" id="10_A6"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A7.png" id="11_A7"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_A8.png" id="12_A8"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L0.png" id="13_L0"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L1.png" id="14_L1"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L2.png" id="15_L2"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L3.png" id="16_L3"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L4.png" id="17_L4"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S0.png" id="18_S0"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S1.png" id="19_S1"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S2.png" id="20_S2"]
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_A0")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_A1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("8_A2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_A1")
 }],
-"loop": true,
+"loop": false,
 "name": &"idle",
-"speed": 5.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_A3")
+"texture": ExtResource("7_A3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_A4")
+"texture": ExtResource("8_A4")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_A5")
+"texture": ExtResource("9_A5")
 }, {
 "duration": 1.0,
-"texture": ExtResource("12_A6")
+"texture": ExtResource("10_A6")
 }, {
 "duration": 1.0,
-"texture": ExtResource("13_A7")
+"texture": ExtResource("11_A7")
 }, {
 "duration": 1.0,
-"texture": ExtResource("14_A8")
+"texture": ExtResource("12_A8")
 }],
 "loop": true,
 "name": &"walk",
@@ -67,7 +56,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_A10")
+"texture": ExtResource("2_A10")
 }],
 "loop": false,
 "name": &"jump",
@@ -75,10 +64,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("15_L0")
+"texture": ExtResource("13_L0")
 }, {
 "duration": 1.0,
-"texture": ExtResource("16_L1")
+"texture": ExtResource("14_L1")
 }],
 "loop": true,
 "name": &"fall",
@@ -86,13 +75,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("17_L2")
+"texture": ExtResource("15_L2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("18_L3")
+"texture": ExtResource("16_L3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("19_L4")
+"texture": ExtResource("17_L4")
 }],
 "loop": false,
 "name": &"land",
@@ -100,10 +89,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_A11")
+"texture": ExtResource("3_A11")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_A14")
+"texture": ExtResource("6_A14")
 }],
 "loop": false,
 "name": &"hurt",
@@ -111,10 +100,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("5_A12")
+"texture": ExtResource("4_A12")
 }, {
 "duration": 1.0,
-"texture": ExtResource("6_A13")
+"texture": ExtResource("5_A13")
 }],
 "loop": true,
 "name": &"cheer",
@@ -122,19 +111,19 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("20_S0")
+"texture": ExtResource("18_S0")
 }, {
 "duration": 1.0,
-"texture": ExtResource("21_S1")
+"texture": ExtResource("19_S1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("21_S1")
+"texture": ExtResource("19_S1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("20_S0")
+"texture": ExtResource("18_S0")
 }, {
 "duration": 1.0,
-"texture": ExtResource("22_S2")
+"texture": ExtResource("20_S2")
 }],
 "loop": true,
 "name": &"sleepy",

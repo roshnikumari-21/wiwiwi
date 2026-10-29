@@ -15,7 +15,8 @@ SHEETS = {
 
 # animation: (frame ids, frames per second, loop)
 ANIMATIONS = {
-    "idle":   (["A0", "A1", "A2", "A1"], 5.0, True),
+    # One still frame: the concept idle frames differ slightly, which looked like trembling.
+    "idle":   (["A0"], 1.0, False),
     "walk":   (["A3", "A4", "A5", "A6", "A7", "A8"], 12.0, True),
     "jump":   (["A10"], 1.0, False),
     "fall":   (["L0", "L1"], 6.0, True),

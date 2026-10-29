@@ -222,9 +222,9 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - Carried forward (not blocking M1): ElevenLabs commercial rights check · GitHub repo for the project · emulator check for 20:9 + tablet shapes (in M1 performance check)
 
 ### M1 — Prototype, greybox (≈ 70 h)
-- [x] Concept art: `.gdignore` on `raw_assets_idea`; asset pipeline (`tools/art_pipeline/`: `cut_cat.py`, `cut_pieces.py`); 22 aligned cat frames → 8 animations (idle, walk, jump, fall, land, hurt, cheer, sleepy) + touch-button art
+- [x] Concept art: `.gdignore` on `raw_assets_idea`; asset pipeline (`tools/art_pipeline/`: `cut_cat.py`, `cut_pieces.py`); 20 aligned cat frames → 8 animations (idle, walk, jump, fall, land, hurt, cheer, sleepy) + touch-button art
 - [x] Player controller v2 + camera (look-ahead, vertical drag), greybox blocks, test room `dev/m1_movement_test.tscn` (current main scene); automated feel checks pass
-- [ ] Play-test the test room on the phone and tune numbers
+- [x] Play-tested on the Galaxy M11 (30 Oct 2026): movement feel approved as is; idle changed to one still frame (the 3 concept idle frames differed slightly and looked like trembling)
 - [ ] Greybox tileset, `level_base`, `LevelData` + catalog
 - [ ] Hearts, checkpoints, respawn, coins, golden yarn, goal, stars
 - [ ] Energy + milk; slime, spikes, pits, platforms
