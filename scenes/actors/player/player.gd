@@ -25,6 +25,7 @@ extends CharacterBody2D
 
 var _breath_time := 0.0
 
+var _in_jump := false   ## true from take-off until touchdown: keeps the leap pose for the whole arc
 var _coyote_left := 0.0
 var _buffer_left := 0.0
 var _was_on_floor := true
@@ -64,6 +65,7 @@ func _handle_jump(delta: float) -> void:
 
 	if _buffer_left > 0.0 and _coyote_left > 0.0:
 		velocity.y = _jump_speed
+		_in_jump = true
 		_buffer_left = 0.0
 		_coyote_left = 0.0
 		_do_squash(Vector2(0.85, 1.15))
@@ -85,6 +87,7 @@ func _after_move() -> void:
 	if not is_on_floor():
 		_fall_peak_speed = max(_fall_peak_speed, velocity.y)
 	elif not _was_on_floor:
+		_in_jump = false
 		if _fall_peak_speed > 500.0:
 			_do_squash(Vector2(1.18, 0.82))
 			sprite.play("land")
@@ -93,7 +96,8 @@ func _after_move() -> void:
 
 func _update_animation() -> void:
 	if not is_on_floor():
-		sprite.play("jump" if velocity.y < 0.0 else "fall")
+		# A jump keeps the leap pose up and down; "fall" is only for drops without a jump.
+		sprite.play("jump" if _in_jump or velocity.y < 0.0 else "fall")
 	elif sprite.animation == "land" and sprite.is_playing() and abs(velocity.x) < 60.0:
 		return  # let the landing finish unless the player starts running
 	elif abs(velocity.x) > 20.0:

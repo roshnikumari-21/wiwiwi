@@ -21,7 +21,9 @@ ANIMATIONS = {
     "idle":   ([("I0", 28), ("I0b", 1.2), ("I0", 18), ("I0b", 1.2), ("I0", 1.2), ("I0b", 1.2)], 8.0, True),
     "walk":   (["A3", "A4", "A5", "A6", "A7", "A8"], 12.0, True),
     "jump":   (["A10"], 1.0, False),
-    "fall":   (["L0", "L1"], 6.0, True),
+    # Only for drops without a jump (walking off a ledge). One steady frame: L1's folded legs
+    # looked wrong in mid-air; folding happens only on touchdown ("land").
+    "fall":   (["L0"], 1.0, False),
     "land":   (["L2", "L3", "L4"], 14.0, False),
     "hurt":   (["A11", "A14"], 8.0, False),
     "cheer":  (["A12", "A13"], 5.0, True),

@@ -14,13 +14,12 @@
 [ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_I0.png" id="12_I0"]
 [ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_I0b.png" id="13_I0b"]
 [ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L0.png" id="14_L0"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L1.png" id="15_L1"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L2.png" id="16_L2"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L3.png" id="17_L3"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L4.png" id="18_L4"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S0.png" id="19_S0"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S1.png" id="20_S1"]
-[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S2.png" id="21_S2"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L2.png" id="15_L2"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L3.png" id="16_L3"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_L4.png" id="17_L4"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S0.png" id="18_S0"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S1.png" id="19_S1"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S2.png" id="20_S2"]
 
 [resource]
 animations = [{
@@ -81,23 +80,20 @@ animations = [{
 "frames": [{
 "duration": 1.00,
 "texture": ExtResource("14_L0")
-}, {
-"duration": 1.00,
-"texture": ExtResource("15_L1")
 }],
-"loop": true,
+"loop": false,
 "name": &"fall",
-"speed": 6.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.00,
-"texture": ExtResource("16_L2")
+"texture": ExtResource("15_L2")
 }, {
 "duration": 1.00,
-"texture": ExtResource("17_L3")
+"texture": ExtResource("16_L3")
 }, {
 "duration": 1.00,
-"texture": ExtResource("18_L4")
+"texture": ExtResource("17_L4")
 }],
 "loop": false,
 "name": &"land",
@@ -127,19 +123,19 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.00,
-"texture": ExtResource("19_S0")
+"texture": ExtResource("18_S0")
 }, {
 "duration": 1.00,
-"texture": ExtResource("20_S1")
+"texture": ExtResource("19_S1")
 }, {
 "duration": 1.00,
-"texture": ExtResource("20_S1")
+"texture": ExtResource("19_S1")
 }, {
 "duration": 1.00,
-"texture": ExtResource("19_S0")
+"texture": ExtResource("18_S0")
 }, {
 "duration": 1.00,
-"texture": ExtResource("21_S2")
+"texture": ExtResource("20_S2")
 }],
 "loop": true,
 "name": &"sleepy",
