@@ -27,30 +27,40 @@ RECIPES = {
         ["spikes", "flag_off", "flag_on", "cat_bed", "floating_island", "signpost"],
         None,
     ),
-    "Kawaii Girl and Cat Pose Sheet.png": (
+    # Girl at the level goal: wait -> crouch -> kneel reaching -> kneel arms wide, then the hug loop.
+    "Chibi Girl Hugging Animation Sprites.png": (
         ART / "characters" / "girl",
-        ["girl_idle", "girl_side", "girl_arms_open", None],   # old hug replaced by the hug sheet below
+        ["girl_wait", "girl_crouch", "girl_kneel_reach", "girl_kneel_open"],
         150,
     ),
-    "Chibi Girl and Cat Hug Sprite Sheet.png": (
+    "Three-Frame Chibi Cat Hug Stickers.png": (
         ART / "characters" / "girl",
-        ["girl_kneel_open", "girl_hug_0", "girl_hug_1", "girl_hug_2", None],  # None = the kitten (game has her)
+        ["girl_hug_0", "girl_hug_1", "girl_hug_2"],
         150,
     ),
 }
 
 # Pieces that animate together: put on one same-size canvas so they don't jump between frames.
 # "centre" = middle of the canvas (spinning coin); "feet" = bottom-centre (poses swapped on the ground);
-# "match" = first piece bottom-right, the others shifted to best overlap it (AI frames are drawn
+# "shoe" = bottom of the canvas, her right shoe on the centre line (it stays planted while she kneels);
+# "shoe_match" = first piece like "shoe", the others shifted to best overlap it (AI frames are drawn
 #           a few pixels apart; this stops the body jiggling between frames).
+# Optional 3rd value = resize factor, to bring a sheet drawn bigger to the same size as the others.
 CENTRED_GROUPS = {
     ART / "objects": [(["coin_0", "coin_1", "coin_2", "coin_3", "coin_4"], "centre")],
     ART / "characters" / "girl": [
-        (["girl_idle", "girl_side", "girl_arms_open"], "feet"),
-        (["girl_kneel_open"], "feet"),
-        (["girl_hug_0", "girl_hug_1", "girl_hug_2"], "match"),
+        (["girl_wait", "girl_crouch", "girl_kneel_reach", "girl_kneel_open"], "shoe"),
+        # The hug sheet is drawn bigger: kneeling height 664 px vs 509 px in the kneel-down sheet.
+        (["girl_hug_0", "girl_hug_1", "girl_hug_2"], "shoe_match", 509 / 664),
     ],
 }
+
+
+def shoe_x(im: Image.Image) -> int:
+    """x of the right-most solid pixel near the bottom: the front shoe."""
+    a = np.asarray(im)[..., 3]
+    rows = a[int(a.shape[0] * 0.88):] > 128
+    return int(np.flatnonzero(rows.any(axis=0)).max())
 
 
 def best_offset(ref: np.ndarray, im: np.ndarray, start, search=30):
@@ -85,24 +95,32 @@ def main():
                 print(f"  {name}: {piece.width}x{piece.height}")
 
     for out_dir, groups in CENTRED_GROUPS.items():
-        for group, anchor in groups:
+        for group, anchor, *resize in groups:
             ims = [Image.open(out_dir / f"{n}.png") for n in group]
-            w, h = max(i.width for i in ims), max(i.height for i in ims)
-            if anchor == "match":
-                w, h = w + 40, h + 40   # room to shift
+            if resize:
+                ims = [i.resize((round(i.width * resize[0]), round(i.height * resize[0])), Image.LANCZOS) for i in ims]
+            if anchor.startswith("shoe"):
+                shoes = [shoe_x(i) for i in ims]
+                half = max(max(s, i.width - s) for s, i in zip(shoes, ims)) + 20
+                w, h = 2 * half, max(i.height for i in ims) + 20
+            else:
+                w, h = max(i.width for i in ims), max(i.height for i in ims)
             ref = None
-            for n, im in zip(group, ims):
+            for k, (n, im) in enumerate(zip(group, ims)):
                 canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-                y = (h - im.height) // 2 if anchor == "centre" else h - im.height - (20 if anchor == "match" else 0)
-                x = w - im.width - 20 if anchor == "match" else (w - im.width) // 2
-                if anchor == "match" and ref is not None:
-                    x, y = best_offset(ref, np.asarray(im), (x, y))
+                if anchor == "centre":
+                    x, y = (w - im.width) // 2, (h - im.height) // 2
+                elif anchor == "feet":
+                    x, y = (w - im.width) // 2, h - im.height
+                else:  # shoe / shoe_match
+                    x, y = w // 2 - shoes[k], h - im.height - 10
+                    if anchor == "shoe_match" and ref is not None:
+                        x, y = best_offset(ref, np.asarray(im), (x, y), search=16)
                 canvas.alpha_composite(im, (x, y))
                 if ref is None:
                     ref = np.asarray(canvas)
                 canvas.save(out_dir / f"{n}.png", optimize=True)
-            print(f"  centred {group[0]}..{group[-1]} on {w}x{h}")
-
+            print(f"  aligned {group[0]}..{group[-1]} ({anchor}) on {w}x{h}")
 
 if __name__ == "__main__":
     main()

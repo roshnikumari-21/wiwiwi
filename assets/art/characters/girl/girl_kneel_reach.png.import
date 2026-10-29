@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dncbr8wj5tbys"
-path="res://.godot/imported/girl_idle.png-1b5da20911e678894f9dcffe5f45ec96.ctex"
+uid="uid://byelovqenrkoh"
+path="res://.godot/imported/girl_kneel_reach.png-26240ae8907a20b34023641ec4119da7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/characters/girl/girl_idle.png"
-dest_files=["res://.godot/imported/girl_idle.png-1b5da20911e678894f9dcffe5f45ec96.ctex"]
+source_file="res://assets/art/characters/girl/girl_kneel_reach.png"
+dest_files=["res://.godot/imported/girl_kneel_reach.png-26240ae8907a20b34023641ec4119da7.ctex"]
 
 [params]
 

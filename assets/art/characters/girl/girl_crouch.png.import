@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://50s34s5jwtoi"
-path="res://.godot/imported/girl_side.png-d3e523a828bde955ecc5f395a463562d.ctex"
+uid="uid://b4t13iar03bva"
+path="res://.godot/imported/girl_crouch.png-40e1b5939fdcf7238bbe68e90a189cab.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/characters/girl/girl_side.png"
-dest_files=["res://.godot/imported/girl_side.png-d3e523a828bde955ecc5f395a463562d.ctex"]
+source_file="res://assets/art/characters/girl/girl_crouch.png"
+dest_files=["res://.godot/imported/girl_crouch.png-40e1b5939fdcf7238bbe68e90a189cab.ctex"]
 
 [params]
 
