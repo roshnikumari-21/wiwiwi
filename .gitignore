@@ -5,6 +5,9 @@
 # Build output
 /builds/
 
+# Concept art master copies (kept locally, not in Git)
+/assets/raw_assets_idea/
+
 # Signing keys and secrets: never commit these
 *.keystore
 *.jks

@@ -24,6 +24,9 @@
 
 ## 1. Scope
 - **v1:** 2 worlds × 10 levels. World 3 is a post-launch update.
+- **World 1 — Meadow** (concept art): countryside, cottages, windmill. Teaches everything: run/jump, coins, milk, slimes, spikes, pits, moving platforms, checkpoints. Ends with the owner reunion.
+- **World 2 — Sunset Town** (teased on the concept level map): rooftops at sunset, same rules plus one new enemy and one new hazard (e.g. crumbling tiles), harder levels; ends with the final "home" reunion.
+- **Focus rule (29 Oct 2026):** build and polish **World 1 completely first**; World 2 starts only after World 1 is done properly.
 - **Carried over from the prototype:** gentle energy + milk, owner reunion at the end of each world, stompable slimes, moving platforms.
 - **New:** 3 hearts per level, checkpoints, 3-star rating, level select, settings, Play Games.
 - **Not in v1:** coin shop, real-money purchases, ads, World 3, Hindi.
@@ -115,7 +118,9 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 
 ### 5.1 Concept art (`assets/raw_assets_idea/`, added 29 Oct 2026)
 26 concept images define the **art direction**: chibi kawaii, hand-drawn look, warm brown outlines, soft countryside (cottage, windmill, meadow). They are the **reference and source** for game art, never used directly in the game.
-- **Folder rules:** stays untouched as the master copy; must be **excluded from Godot import/export** (a `.gdignore` file) so ~40 MB of concept images never ship in the app.
+- **Folder rules:** stays untouched as the master copy. Excluded from Godot (`.gdignore`, so ~40 MB never ships) and from Git (`.gitignore`; kept locally only, by decision 29 Oct 2026).
+- **Source and rights:** generated with **ChatGPT** from our own prompts; per OpenAI's terms the output belongs to us (⚠ re-check their terms before launch and keep a note). New/missing art is made the same way so the style stays consistent.
+- **Decisions:** the owner girl wears the **red pinafore dress** (pose sheet); the denim outfit in the banner is reference only. Settings screen: **toggles only** (music, sound) — no volume sliders, no vibration for now.
 - **Pipeline (scripted, repeatable):** remove the white background → slice each sheet into single pieces → align animation frames to one baseline and cell size → export clean PNGs to `assets/art/...` → build SpriteFrames / 9-slice styles / atlases. Re-running the script after an art change updates the game.
 
 | Concept sheet | Becomes in game | Work needed |
@@ -267,6 +272,6 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 | Only one real test phone (Galaxy M11) | Emulator for other shapes; Play pre-launch report + closed-test phones (M4) |
 | Art bottleneck / scope creep | CC0 bases; new ideas go to a v1.1 list |
 | Concept art not game-ready (no transparency, not on a grid, tiles not seamless, frames drift) | Scripted cleanup pipeline; regenerate missing/unsuitable pieces in the same style |
-| Rights for AI-generated art | Confirm the generator's commercial terms and keep a record |
+| Rights for AI-generated art (ChatGPT) | OpenAI terms assign output to us; re-check before launch and keep a record |
 
-**Open:** which tool made the concept art (license) · owner outfit (pinafore in pose sheet vs overalls in banner) · settings: volume sliders + vibration as in the mockup, or toggles only · hours per week · target audience (13+ or including kids) · ElevenLabs plan · who owns art vs code · Play Console account type (personal/organization).
+**Open:** hours per week · target audience (13+ or including kids) · ElevenLabs plan · who owns art vs code · Play Console account type (personal/organization).
