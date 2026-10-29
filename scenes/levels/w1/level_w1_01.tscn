@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/coin.tscn" id="3_coin"]
 [ext_resource type="PackedScene" path="res://scenes/objects/golden_yarn.tscn" id="4_yarn"]
 [ext_resource type="PackedScene" path="res://scenes/objects/checkpoint.tscn" id="5_flag"]
-[ext_resource type="PackedScene" path="res://scenes/objects/goal_bed.tscn" id="6_goal"]
+[ext_resource type="PackedScene" path="res://scenes/objects/goal_girl.tscn" id="6_goal"]
 
 [node name="LevelW1_01" instance=ExtResource("1_base")]
 level_id = "w1_01"
@@ -102,5 +102,5 @@ position = Vector2(4440, 350)
 [node name="Checkpoint" parent="Objects" instance=ExtResource("5_flag")]
 position = Vector2(3000, 760)
 
-[node name="GoalBed" parent="Objects" instance=ExtResource("6_goal")]
+[node name="GoalGirl" parent="Objects" instance=ExtResource("6_goal")]
 position = Vector2(5320, 900)

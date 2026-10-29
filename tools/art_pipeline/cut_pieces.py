@@ -4,6 +4,7 @@ Each recipe: sheet -> (output folder, names in reading order (None = skip), hole
 hole_min_area: also clear trapped white background patches at least this big (None = off).
 Run:  python tools/art_pipeline/cut_pieces.py
 """
+import numpy as np
 from PIL import Image
 
 from pipeline import ART, cut, find_sprites, load, remove_background, to_image
@@ -28,17 +29,46 @@ RECIPES = {
     ),
     "Kawaii Girl and Cat Pose Sheet.png": (
         ART / "characters" / "girl",
-        ["girl_idle", "girl_side", "girl_arms_open", "girl_hug"],
+        ["girl_idle", "girl_side", "girl_arms_open", None],   # old hug replaced by the hug sheet below
+        150,
+    ),
+    "Chibi Girl and Cat Hug Sprite Sheet.png": (
+        ART / "characters" / "girl",
+        ["girl_kneel_open", "girl_hug_0", "girl_hug_1", "girl_hug_2", None],  # None = the kitten (game has her)
         150,
     ),
 }
 
 # Pieces that animate together: put on one same-size canvas so they don't jump between frames.
-# "centre" = middle of the canvas (spinning coin); "feet" = bottom-centre (poses swapped on the ground).
+# "centre" = middle of the canvas (spinning coin); "feet" = bottom-centre (poses swapped on the ground);
+# "match" = first piece bottom-right, the others shifted to best overlap it (AI frames are drawn
+#           a few pixels apart; this stops the body jiggling between frames).
 CENTRED_GROUPS = {
     ART / "objects": [(["coin_0", "coin_1", "coin_2", "coin_3", "coin_4"], "centre")],
-    ART / "characters" / "girl": [(["girl_idle", "girl_side", "girl_arms_open", "girl_hug"], "feet")],
+    ART / "characters" / "girl": [
+        (["girl_idle", "girl_side", "girl_arms_open"], "feet"),
+        (["girl_kneel_open"], "feet"),
+        (["girl_hug_0", "girl_hug_1", "girl_hug_2"], "match"),
+    ],
 }
+
+
+def best_offset(ref: np.ndarray, im: np.ndarray, start, search=30):
+    """Shift (x, y) that makes `im` overlap `ref` best, judged on the lower-right body
+    (dress, legs): the cat's head and tail are the parts meant to move."""
+    h, w = ref.shape[:2]
+    region = (slice(h // 2, h), slice(w * 2 // 5, w))
+    target = ref[region].astype(np.float32)
+    best, best_err = start, None
+    for dy in range(-search, search + 1, 2):
+        for dx in range(-search, search + 1, 2):
+            x, y = start[0] + dx, start[1] + dy
+            canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+            canvas.alpha_composite(Image.fromarray(im), (max(x, 0), max(y, 0)))
+            err = np.abs(np.asarray(canvas)[region].astype(np.float32) - target).mean()
+            if best_err is None or err < best_err:
+                best, best_err = (x, y), err
+    return best
 
 
 def main():
@@ -58,10 +88,18 @@ def main():
         for group, anchor in groups:
             ims = [Image.open(out_dir / f"{n}.png") for n in group]
             w, h = max(i.width for i in ims), max(i.height for i in ims)
+            if anchor == "match":
+                w, h = w + 40, h + 40   # room to shift
+            ref = None
             for n, im in zip(group, ims):
                 canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-                y = h - im.height if anchor == "feet" else (h - im.height) // 2
-                canvas.alpha_composite(im, ((w - im.width) // 2, y))
+                y = (h - im.height) // 2 if anchor == "centre" else h - im.height - (20 if anchor == "match" else 0)
+                x = w - im.width - 20 if anchor == "match" else (w - im.width) // 2
+                if anchor == "match" and ref is not None:
+                    x, y = best_offset(ref, np.asarray(im), (x, y))
+                canvas.alpha_composite(im, (x, y))
+                if ref is None:
+                    ref = np.asarray(canvas)
                 canvas.save(out_dir / f"{n}.png", optimize=True)
             print(f"  centred {group[0]}..{group[-1]} on {w}x{h}")
 

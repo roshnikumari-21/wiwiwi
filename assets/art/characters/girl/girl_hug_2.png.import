@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4k1fwixawohb"
-path="res://.godot/imported/girl_hug.png-3709445c396510eeb1ef7bb6e1a5d144.ctex"
+uid="uid://bvl0sdo4b4lvq"
+path="res://.godot/imported/girl_hug_2.png-96b0d75d89ae65ea8c16fadb85c44845.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/characters/girl/girl_hug.png"
-dest_files=["res://.godot/imported/girl_hug.png-3709445c396510eeb1ef7bb6e1a5d144.ctex"]
+source_file="res://assets/art/characters/girl/girl_hug_2.png"
+dest_files=["res://.godot/imported/girl_hug_2.png-96b0d75d89ae65ea8c16fadb85c44845.ctex"]
 
 [params]
 

@@ -50,7 +50,7 @@ func _run() -> void:
 	level.queue_free()
 	await _frames(2)
 
-	# --- Attempt 2: all coins, no yarn, reach the bed -> 2 stars ---
+	# --- Attempt 2: all coins, no yarn, reach the girl -> 2 stars ---
 	level = await _load()
 	player = level.get_node("Player")
 	await _frames(2)
@@ -63,13 +63,13 @@ func _run() -> void:
 	await _frames(10)
 	_check("player frozen", player.frozen, "")
 	_check("nothing shown before the hug ends", _completed.is_empty(), _completed)
-	var girl = level.get_node("Objects/GoalBed/Girl")
+	var girl = level.get_node("Objects/GoalGirl/Girl")
 	for i in 400:
 		if not _completed.is_empty():
 			break
 		await physics_frame
 	_check("cat walked into her arms", not player.visible, player.global_position)
-	_check("girl hugs", girl.texture.resource_path.ends_with("girl_hug.png"), girl.texture.resource_path)
+	_check("girl hugs", girl.texture.resource_path.contains("girl_hug_"), girl.texture.resource_path)
 	_check("goal -> completed with 2 stars", _completed == [2, 16, 16, false], _completed)
 	level.queue_free()
 	await _frames(2)
