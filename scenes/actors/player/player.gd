@@ -25,6 +25,9 @@ extends CharacterBody2D
 
 var _breath_time := 0.0
 var frozen := false     ## true when the level is over: no input, gravity only
+var _walk_target := NAN ## while frozen, the game can walk her to this x (e.g. into the girl's arms)
+
+signal arrived          ## reached the walk_to() target
 
 var _in_jump := false   ## true from take-off until touchdown: keeps the leap pose for the whole arc
 var _coyote_left := 0.0
@@ -49,7 +52,7 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
 	if frozen:
-		velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
+		_auto_walk(delta)
 	else:
 		_handle_jump(delta)
 		_handle_run(delta)
@@ -142,10 +145,23 @@ func respawn_at(point: Vector2) -> void:
 	blink.tween_property(sprite, "modulate:a", 0.3, 0.08)
 	blink.tween_property(sprite, "modulate:a", 1.0, 0.08)
 
-## Reached the goal: stop and cheer.
-func celebrate() -> void:
+## Take over and walk her to an x position (cutscenes). Await `arrived`.
+func walk_to(x: float) -> void:
 	frozen = true
-	sprite.play("cheer")
+	_walk_target = x
+
+func _auto_walk(delta: float) -> void:
+	if is_nan(_walk_target):
+		velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
+		return
+	var dx := _walk_target - global_position.x
+	if abs(dx) < 8.0:
+		velocity.x = 0.0
+		_walk_target = NAN
+		arrived.emit()
+	else:
+		velocity.x = sign(dx) * run_speed * 0.5
+		sprite.flip_h = dx < 0.0
 
 ## Out of hearts: stop and look sad.
 func give_up() -> void:

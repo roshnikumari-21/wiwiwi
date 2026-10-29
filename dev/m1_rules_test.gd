@@ -58,10 +58,19 @@ func _run() -> void:
 	for coin in get_nodes_in_group("coins"):
 		await _place(player, coin.global_position + Vector2(0, 50))
 	_check("all coins", gs.coins == 16, gs.coins)
-	await _place(player, Vector2(5400, 900))
-	_check("goal -> completed with 2 stars", _completed == [2, 16, 16, false], _completed)
-	_check("cat cheers", player.sprite.animation == "cheer", player.sprite.animation)
+	await _place(player, Vector2(5150, 900))   # just before the girl
+	player.global_position.x = 5220.0          # step into her reach
+	await _frames(10)
 	_check("player frozen", player.frozen, "")
+	_check("nothing shown before the hug ends", _completed.is_empty(), _completed)
+	var girl = level.get_node("Objects/GoalBed/Girl")
+	for i in 400:
+		if not _completed.is_empty():
+			break
+		await physics_frame
+	_check("cat walked into her arms", not player.visible, player.global_position)
+	_check("girl hugs", girl.texture.resource_path.ends_with("girl_hug.png"), girl.texture.resource_path)
+	_check("goal -> completed with 2 stars", _completed == [2, 16, 16, false], _completed)
 	level.queue_free()
 	await _frames(2)
 

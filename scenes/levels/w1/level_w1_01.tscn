@@ -103,4 +103,4 @@ position = Vector2(4440, 350)
 position = Vector2(3000, 760)
 
 [node name="GoalBed" parent="Objects" instance=ExtResource("6_goal")]
-position = Vector2(5400, 900)
+position = Vector2(5320, 900)

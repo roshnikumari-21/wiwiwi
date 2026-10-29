@@ -30,7 +30,7 @@ func _ready() -> void:
 
 	Events.checkpoint_reached.connect(func(point: Vector2): _respawn_point = point)
 	for goal in get_tree().get_nodes_in_group("goal"):
-		goal.reached.connect(_on_goal_reached)
+		goal.reached.connect(_on_goal_reached.bind(goal))
 	hud.restart_pressed.connect(restart)
 
 	GameState.begin_attempt(level_id, get_tree().get_nodes_in_group("coins").size())
@@ -51,12 +51,12 @@ func _on_fell() -> void:
 		player.give_up()
 		Events.level_failed.emit()
 
-func _on_goal_reached() -> void:
+func _on_goal_reached(goal: Node) -> void:
 	if _over:
 		return
 	_over = true
 	touch_controls.hide()
-	player.celebrate()
+	await goal.play_reunion(player)
 	Events.level_completed.emit(GameState.stars(), GameState.coins, GameState.coin_total, GameState.has_yarn)
 
 func _respawn() -> void:

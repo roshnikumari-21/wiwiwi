@@ -15,12 +15,14 @@ def load(name: str) -> np.ndarray:
     return np.asarray(Image.open(RAW / name).convert("RGBA")).astype(np.float32)
 
 
-def remove_background(img: np.ndarray, neutral_min=200, neutral_sat=14, shadow=True) -> np.ndarray:
+def remove_background(img: np.ndarray, neutral_min=200, neutral_sat=14, shadow=True, hole_min_area=None) -> np.ndarray:
     """Make the background transparent.
 
     Background = near-grey/white pixels (and soft beige drop shadows) that are connected to the
     image border. Anything enclosed by an outline (like the cat's cream fur) is never touched.
     Pixels that already have real transparency stay transparent.
+    hole_min_area: also clear pure-white patches this big that are trapped inside the drawing
+    (gaps between hair and arms, between legs). Small ones, like eye sparkles, are kept.
     """
     rgb = img[..., :3]
     mx, mn = rgb.max(axis=2), rgb.min(axis=2)
@@ -34,6 +36,11 @@ def remove_background(img: np.ndarray, neutral_min=200, neutral_sat=14, shadow=T
     labels, _ = ndimage.label(candidate)
     border = np.unique(np.concatenate([labels[0], labels[-1], labels[:, 0], labels[:, -1]]))
     background = np.isin(labels, border[border > 0])
+    if hole_min_area:
+        white = (sat <= 10) & (val >= 238) & ~background
+        holes, n = ndimage.label(white)
+        sizes = ndimage.sum(white, holes, range(1, n + 1))
+        background |= np.isin(holes, np.flatnonzero(sizes >= hole_min_area) + 1)
 
     out = img.copy()
     out[background, 3] = 0
