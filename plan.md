@@ -47,7 +47,7 @@
 | Text | All strings through `tr()` + CSV, ready for more languages |
 
 ## 3. Gameplay Rules
-- **Controls feel:** acceleration/deceleration, variable jump height, coyote time, jump buffer. Numbers tuned in M1.
+- **Controls feel:** acceleration/deceleration, variable jump height, coyote time, jump buffer. First M1 values (in `player.gd`, tunable in the Inspector): run 520 px/s reached in 0.08 s · full jump ≈ 300 px (0.42 s to apex, faster fall) · tap = short hop ≈ 140 px · coyote 0.12 s · buffer 0.12 s. Cat ≈ 150 px tall on screen.
 - **Failing:** spikes, pits, enemy side-hits cost 1 heart → respawn at last checkpoint. 0 hearts → Level Failed.
 - **Energy:** drains slowly while moving; milk refills it; at 0 the cat is slower, never a fail.
 - **Stars:** ★ reach the goal · ★★ collect ≥ 80% of coins · ★★★ find the hidden Golden Yarn.
@@ -222,12 +222,13 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - Carried forward (not blocking M1): ElevenLabs commercial rights check · GitHub repo for the project · emulator check for 20:9 + tablet shapes (in M1 performance check)
 
 ### M1 — Prototype, greybox (≈ 70 h)
-- [ ] Concept art: `.gdignore` on `raw_assets_idea`; asset pipeline script; cut the cat frames (idle/walk/jump/hurt) for the feel test
-- [ ] Player controller v2 + camera
+- [x] Concept art: `.gdignore` on `raw_assets_idea`; asset pipeline (`tools/art_pipeline/`: `cut_cat.py`, `cut_pieces.py`); 22 aligned cat frames → 8 animations (idle, walk, jump, fall, land, hurt, cheer, sleepy) + touch-button art
+- [x] Player controller v2 + camera (look-ahead, vertical drag), greybox blocks, test room `dev/m1_movement_test.tscn` (current main scene); automated feel checks pass
+- [ ] Play-test the test room on the phone and tune numbers
 - [ ] Greybox tileset, `level_base`, `LevelData` + catalog
 - [ ] Hearts, checkpoints, respawn, coins, golden yarn, goal, stars
 - [ ] Energy + milk; slime, spikes, pits, platforms
-- [ ] Touch controls in SafeArea
+- [x] Touch controls in SafeArea (concept-art buttons, opacity/size ready for Settings)
 - [ ] 3 greybox levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
 
 ### M2 — Vertical slice (≈ 110 h)

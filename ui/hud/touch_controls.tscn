@@ -1,0 +1,66 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/hud/touch_controls.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/touch/btn_left.png" id="2_left"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/touch/btn_left_pressed.png" id="3_left_p"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/touch/btn_right.png" id="4_right"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/touch/btn_right_pressed.png" id="5_right_p"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/touch/btn_jump.png" id="6_jump"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/touch/btn_jump_pressed.png" id="7_jump_p"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_btn"]
+radius = 195.0
+
+[node name="TouchControls" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="LeftPad" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -225.0
+offset_right = 480.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Left" type="TouchScreenButton" parent="LeftPad"]
+texture_normal = ExtResource("2_left")
+texture_pressed = ExtResource("3_left_p")
+shape = SubResource("CircleShape2D_btn")
+passby_press = true
+action = "move_left"
+
+[node name="Right" type="TouchScreenButton" parent="LeftPad"]
+position = Vector2(250, 0)
+texture_normal = ExtResource("4_right")
+texture_pressed = ExtResource("5_right_p")
+shape = SubResource("CircleShape2D_btn")
+passby_press = true
+action = "move_right"
+
+[node name="RightPad" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -228.0
+offset_top = -225.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Jump" type="TouchScreenButton" parent="RightPad"]
+texture_normal = ExtResource("6_jump")
+texture_pressed = ExtResource("7_jump_p")
+shape = SubResource("CircleShape2D_btn")
+action = "jump"

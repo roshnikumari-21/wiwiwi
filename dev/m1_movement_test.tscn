@@ -1,0 +1,91 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://dev/m1_movement_test.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/objects/greybox_block.tscn" id="2_block"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player/player.tscn" id="3_player"]
+[ext_resource type="Script" path="res://scenes/actors/player/player_camera.gd" id="4_camera"]
+[ext_resource type="Script" path="res://ui/components/safe_area.gd" id="5_safe"]
+[ext_resource type="PackedScene" path="res://ui/hud/touch_controls.tscn" id="6_touch"]
+
+[node name="M1MovementTest" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Level" type="Node2D" parent="."]
+
+[node name="LeftWall" parent="Level" instance=ExtResource("2_block")]
+position = Vector2(-128, -400)
+size = Vector2(128, 1600)
+
+[node name="Ground1" parent="Level" instance=ExtResource("2_block")]
+position = Vector2(0, 900)
+size = Vector2(1600, 300)
+
+[node name="Ground2" parent="Level" instance=ExtResource("2_block")]
+position = Vector2(1900, 900)
+size = Vector2(1100, 300)
+
+[node name="Step1" parent="Level" instance=ExtResource("2_block")]
+position = Vector2(2150, 780)
+size = Vector2(256, 40)
+one_way = true
+
+[node name="Step2" parent="Level" instance=ExtResource("2_block")]
+position = Vector2(2450, 660)
+size = Vector2(256, 40)
+one_way = true
+
+[node name="Step3" parent="Level" instance=ExtResource("2_block")]
+position = Vector2(2750, 540)
+size = Vector2(256, 40)
+one_way = true
+
+[node name="Ground3" parent="Level" instance=ExtResource("2_block")]
+position = Vector2(3380, 900)
+size = Vector2(1000, 300)
+
+[node name="LedgeReachable" parent="Level" instance=ExtResource("2_block")]
+position = Vector2(3700, 620)
+size = Vector2(300, 280)
+
+[node name="LedgeTooHigh" parent="Level" instance=ExtResource("2_block")]
+position = Vector2(4080, 560)
+size = Vector2(300, 340)
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(200, 900)
+
+[node name="Camera" type="Camera2D" parent="Player"]
+position = Vector2(0, -160)
+limit_left = 0
+limit_top = -300
+limit_right = 4380
+limit_bottom = 1200
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.3
+drag_bottom_margin = 0.15
+script = ExtResource("4_camera")
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="SafeArea" type="MarginContainer" parent="Hud"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_safe")
+
+[node name="TouchControls" parent="Hud/SafeArea" instance=ExtResource("6_touch")]
+layout_mode = 2
+
+[node name="Readout" type="Label" parent="Hud/SafeArea"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.25, 0.2, 0.3, 1)
+theme_override_font_sizes/font_size = 30
+text = "FPS"
