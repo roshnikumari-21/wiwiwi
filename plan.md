@@ -102,7 +102,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 | Enemies | W1 enemy (P0), W2 enemy (P1) | Self | P0/P1 |
 | Tilesets | 1 per world, TileMapLayer + terrains | CC0 base, restyled | P0/P1 |
 | Backgrounds | 3–4 parallax layers per world (Parallax2D) | CC0 base + Self | P0/P1 |
-| Objects | coin, golden yarn, milk bowl, checkpoint, goal door, spikes, platforms (one-way, moving, crumbling), decorations | Self / CC0 | P0/P1 |
+| Objects | coin, golden yarn, milk bowl, checkpoint flag, goal cat bed, spikes, platforms (one-way, moving, crumbling), decorations | Self / CC0 | P0/P1 |
 | FX | sparkle, dust, confetti (CPUParticles2D textures) | Self | P0/P1 |
 | UI | 9-slice buttons and panels, icon set, star icons, touch-control art, world cards | Self / CC0 | P0 |
 | Fonts | 1 display + 1 UI font, open license, embedded with license file | OFL | P0 |
@@ -112,6 +112,28 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 
 **Folders:** `assets/art/{characters,enemies,objects,tiles,backgrounds,ui,fx}`, `assets/audio/{music,sfx}`, `assets/fonts` (+ `licenses/`), `data/`, `scenes/`, `ui/`, `autoload/`, `localization/`.
 **Naming:** `snake_case` files, `PascalCase` nodes, prefixes `bg_`, `tiles_`, `fx_`, `ui_`, `mus_`, `sfx_`. No spaces or dates in names.
+
+### 5.1 Concept art (`assets/raw_assets_idea/`, added 29 Oct 2026)
+26 concept images define the **art direction**: chibi kawaii, hand-drawn look, warm brown outlines, soft countryside (cottage, windmill, meadow). They are the **reference and source** for game art, never used directly in the game.
+- **Folder rules:** stays untouched as the master copy; must be **excluded from Godot import/export** (a `.gdignore` file) so ~40 MB of concept images never ship in the app.
+- **Pipeline (scripted, repeatable):** remove the white background → slice each sheet into single pieces → align animation frames to one baseline and cell size → export clean PNGs to `assets/art/...` → build SpriteFrames / 9-slice styles / atlases. Re-running the script after an art change updates the game.
+
+| Concept sheet | Becomes in game | Work needed |
+|---|---|---|
+| Kitten animation + pose sheets | Cat: idle (3), walk (6), jump (2), hurt, cheer (2) frames; expressions for UI | Background removal, frame alignment; missing: fall, land, sleepy |
+| Girl + cat pose sheet | Owner: idle, side, open arms, **hug with cat** (reunion) | Cut poses; reunion uses AnimationPlayer between poses |
+| Slime sheet | Slime walk (3) + squish; orange variant = World 2 or harder slime | Cut + align |
+| Platformer asset sheet | Spikes, **checkpoint flag** (off/on), **cat bed = level goal**, floating island, signpost | Cut |
+| Effects sheet | Dust, coin sparkle, star burst, heart break, checkpoint activation, confetti (5 frames each) | Cut into one-shot animations |
+| Icon sheets | Coin spin (5 frames), milk bowl full/empty, heart full/empty, star full/empty, all menu icons | Cut into a UI atlas |
+| UI asset sheet + control buttons | Pill buttons (4 colours × 3 states), round buttons, cream panel, wooden title sign, ribbon; touch controls ◀ ▶ 🐾 (normal/pressed) | Cut + 9-slice margins; text is added in Godot (translatable) |
+| Meadow tileset | World 1 ground/platform pieces | Not seamless or grid-aligned → rebuild as clean repeating tiles + decorated edge pieces |
+| Props sheets | Decorations: bushes, mushrooms, rocks, fences, logs, stumps, flowers | Cut |
+| Countryside panorama | World 1 far background | Single flat layer, too small for scrolling → needs separate wide parallax layers |
+| Screen mockups (loading, menu, level map, gameplay, pause, try again, level complete, settings) | **Layout reference** for each screen | Rebuilt in Godot from the cut pieces |
+| App icons + banner | Play Store icon, adaptive icon, feature graphic (banner fits 1024×500) | Adaptive icon needs separate foreground/background layers |
+
+**Still missing (create with the same tool/style):** Golden Yarn Ball · cat fall/land/sleepy frames · moving + one-way platform pieces · seamless World 1 tiles · layered wide backgrounds · HUD frames (hearts bar, coin counter, energy bar) · level-map node set (number, stars, lock) · all World 2 art (sunset town tiles, background, enemy, crumbling tile).
 
 ## 6. Tech Architecture
 | Autoload | Job |
@@ -195,6 +217,7 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - Carried forward (not blocking M1): ElevenLabs commercial rights check · GitHub repo for the project · emulator check for 20:9 + tablet shapes (in M1 performance check)
 
 ### M1 — Prototype, greybox (≈ 70 h)
+- [ ] Concept art: `.gdignore` on `raw_assets_idea`; asset pipeline script; cut the cat frames (idle/walk/jump/hurt) for the feel test
 - [ ] Player controller v2 + camera
 - [ ] Greybox tileset, `level_base`, `LevelData` + catalog
 - [ ] Hearts, checkpoints, respawn, coins, golden yarn, goal, stars
@@ -203,7 +226,9 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [ ] 3 greybox levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
 
 ### M2 — Vertical slice (≈ 110 h)
-- [ ] Art direction decided (colors, fonts, style); Theme resource
+- [x] Art direction set by the concept art in `assets/raw_assets_idea/` (§5.1)
+- [ ] Fonts chosen to match the concept lettering; Theme resource from the cut UI pieces
+- [ ] Missing art created (§5.1 list); World 1 seamless tiles + layered background
 - [ ] Final cat animations, World 1 tileset + parallax, core objects
 - [ ] All screens + transitions + Back button
 - [ ] SaveManager v1, AudioManager + core SFX, juice pass
@@ -241,5 +266,7 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 | AI audio not licensed for commercial use | Check in M0; regenerate or replace |
 | Only one real test phone (Galaxy M11) | Emulator for other shapes; Play pre-launch report + closed-test phones (M4) |
 | Art bottleneck / scope creep | CC0 bases; new ideas go to a v1.1 list |
+| Concept art not game-ready (no transparency, not on a grid, tiles not seamless, frames drift) | Scripted cleanup pipeline; regenerate missing/unsuitable pieces in the same style |
+| Rights for AI-generated art | Confirm the generator's commercial terms and keep a record |
 
-**Open:** hours per week · target audience (13+ or including kids) · ElevenLabs plan · who owns art vs code · Play Console account type (personal/organization).
+**Open:** which tool made the concept art (license) · owner outfit (pinafore in pose sheet vs overalls in banner) · settings: volume sliders + vibration as in the mockup, or toggles only · hours per week · target audience (13+ or including kids) · ElevenLabs plan · who owns art vs code · Play Console account type (personal/organization).
