@@ -1,7 +1,8 @@
 class_name Level
 extends Node2D
 ## Base script for every level. Puts the cat at the spawn point, fits the camera to the level's ground,
-## and catches falls. Each real level inherits level_base.tscn and only adds terrain and objects.
+## and runs the level rules: hearts, checkpoints, the goal and stars.
+## Each real level inherits level_base.tscn and only adds terrain and objects.
 
 @export var level_id: String = ""            ## must match an id in the level catalog
 @export var extra_sky: float = 700.0         ## how far the camera may look above the highest ground
@@ -11,28 +12,60 @@ extends Node2D
 @onready var camera: Camera2D = $Player/Camera
 @onready var spawn: Marker2D = $PlayerSpawn
 @onready var terrain: Node2D = $Terrain
+@onready var hud: Hud = $Hud/SafeArea/Hud
+@onready var touch_controls: Control = $Hud/SafeArea/TouchControls
 
 var bounds: Rect2
 var _fall_line: float
+var _respawn_point: Vector2
+var _over := false   ## true once the level is won or lost
 
 func _ready() -> void:
-	GameState.current_level_id = level_id
 	bounds = _terrain_bounds()
 	camera.limit_left = int(bounds.position.x)
 	camera.limit_right = int(bounds.end.x)
 	camera.limit_top = int(bounds.position.y - extra_sky)
 	camera.limit_bottom = int(bounds.end.y)
 	_fall_line = bounds.end.y + fall_margin
-	respawn()
+
+	Events.checkpoint_reached.connect(func(point: Vector2): _respawn_point = point)
+	for goal in get_tree().get_nodes_in_group("goal"):
+		goal.reached.connect(_on_goal_reached)
+	hud.restart_pressed.connect(restart)
+
+	GameState.begin_attempt(level_id, get_tree().get_nodes_in_group("coins").size())
+	_respawn_point = spawn.global_position
+	_respawn()
 
 func _physics_process(_delta: float) -> void:
-	if player.global_position.y > _fall_line:
-		respawn()  # M1 placeholder; hearts and checkpoints replace this in the next step
+	if not _over and player.global_position.y > _fall_line:
+		_on_fell()
 
-func respawn() -> void:
-	player.global_position = spawn.global_position
-	player.velocity = Vector2.ZERO
+## Fell in a pit: lose a heart. Back to the last flag if any hearts are left, otherwise the level is lost.
+func _on_fell() -> void:
+	if GameState.lose_heart():
+		_respawn()
+	else:
+		_over = true
+		touch_controls.hide()
+		player.give_up()
+		Events.level_failed.emit()
+
+func _on_goal_reached() -> void:
+	if _over:
+		return
+	_over = true
+	touch_controls.hide()
+	player.celebrate()
+	Events.level_completed.emit(GameState.stars(), GameState.coins, GameState.coin_total, GameState.has_yarn)
+
+func _respawn() -> void:
+	player.respawn_at(_respawn_point)
 	camera.reset_smoothing()
+
+## Play the level again from the start (fresh hearts, coins and flags).
+func restart() -> void:
+	SceneTransition.change_scene(scene_file_path)
 
 ## The rectangle covering all ground pieces, so the camera never shows past the level's edges.
 func _terrain_bounds() -> Rect2:

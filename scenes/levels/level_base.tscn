@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://scenes/actors/player/player_camera.gd" id="3_camera"]
 [ext_resource type="Script" path="res://ui/components/safe_area.gd" id="4_safe"]
 [ext_resource type="PackedScene" path="res://ui/hud/touch_controls.tscn" id="5_touch"]
+[ext_resource type="PackedScene" path="res://ui/hud/hud.tscn" id="6_hud"]
 
 [node name="LevelBase" type="Node2D"]
 script = ExtResource("1_level")
@@ -40,4 +41,7 @@ mouse_filter = 2
 script = ExtResource("4_safe")
 
 [node name="TouchControls" parent="Hud/SafeArea" instance=ExtResource("5_touch")]
+layout_mode = 2
+
+[node name="Hud" parent="Hud/SafeArea" instance=ExtResource("6_hud")]
 layout_mode = 2

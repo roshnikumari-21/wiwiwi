@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/objects/goal_bed.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/objects/cat_bed.png" id="2_bed"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bed"]
+size = Vector2(150, 90)
+
+[node name="GoalBed" type="Area2D" groups=["goal"]]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_script")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.55, 0.55)
+texture = ExtResource("2_bed")
+offset = Vector2(0, -136)
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -45)
+shape = SubResource("RectangleShape2D_bed")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

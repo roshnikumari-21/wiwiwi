@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/objects/coin.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/objects/coin_0.png" id="2_c0"]
+[ext_resource type="Texture2D" path="res://assets/art/objects/coin_1.png" id="3_c1"]
+[ext_resource type="Texture2D" path="res://assets/art/objects/coin_2.png" id="4_c2"]
+[ext_resource type="Texture2D" path="res://assets/art/objects/coin_3.png" id="5_c3"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_coin"]
+animations = [{
+"frames": [{
+"duration": 2.0,
+"texture": ExtResource("2_c0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_c1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_c2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_c3")
+}],
+"loop": true,
+"name": &"spin",
+"speed": 9.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_coin"]
+radius = 30.0
+
+[node name="Coin" type="Area2D" groups=["coins"]]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_script")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_coin")
+animation = &"spin"
+autoplay = "spin"
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_coin")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

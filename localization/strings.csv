@@ -3,3 +3,8 @@ APP_TITLE,wiwiwi
 DEV_HEADING,Device check
 DEV_FADE_TEST,Test fade
 DEV_TAP_HINT,Tap anywhere with one or more fingers
+RESULT_WIN,Level complete!
+RESULT_FAIL,Out of hearts
+RESULT_COINS,Coins: %d / %d
+RESULT_REPLAY,Play again
+RESULT_RETRY,Try again

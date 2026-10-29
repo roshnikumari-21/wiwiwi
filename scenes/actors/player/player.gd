@@ -24,6 +24,7 @@ extends CharacterBody2D
 @onready var sprite: AnimatedSprite2D = $Sprite
 
 var _breath_time := 0.0
+var frozen := false     ## true when the level is over: no input, gravity only
 
 var _in_jump := false   ## true from take-off until touchdown: keeps the leap pose for the whole arc
 var _coyote_left := 0.0
@@ -47,8 +48,11 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
-	_handle_jump(delta)
-	_handle_run(delta)
+	if frozen:
+		velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
+	else:
+		_handle_jump(delta)
+		_handle_run(delta)
 	move_and_slide()
 	_after_move()
 	_update_animation()
@@ -95,6 +99,8 @@ func _after_move() -> void:
 	_was_on_floor = is_on_floor()
 
 func _update_animation() -> void:
+	if frozen and sprite.animation in ["cheer", "hurt"]:
+		return
 	if not is_on_floor():
 		# A jump keeps the leap pose up and down; "fall" is only for drops without a jump.
 		sprite.play("jump" if _in_jump or velocity.y < 0.0 else "fall")
@@ -124,3 +130,25 @@ func _do_squash(amount: Vector2) -> void:
 	_squash = create_tween()
 	_squash.tween_property(sprite, "scale", _base_scale * amount, 0.07)
 	_squash.tween_property(sprite, "scale", _base_scale, 0.14)
+
+## Put the cat back at a point (after a pit fall), with a short blink so the player sees where she is.
+func respawn_at(point: Vector2) -> void:
+	global_position = point
+	velocity = Vector2.ZERO
+	_in_jump = false
+	_fall_peak_speed = 0.0
+	sprite.flip_h = false
+	var blink := create_tween().set_loops(4)
+	blink.tween_property(sprite, "modulate:a", 0.3, 0.08)
+	blink.tween_property(sprite, "modulate:a", 1.0, 0.08)
+
+## Reached the goal: stop and cheer.
+func celebrate() -> void:
+	frozen = true
+	sprite.play("cheer")
+
+## Out of hearts: stop and look sad.
+func give_up() -> void:
+	frozen = true
+	velocity = Vector2.ZERO
+	sprite.play("hurt")
