@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/levels/level_base.tscn" id="1_base"]
+[ext_resource type="PackedScene" path="res://scenes/objects/greybox_block.tscn" id="2_block"]
+
+[node name="LevelW1_01" instance=ExtResource("1_base")]
+level_id = "w1_01"
+
+[node name="LeftWall" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(-128, -200)
+size = Vector2(128, 1500)
+
+[node name="Ground1" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(0, 900)
+size = Vector2(1400, 400)
+
+[node name="Ground2" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(1600, 900)
+size = Vector2(900, 400)
+
+[node name="StepUp" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(2500, 760)
+size = Vector2(700, 540)
+
+[node name="Ground3" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(3500, 900)
+size = Vector2(1300, 400)
+
+[node name="FloatStep1" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(3750, 720)
+size = Vector2(256, 40)
+one_way = true
+
+[node name="FloatStep2" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(4100, 580)
+size = Vector2(256, 40)
+one_way = true
+
+[node name="EndGround" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(4800, 900)
+size = Vector2(900, 400)
+
+[node name="RightWall" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(5700, -200)
+size = Vector2(128, 1500)

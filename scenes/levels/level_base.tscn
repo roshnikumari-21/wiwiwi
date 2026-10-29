@@ -1,0 +1,43 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/level.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player/player.tscn" id="2_player"]
+[ext_resource type="Script" path="res://scenes/actors/player/player_camera.gd" id="3_camera"]
+[ext_resource type="Script" path="res://ui/components/safe_area.gd" id="4_safe"]
+[ext_resource type="PackedScene" path="res://ui/hud/touch_controls.tscn" id="5_touch"]
+
+[node name="LevelBase" type="Node2D"]
+script = ExtResource("1_level")
+
+[node name="Terrain" type="Node2D" parent="."]
+
+[node name="Objects" type="Node2D" parent="."]
+
+[node name="PlayerSpawn" type="Marker2D" parent="."]
+position = Vector2(200, 900)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(200, 900)
+
+[node name="Camera" type="Camera2D" parent="Player"]
+position = Vector2(0, -160)
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+drag_vertical_enabled = true
+drag_top_margin = 0.3
+drag_bottom_margin = 0.15
+script = ExtResource("3_camera")
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="SafeArea" type="MarginContainer" parent="Hud"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_safe")
+
+[node name="TouchControls" parent="Hud/SafeArea" instance=ExtResource("5_touch")]
+layout_mode = 2

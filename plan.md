@@ -53,7 +53,8 @@
 - **Stars:** ★ reach the goal · ★★ collect ≥ 80% of coins · ★★★ find the hidden Golden Yarn.
 - **Levels:** 1–3 teach, 4–7 combine, 8–9 challenge, 10 finale + owner reunion. 60–150 s each.
 - **Enemies:** World 1 slime; World 2 one new enemy + one new hazard.
-- **Level data:** each level = a scene + a small `LevelData` resource (id, world, scene path, hint). A `level_catalog` lists them in order; menus and unlocks read only from it.
+- **Level data:** each level = a scene + a small `LevelData` resource (`data/levels/<id>.tres`: id, world, index, scene path, hint). `data/levels/level_catalog.tres` lists them in order; menus and unlocks read only from it. Regenerate with `tools/make_level_data.gd` after adding a level.
+- **Level building = ground strips, not TileMap (decided 30 Oct 2026):** the World 1 art is a strip kit (left edge, repeating middle, right edge, thin floating piece) with no corners/slopes, so levels are made of resizable ground pieces. M1 uses grey `GreyboxBlock`s; in M2 the same pieces get the art skin, so greybox levels need no rebuild.
 - **Save:** local versioned `user://save.json` (progress, coins, stats) with safe writes and migrations; `user://settings.cfg` for device settings. The save already has `wallet` and `cosmetics` fields so a shop needs no migration later.
 
 ## 4. Screens and Flow
@@ -103,7 +104,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 | Cat animations | idle, run, jump, fall, land, hurt (P0); collect, sleepy, win (P1) — sprite sheets for AnimatedSprite2D | Self | P0/P1 |
 | Owner | idle, wave, hug (cutscene via AnimationPlayer) | Self | P1 |
 | Enemies | W1 enemy (P0), W2 enemy (P1) | Self | P0/P1 |
-| Tilesets | 1 per world, TileMapLayer + terrains | CC0 base, restyled | P0/P1 |
+| Ground kit | 1 per world: left edge, repeating middle, right edge, floating piece (ground strips, see §3) | Self (ChatGPT) | P0/P1 |
 | Backgrounds | 3–4 parallax layers per world (Parallax2D) | CC0 base + Self | P0/P1 |
 | Objects | coin, golden yarn, milk bowl, checkpoint flag, goal cat bed, spikes, platforms (one-way, moving, crumbling), decorations | Self / CC0 | P0/P1 |
 | FX | sparkle, dust, confetti (CPUParticles2D textures) | Self | P0/P1 |
@@ -132,7 +133,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 | Effects sheet | Dust, coin sparkle, star burst, heart break, checkpoint activation, confetti (5 frames each) | Cut into one-shot animations |
 | Icon sheets | Coin spin (5 frames), milk bowl full/empty, heart full/empty, star full/empty, all menu icons | Cut into a UI atlas |
 | UI asset sheet + control buttons | Pill buttons (4 colours × 3 states), round buttons, cream panel, wooden title sign, ribbon; touch controls ◀ ▶ 🐾 (normal/pressed) | Cut + 9-slice margins; text is added in Godot (translatable) |
-| Meadow tileset | World 1 ground/platform pieces | Not seamless or grid-aligned → rebuild as clean repeating tiles + decorated edge pieces |
+| Meadow tileset + "Meadow Platform Tile Set" | World 1 ground strip skin (edges + repeating middle) and floating pieces | Check the middle piece repeats seamlessly; cut edges |
 | Props sheets | Decorations: bushes, mushrooms, rocks, fences, logs, stumps, flowers | Cut |
 | Countryside panorama | World 1 far background | Single flat layer, too small for scrolling → needs separate wide parallax layers |
 | Screen mockups (loading, menu, level map, gameplay, pause, try again, level complete, settings) | **Layout reference** for each screen | Rebuilt in Godot from the cut pieces |
@@ -152,7 +153,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 | `Economy` *(future slot)* | Wallet + coin shop; hidden behind a feature flag in v1 |
 
 - **Signals:** objects talk to parents locally; anything global goes through `Events`. Achievements are data-driven and tracked by one listener.
-- **Levels:** `level_base.tscn` (camera, parallax, tiles, objects, spawn, goal, HUD); each level **inherits** it and only adds tiles and objects.
+- **Levels:** `scenes/levels/level_base.tscn` + `level.gd` (Terrain, Objects, PlayerSpawn, Player + Camera, HUD with touch controls). The camera limits fit the terrain automatically; falling below it is a pit. Each level **inherits** the base and only adds terrain and objects (e.g. `scenes/levels/w1/level_w1_01.tscn`).
 - **Performance:** texture atlases; lossless for UI/characters, VRAM-compressed (ETC2/ASTC) for large backgrounds; CPUParticles2D only, capped; enemies off-screen are disabled; one world's assets loaded at a time; AAB target < 80 MB.
 
 ## 7. Google Services (no backend)
@@ -225,7 +226,7 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] Concept art: `.gdignore` on `raw_assets_idea`; asset pipeline (`tools/art_pipeline/`: `cut_cat.py`, `cut_pieces.py`); 21 aligned cat frames → 8 animations (idle, walk, jump, fall, land, hurt, cheer, sleepy) + touch-button art
 - [x] Player controller v2 + camera (look-ahead, vertical drag), greybox blocks, test room `dev/m1_movement_test.tscn` (current main scene); automated feel checks pass
 - [x] Play-tested on the Galaxy M11 (30 Oct 2026): movement feel approved as is. Idle reworked: still pose from the new idle sheet + a blink made by pasting only the closed eyes onto the same frame (zero wobble), blinking every few seconds with an occasional double blink; breathing is a 1.2 % scale in code. Rule: never loop separately drawn AI frames for "still" poses
-- [ ] Greybox tileset, `level_base`, `LevelData` + catalog
+- [x] `level_base` + `level.gd` (auto camera limits, pit respawn), `LevelData` + `LevelCatalog` + `tools/make_level_data.gd`, `GameState` (catalog, current level, `start_level`), greybox level 1-1 (main scene); tested on PC + phone
 - [ ] Hearts, checkpoints, respawn, coins, golden yarn, goal, stars
 - [ ] Energy + milk; slime, spikes, pits, platforms
 - [x] Touch controls in SafeArea (concept-art buttons, opacity/size ready for Settings)
