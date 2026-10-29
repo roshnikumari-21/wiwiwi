@@ -137,6 +137,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - **v1:** sign-in, ~12 achievements, 2 leaderboards. **v1.1:** cloud save (Saved Games/snapshots) using our existing save file.
 - **Plugin:** `godot-play-game-services` v3.4.0 (github.com/godot-sdk-integrations, MIT). **Verified on Godot 4.7.2 on a real phone (M0).** Needs a Gradle build and a Play Games game ID in the export preset.
 - **Setup:** create the app in Play Console → upload a build to internal testing → create the Play Games project → add credentials (SHA-1 of signing keys) → create achievements/leaderboards → add testers → put the game ID in export settings → publish with the release.
+- **Status:** Play Games project created, linked to Google Cloud project **"wiwiwi"**, game ID **`254276654194`** (in both export presets). Next: credentials with the app-signing SHA-1 (after first upload) + Godot debug SHA-1, then add testers.
 
 ### 7.2 Google Play Billing — future slot (not in v1)
 - **What it's for:** real-money purchases (e.g. cosmetic packs) and subscriptions. **Not used in v1.**
@@ -160,12 +161,15 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - **Before release:** Play Console pre-launch report.
 
 ## 10. Release on Google Play
-- [ ] Personal developer account ($25)
-- [ ] Privacy policy page (required even with no data collected)
+- **Account:** existing developer account **"DigiCraft Innovation"** (also publishes StoreMitr, `com.digicraft.storemitr`). Owned by the co-founder: uploads go through them, or they invite the developer under *Users and permissions* with wiwiwi-only access (no password sharing). The keystore and its password stay with the developer.
+- [x] App **wiwiwi** created in Play Console (Game, Free)
+- [x] Privacy policy URL set (required even with no data collected). Optional game domain later: `wiwiwi.com`/`.app` are taken; `playwiwiwi.com`, `wiwiwi.games`, `wiwiwi.in` were free (29 Oct 2026)
+- **Decisions:** App access = **"No restricted access"** (sign-in optional, no purchases; revisit if paid content is added). Store category = **Adventure** (recommended), with tags such as Platformer, Casual, Cute, Single player, Offline.
+- [ ] Internal testing release (first upload claims the package and enrolls Play App Signing)
 - [ ] Data safety form (we collect nothing ourselves; include what the Play Games SDK does)
 - [ ] Content rating, target audience (⚠ under-13 → Families policy), ads: none
 - [ ] Store listing: texts, icon, feature graphic, screenshots
-- [ ] **Closed test: ≥ 12 testers opted in for 14 continuous days** (personal accounts after Nov 2023), then apply for production access
+- [ ] **Closed test: ≥ 12 testers opted in for 14 continuous days** — only if the account is a *personal* account created after Nov 2023 (⚠ check account type in Settings → Developer account; organization accounts are exempt), then apply for production access
 - [ ] Staged rollout 20% → 100%; watch crashes/ANRs for 2 weeks
 
 ## 11. Milestones M0–M5
@@ -181,11 +185,13 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 - [ ] Emulator check for 20:9 + tablet shapes
 - [x] Game name: **wiwiwi**
 - [x] Studio name **digicraft** → package ID `com.digicraft.wiwiwi` (not used on Google Play as of 29 Oct 2026)
-- [ ] Release keystore + Play Console account + internal testing upload (AAB via Gradle)
+- [x] Release keystore (see §8) · Play Console app created in the DigiCraft Innovation account
+- [ ] Internal testing upload of `builds/wiwiwi-release.aab` (by the co-founder / account owner)
 - [x] Gradle build + Play Games plugin v3.4.0 (MIT) loads on the phone with Godot 4.7.2; `PlayServices` wrapper reports signed_out gracefully
 - [x] Play Games project created (Cloud project "wiwiwi"); game ID `254276654194` in both export presets
 - [ ] Play Games: real sign-in on the phone (needs Play Console + real game ID)
-- [ ] First AAB export (with real package ID + release keystore)
+- [x] First AAB export (real package ID, real game ID, signed with the upload key)
+- [x] Project folder renamed to `C:\Godot\Projects\wiwiwi`
 - [ ] Check ElevenLabs commercial rights for existing audio
 - [ ] GitHub repo for the new project
 
@@ -229,10 +235,11 @@ Estimates are combined focused hours. At **[X] h/week**: weeks = hours ÷ X (≈
 | Risk | Mitigation |
 |---|---|
 | Play Games plugin breaks in a future Godot update | Proven on 4.7.2 (M0); pin Godot 4.7.x until launch |
-| 14-day / 12-tester closed test | Recruit 15–20 testers early; start in M4 |
-| Keystore loss | Play App Signing + 2 backups |
+| 14-day / 12-tester closed test (if the account is personal) | Check account type; if needed, recruit 15–20 testers early and start in M4 |
+| Keystore loss | Play App Signing + 2 backups; a business backup with the co-founder (file and password via separate channels) |
+| Only the co-founder can access Play Console | Invite the developer with wiwiwi-only permissions |
 | AI audio not licensed for commercial use | Check in M0; regenerate or replace |
-| No real device | Emulator for development; Play pre-launch report + closed-test phones for real-device checks (M4) |
+| Only one real test phone (Galaxy M11) | Emulator for other shapes; Play pre-launch report + closed-test phones (M4) |
 | Art bottleneck / scope creep | CC0 bases; new ideas go to a v1.1 list |
 
-**Open:** hours per week · target audience (13+ or including kids) · ElevenLabs plan · who owns art vs code · privacy policy hosting.
+**Open:** hours per week · target audience (13+ or including kids) · ElevenLabs plan · who owns art vs code · Play Console account type (personal/organization).
