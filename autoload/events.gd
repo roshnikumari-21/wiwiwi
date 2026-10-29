@@ -5,6 +5,8 @@ extends Node
 signal coin_collected
 signal yarn_collected
 signal hearts_changed(hearts: int)
+signal energy_changed(energy: float)   ## 0..1
+signal milk_drunk
 signal checkpoint_reached(respawn_position: Vector2)
 signal level_completed(stars: int, coins: int, coin_total: int, has_yarn: bool)
 signal level_failed

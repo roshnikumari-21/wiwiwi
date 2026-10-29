@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/art/objects/coin_0.png" id="3_coin"]
 [ext_resource type="Texture2D" path="res://assets/art/objects/yarn.png" id="4_yarn"]
 [ext_resource type="Texture2D" path="res://assets/art/objects/star_empty.png" id="5_star"]
+[ext_resource type="Texture2D" path="res://assets/art/objects/milk_bowl_full.png" id="6_milk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 70.0
@@ -16,6 +17,30 @@ corner_radius_top_left = 40
 corner_radius_top_right = 40
 corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar_bg"]
+bg_color = Color(0.36, 0.25, 0.2, 0.55)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.36, 0.25, 0.2, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar_fill"]
+bg_color = Color(1, 0.98, 0.93, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.36, 0.25, 0.2, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [node name="Hud" type="Control"]
 layout_mode = 3
@@ -95,6 +120,35 @@ pivot_offset = Vector2(48, 38)
 texture = ExtResource("4_yarn")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Energy" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 130.0
+offset_right = 520.0
+offset_bottom = 190.0
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="MilkIcon" type="TextureRect" parent="Energy"]
+custom_minimum_size = Vector2(90, 54)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("6_milk")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bar" type="ProgressBar" parent="Energy"]
+custom_minimum_size = Vector2(300, 34)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_bar_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_bar_fill")
+max_value = 1.0
+step = 0.0
+value = 1.0
+show_percentage = false
 
 [node name="Card" type="ColorRect" parent="."]
 visible = false

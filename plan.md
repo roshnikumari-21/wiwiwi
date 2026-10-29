@@ -50,7 +50,7 @@
 - **Controls feel:** acceleration/deceleration, variable jump height, coyote time, jump buffer. First M1 values (in `player.gd`, tunable in the Inspector): run 520 px/s reached in 0.08 s · full jump ≈ 300 px (0.42 s to apex, faster fall) · tap = short hop ≈ 140 px · coyote 0.12 s · buffer 0.12 s. Cat ≈ 150 px tall on screen.
 - **Failing:** spikes, pits, enemy side-hits cost 1 heart → respawn at last checkpoint (blink on respawn). 0 hearts → Level Failed card → "Try again" restarts the level with fresh hearts, coins and flags.
 - **Checkpoint:** paw flag; first touch raises it and moves the respawn point there. **Goal (changed 30 Oct 2026):** the girl waits at the end of **every** level (no cat bed). She waits with clasped hands and bounces when the cat comes near; reaching her, she kneels down (crouch → kneel reaching → arms wide), the cat walks in, and they hug (3-frame loop) while hearts float up, then the result card with stars. The world-end reunion (level 10) stays as a bigger story moment.
-- **Energy:** drains slowly while moving; milk refills it; at 0 the cat is slower, never a fail.
+- **Energy:** drains slowly while moving (full tank = 35 s of moving, `Player.energy_seconds`); milk refills it to full. At 0 the cat runs at 65 % speed with slower legs and yawns (sleepy idle) when standing: never a fail (a tired cat still clears the widest gaps; tested). The cat only drinks when not already full, so a bowl is not wasted. Each level sets `start_energy` (1-1 starts at 40 % to teach milk). HUD: milk icon + bar, orange below 25 %.
 - **Stars:** ★ reach the goal · ★★ collect ≥ 80% of coins · ★★★ find the hidden Golden Yarn.
 - **Levels:** 1–3 teach, 4–7 combine, 8–9 challenge, 10 finale + owner reunion. 60–150 s each.
 - **Enemies:** World 1 slime; World 2 one new enemy + one new hazard.
@@ -107,7 +107,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 | Enemies | W1 enemy (P0), W2 enemy (P1) | Self | P0/P1 |
 | Ground kit | 1 per world: left edge, repeating middle, right edge, floating piece (ground strips, see §3) | Self (ChatGPT) | P0/P1 |
 | Backgrounds | 3–4 parallax layers per world (Parallax2D) | CC0 base + Self | P0/P1 |
-| Objects | coin, golden yarn, milk bowl, checkpoint flag, goal cat bed, spikes, platforms (one-way, moving, crumbling), decorations | Self / CC0 | P0/P1 |
+| Objects | coin, golden yarn, milk bowl, checkpoint flag, goal girl, spikes, platforms (one-way, moving, crumbling), decorations | Self / CC0 | P0/P1 |
 | FX | sparkle, dust, confetti (CPUParticles2D textures) | Self | P0/P1 |
 | UI | 9-slice buttons and panels, icon set, star icons, touch-control art, world cards | Self / CC0 | P0 |
 | Fonts | 1 display + 1 UI font, open license, embedded with license file | OFL | P0 |
@@ -232,7 +232,8 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] `level_base` + `level.gd` (auto camera limits, pit respawn), `LevelData` + `LevelCatalog` + `tools/make_level_data.gd`, `GameState` (catalog, current level, `start_level`), greybox level 1-1 (main scene); tested on PC + phone
 - [x] Level-end hug: girl at the goal `goal_girl.tscn` (waits → bounces → kneels down in 3 frames → cat walks in → 3-frame hug loop + hearts → result card); cat bed removed; `Player.walk_to()` for cutscenes; pipeline clears trapped white gaps (`hole_min_area`)
 - [x] Hearts, checkpoints, respawn, coins, golden yarn, goal, stars: object scenes in `scenes/objects/` (coin, golden_yarn, checkpoint, goal_girl) using cut concept art; `Events` + `GameState` run the attempt; placeholder HUD (`ui/hud/hud.tscn`: hearts, coins x/y, yarn) + win/fail card; level 1-1 has 16 coins, 1 yarn, 1 flag, the girl; `dev/m1_rules_test.gd` passes (22 checks); runs on the M11
-- [ ] Energy + milk; slime, spikes, pits, platforms
+- [x] Energy + milk: `Player` energy (drain, tired speed, sleepy idle), `milk_bowl.tscn` (full → empty), HUD energy bar, 1 bowl in level 1-1; `dev/m1_energy_test.gd` passes (14 checks)
+- [ ] Slime, spikes, pits, platforms
 - [x] Touch controls in SafeArea (concept-art buttons, opacity/size ready for Settings)
 - [ ] 3 greybox levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
 

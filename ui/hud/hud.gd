@@ -10,10 +10,13 @@ const HEART_EMPTY := preload("res://assets/art/objects/heart_empty.png")
 const STAR_FULL := preload("res://assets/art/objects/star_full.png")
 const STAR_EMPTY := preload("res://assets/art/objects/star_empty.png")
 const YARN_MISSING_TINT := Color(0.2, 0.2, 0.25, 0.45)
+const ENERGY_LOW := 0.25                         ## below this the bar turns orange as a warning
+const ENERGY_LOW_TINT := Color(1.0, 0.62, 0.35)
 
 @onready var _hearts: Array[Node] = $Top/Hearts.get_children()
 @onready var _coin_label: Label = $Top/CoinLabel
 @onready var _yarn: TextureRect = $Top/Yarn
+@onready var _energy_bar: ProgressBar = $Energy/Bar
 @onready var _card: Control = $Card
 @onready var _title: Label = $Card/Center/Panel/Box/Title
 @onready var _stars: Array[Node] = $Card/Center/Panel/Box/Stars.get_children()
@@ -26,6 +29,8 @@ func _ready() -> void:
 	Events.hearts_changed.connect(_show_hearts)
 	Events.coin_collected.connect(_show_coins)  # GameState connected first, so it has already counted it
 	Events.yarn_collected.connect(_on_yarn)
+	Events.energy_changed.connect(_show_energy)
+	Events.milk_drunk.connect(_on_milk)
 	Events.level_completed.connect(_on_completed)
 	Events.level_failed.connect(_on_failed)
 	_button.pressed.connect(restart_pressed.emit)
@@ -38,6 +43,17 @@ func _show_hearts(hearts: int) -> void:
 
 func _show_coins() -> void:
 	_coin_label.text = "%d / %d" % [GameState.coins, GameState.coin_total]
+
+func _show_energy(energy: float) -> void:
+	_energy_bar.value = energy
+	_energy_bar.modulate = ENERGY_LOW_TINT if energy < ENERGY_LOW else Color.WHITE
+
+func _on_milk() -> void:
+	var icon: Control = $Energy/MilkIcon
+	icon.pivot_offset = icon.size * 0.5
+	var pop := create_tween()
+	pop.tween_property(icon, "scale", Vector2(1.35, 1.35), 0.12)
+	pop.tween_property(icon, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK)
 
 func _on_yarn() -> void:
 	_yarn.modulate = Color.WHITE

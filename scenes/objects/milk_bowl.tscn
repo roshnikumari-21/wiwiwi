@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/objects/milk_bowl.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/objects/milk_bowl_full.png" id="2_full"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bowl"]
+size = Vector2(130, 90)
+
+[node name="MilkBowl" type="Area2D"]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_script")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_full")
+offset = Vector2(0, -132)
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -45)
+shape = SubResource("RectangleShape2D_bowl")

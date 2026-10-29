@@ -17,6 +17,10 @@ extends CharacterBody2D
 @export var coyote_time: float = 0.12      ## can still jump this long after walking off a ledge
 @export var jump_buffer: float = 0.12      ## a jump pressed this long before landing still counts
 
+@export_group("Energy")
+@export var energy_seconds: float = 35.0   ## seconds of moving on a full tank
+@export var tired_speed: float = 0.65      ## share of run speed left when energy is empty (never a fail)
+
 @export_group("Idle")
 @export var breath_amount: float = 0.012   ## how much she rises when breathing (1.2 %)
 @export var breath_period: float = 2.6     ## seconds per breath
@@ -24,6 +28,7 @@ extends CharacterBody2D
 @onready var sprite: AnimatedSprite2D = $Sprite
 
 var _breath_time := 0.0
+var energy := 1.0 : set = set_energy   ## 0..1; drains while moving, milk refills it
 var frozen := false     ## true when the level is over: no input, gravity only
 var _walk_target := NAN ## while frozen, the game can walk her to this x (e.g. into the girl's arms)
 
@@ -58,6 +63,7 @@ func _physics_process(delta: float) -> void:
 		_handle_run(delta)
 	move_and_slide()
 	_after_move()
+	_use_energy(delta)
 	_update_animation()
 
 func _apply_gravity(delta: float) -> void:
@@ -85,7 +91,7 @@ func _handle_run(delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
 	var grip := 1.0 if is_on_floor() else air_control
 	if direction != 0.0:
-		velocity.x = move_toward(velocity.x, direction * run_speed, acceleration * grip * delta)
+		velocity.x = move_toward(velocity.x, direction * run_speed * _speed_factor(), acceleration * grip * delta)
 		sprite.flip_h = direction < 0.0
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, deceleration * grip * delta)
@@ -112,7 +118,9 @@ func _update_animation() -> void:
 	elif abs(velocity.x) > 20.0:
 		sprite.play("walk")
 	else:
-		sprite.play("idle")
+		sprite.play("sleepy" if is_tired() else "idle")
+	# Tired legs move slower, matching the slower speed.
+	sprite.speed_scale = _speed_factor() if sprite.animation == "walk" else 1.0
 
 # Gentle breathing while standing still, done by scaling (no extra frames, so nothing can wobble).
 func _breathe(delta: float) -> void:
@@ -133,6 +141,27 @@ func _do_squash(amount: Vector2) -> void:
 	_squash = create_tween()
 	_squash.tween_property(sprite, "scale", _base_scale * amount, 0.07)
 	_squash.tween_property(sprite, "scale", _base_scale, 0.14)
+
+func set_energy(value: float) -> void:
+	value = clampf(value, 0.0, 1.0)
+	if value != energy:
+		energy = value
+		Events.energy_changed.emit(energy)
+
+func is_tired() -> bool:
+	return energy <= 0.0
+
+## Drank milk: full energy again, with a happy little hop of the sprite.
+func refill_energy() -> void:
+	energy = 1.0
+	_do_squash(Vector2(0.9, 1.12))
+
+func _use_energy(delta: float) -> void:
+	if not frozen and abs(velocity.x) > 20.0:
+		energy -= delta / energy_seconds
+
+func _speed_factor() -> float:
+	return tired_speed if is_tired() else 1.0
 
 ## Put the cat back at a point (after a pit fall), with a short blink so the player sees where she is.
 func respawn_at(point: Vector2) -> void:

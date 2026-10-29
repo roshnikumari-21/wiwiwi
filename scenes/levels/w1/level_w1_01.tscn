@@ -6,9 +6,11 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/golden_yarn.tscn" id="4_yarn"]
 [ext_resource type="PackedScene" path="res://scenes/objects/checkpoint.tscn" id="5_flag"]
 [ext_resource type="PackedScene" path="res://scenes/objects/goal_girl.tscn" id="6_goal"]
+[ext_resource type="PackedScene" path="res://scenes/objects/milk_bowl.tscn" id="7_milk"]
 
 [node name="LevelW1_01" instance=ExtResource("1_base")]
 level_id = "w1_01"
+start_energy = 0.4
 
 [node name="LeftWall" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(-128, -200)
@@ -104,3 +106,6 @@ position = Vector2(3000, 760)
 
 [node name="GoalGirl" parent="Objects" instance=ExtResource("6_goal")]
 position = Vector2(5320, 900)
+
+[node name="MilkBowl" parent="Objects" instance=ExtResource("7_milk")]
+position = Vector2(2250, 900)

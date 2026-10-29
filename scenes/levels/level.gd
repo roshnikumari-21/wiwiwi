@@ -7,6 +7,7 @@ extends Node2D
 @export var level_id: String = ""            ## must match an id in the level catalog
 @export var extra_sky: float = 700.0         ## how far the camera may look above the highest ground
 @export var fall_margin: float = 400.0       ## falling this far below the lowest ground = fell in a pit
+@export_range(0.0, 1.0) var start_energy: float = 1.0  ## the cat's energy at the start (lower = milk matters sooner)
 
 @onready var player: Player = $Player
 @onready var camera: Camera2D = $Player/Camera
@@ -35,6 +36,8 @@ func _ready() -> void:
 
 	GameState.begin_attempt(level_id, get_tree().get_nodes_in_group("coins").size())
 	_respawn_point = spawn.global_position
+	player.energy = start_energy
+	Events.energy_changed.emit(player.energy)
 	_respawn()
 
 func _physics_process(_delta: float) -> void:
