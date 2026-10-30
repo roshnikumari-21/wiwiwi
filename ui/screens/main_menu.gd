@@ -1,7 +1,7 @@
 extends Control
 ## Home page: the cottage porch. The kitten lies on her cushion, breathing and blinking now and then,
 ## the wooden-sign logo sways gently, and the big Play button opens the level map.
-## Settings / trophy / achievements buttons join once their screens exist (no dead buttons).
+## The round button opens Settings. Trophy / achievements buttons join with Play Games (no dead buttons).
 
 const STAGE_SIZE := Vector2(1774, 887)     ## size of the porch picture; Stage children use its pixels
 const KITTEN_OPEN := preload("res://assets/art/ui/home/kitten_lying.png")
@@ -11,11 +11,17 @@ const KITTEN_BLINK := preload("res://assets/art/ui/home/kitten_lying_blink.png")
 @onready var kitten: Sprite2D = $Stage/Kitten
 @onready var logo: Sprite2D = $Stage/Logo
 @onready var play: TextureButton = $Stage/Play
+@onready var settings: TextureButton = $Stage/Settings
+var menu: GameMenu
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_fit)
 	_fit()
 	play.pressed.connect(_on_play)
+	menu = GameMenu.new()
+	menu.name = "Menu"
+	$UI.add_child(menu)
+	settings.pressed.connect(menu.show_settings)
 	play.grab_focus.call_deferred()
 	_breathe()
 	_blink_later()

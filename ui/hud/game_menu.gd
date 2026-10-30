@@ -1,6 +1,6 @@
 class_name GameMenu
 extends Control
-## The in-level popups, built from the UI kit: Paused, Level complete! and Try again?
+## The popups, built from the UI kit: Paused, Level complete!, Try again? and Settings.
 ## A leafy cream panel with a wooden title sign, the kitten (cheering / sleepy) and pill buttons.
 ## Works while the game is paused. Emits what the player chose; the HUD/level act on it.
 
@@ -9,7 +9,9 @@ signal restart_pressed
 signal next_pressed
 signal map_pressed
 signal home_pressed
+signal settings_closed
 
+const SIZES := {"S": 0.8, "M": 1.0, "L": 1.2}   ## touch-button size choices
 const UI := "res://assets/art/ui/menu/"
 const PANEL := preload(UI + "panel_leafy.png")
 const SIGN := preload(UI + "sign_wood.png")
@@ -69,9 +71,49 @@ func show_pause() -> void:
 	_title("PAUSE_TITLE")
 	_box.add_child(_button("BTN_RESUME", "green", "play", resume_pressed, 640))
 	_box.add_child(_button("BTN_RESTART", "yellow", "replay", restart_pressed, 640))
-	_box.add_child(_row([_button("RESULT_MAP", "brown", "none", map_pressed, 310),
-		_button("BTN_HOME", "red", "home", home_pressed, 310)]))
+	_box.add_child(_row([_button("RESULT_MAP", "brown", "none", map_pressed, 180),
+		_button("SETTINGS_TITLE", "brown", "settings", settings_closed, 300, show_settings.bind(true)),
+		_button("BTN_HOME", "red", "home", home_pressed, 240)]))
 	_open(0.0)
+
+## Settings: music and sound on/off, touch-button size. Saved at once. `from_pause` puts a Back
+## button that returns to the pause menu; otherwise it closes (home page).
+func show_settings(from_pause := false) -> void:
+	_clear()
+	_title("SETTINGS_TITLE")
+	_box.add_child(_toggle("SET_MUSIC", "music_on", "music"))
+	_box.add_child(_toggle("SET_SOUND", "sound_on", "sound"))
+	var size_row := _row([_label("SET_BUTTONS", 270)])
+	for key in SIZES:
+		var b := _button(key, "yellow" if is_equal_approx(SaveManager.get_setting("controls_size"), SIZES[key]) else "brown",
+			"none", settings_closed, 116, _set_controls_size.bind(SIZES[key]))
+		size_row.add_child(b)
+	_box.add_child(size_row)
+	_box.add_child(_button("BTN_BACK" if from_pause else "BTN_DONE", "green", "none", settings_closed, 400,
+		show_pause if from_pause else close_settings))
+	_open(0.0)
+
+func close_settings() -> void:
+	close()
+	settings_closed.emit()
+
+func _toggle(key: String, setting: String, icon_name: String) -> Control:
+	var on: bool = SaveManager.get_setting(setting)
+	var icon := _icon(load(UI + "icon_%s_%s.png" % [icon_name, "on" if on else "off"]), 74, Color.WHITE)
+	var button := _button("ON" if on else "OFF", "green" if on else "red", "none", settings_closed, 170,
+		func():
+			SaveManager.set_setting(setting, not SaveManager.get_setting(setting))
+			_refresh_settings())
+	button.name = key
+	return _row([icon, _label(key, 300), button])
+
+func _set_controls_size(value: float) -> void:
+	SaveManager.set_setting("controls_size", value)
+	_refresh_settings()
+
+func _refresh_settings() -> void:
+	show_settings(_box.find_child("BTN_BACK", true, false) != null)
+
 
 func show_complete(stars: int, coins: int, coin_total: int, has_yarn: bool, has_next: bool) -> void:
 	_clear()
@@ -143,15 +185,24 @@ func _title(key: String) -> void:
 	sign.add_child(label)
 	_box.add_child(sign)
 
-func _button(key: String, colour: String, symbol: String, pressed: Signal, width: float) -> PillButton:
+## A pill button. It emits `pressed` when tapped, or calls `action` instead when one is given.
+func _button(key: String, colour: String, symbol: String, pressed: Signal, width: float, action := Callable()) -> PillButton:
 	var b := PillButton.new()
 	b.name = key
 	b.text = key
 	b.colour = colour
 	b.symbol = symbol
 	b.custom_minimum_size = Vector2(width, 118)
-	b.pressed.connect(pressed.emit)
+	b.pressed.connect(action if action.is_valid() else pressed.emit)
 	return b
+
+func _label(key: String, width: float) -> Label:
+	var label := Label.new()
+	label.text = key
+	label.custom_minimum_size = Vector2(width, 0)
+	label.add_theme_font_size_override("font_size", 46)
+	label.add_theme_color_override("font_color", BROWN)
+	return label
 
 func _row(items: Array) -> HBoxContainer:
 	var row := HBoxContainer.new()
@@ -210,6 +261,10 @@ func _icon(texture: Texture2D, size: float, tint: Color) -> TextureRect:
 	return icon
 
 func _open(delay: float) -> void:
+	if visible and delay == 0.0:   # switching popups (pause <-> settings): no re-entrance animation
+		_panel.scale = Vector2.ONE
+		_focus_first.call_deferred()
+		return
 	modulate.a = 0.0
 	show()
 	_panel.pivot_offset = _panel.size * 0.5
@@ -217,6 +272,9 @@ func _open(delay: float) -> void:
 	t.tween_property(self, "modulate:a", 1.0, 0.25).set_delay(delay)
 	_panel.scale = Vector2(0.85, 0.85)
 	t.tween_property(_panel, "scale", Vector2.ONE, 0.3).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_focus_first.call_deferred()
+
+func _focus_first() -> void:
 	var first := _box.find_children("*", "PillButton", true, false)
 	if not first.is_empty():
-		first[0].grab_focus.call_deferred()
+		first[0].grab_focus()

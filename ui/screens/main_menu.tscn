@@ -9,6 +9,9 @@
 [ext_resource type="Texture2D" path="res://assets/art/ui/home/play_btn.png" id="7_play"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/home/play_btn_pressed.png" id="8_play_p"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/menu/icon_play.png" id="9_icon"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/home/round_btn.png" id="10_round"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/home/round_btn_pressed.png" id="11_round_p"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/icon_settings.png" id="12_gear"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -72,6 +75,33 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("9_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Settings" type="TextureButton" parent="Stage"]
+layout_mode = 0
+offset_left = 560.0
+offset_top = 755.0
+offset_right = 670.0
+offset_bottom = 855.0
+texture_normal = ExtResource("10_round")
+texture_pressed = ExtResource("11_round_p")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="Stage/Settings"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 28.0
+offset_top = 18.0
+offset_right = -18.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("12_gear")
 expand_mode = 1
 stretch_mode = 5
 

@@ -95,7 +95,7 @@ flowchart TD
 | Pre-level hint | `ui/screens/level_intro.tscn` |
 | HUD (hearts, coins, yarn, energy, pause, touch controls) | `ui/hud/hud.tscn` |
 | Pause, Level Complete, Level Failed | `ui/screens/pause_menu.tscn`, `level_complete.tscn`, `level_failed.tscn` |
-| Settings (music, sound, control size/opacity, screen shake, language, Play Games, reset progress) | `ui/screens/settings.tscn` |
+| Settings v1: music on/off, sounds on/off, touch-button size S/M/L (later: Play Games sign-in, Credits, reset progress) | popup in `ui/hud/game_menu.gd` (`show_settings`) |
 | Credits | `ui/screens/credits.tscn` |
 | Owner reunion | `scenes/objects/owner/owner.tscn` |
 
@@ -263,6 +263,7 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 - [x] Owner art received 31 Oct 2026: clean map "Whimsical Countryside Adventure Map" (path has round pads; `SPOTS` set on them; inpainting stand-in retired) and logo "Kawaii Cat Wiwiwi Garden Logo" (already transparent; trimmed to `assets/art/ui/menu/logo.png`, sways gently on the home page, replaces the wooden-sign title). Logo also usable later for the loading screen and store icon/feature graphic. (The home page now uses the sign-only logo, so the cat logo is reserved for loading screen + store.)
 - [x] SaveManager v1 (30 Oct 2026): progress + unlocks + best results + settings, safe writes, backup, migration; `dev/m2_save_test.gd` (10 checks)
 - [x] Art direction set by the concept art in `assets/raw_assets_idea/` (§5.1)
+- [x] Settings (31 Oct 2026): popup in the same style as the other popups (`GameMenu.show_settings`), opened from a round gear button on the home page and from a Settings button in the pause menu (Back returns to the pause menu; the game stays paused). Music on/off, Sounds on/off (sounds = SFX + UI buses), touch buttons S / M / L (0.8 / 1.0 / 1.2, applied immediately). Saved at once in `user://settings.cfg`. `AudioManager` mutes the buses from the settings, so music/SFX added later obey automatically. Left out on purpose (decided earlier): volume sliders, vibration, button opacity. Play Games sign-in and Credits join the settings screen when they exist. `dev/m2_settings_test.gd` (12 checks)
 - [x] Font (31 Oct 2026, owner approved): **Fredoka** (Google Fonts, SIL Open Font License 1.1 = free for commercial use, licence kept in `assets/fonts/licenses/Fredoka-OFL.txt`; must ship/credit per OFL in the Credits screen). SemiBold is the default for all text via `ui/theme/wiwiwi_theme.tres` (project setting gui/theme/custom); Bold for titles and pill buttons. Long popup titles shrink to fit the sign.
 - [ ] Missing art created (§5.1 list); World 1 seamless tiles + layered background
 - [ ] Final cat animations, World 1 tileset + parallax, core objects

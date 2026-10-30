@@ -10,6 +10,14 @@ const BUTTON_SCALE := 0.55  ## art is ~390 px; 0.55 ≈ 215 px at 1080p
 func _ready() -> void:
 	visible = show_on_desktop or OS.has_feature("mobile")
 	modulate.a = opacity
+	SaveManager.settings_changed.connect(_on_setting)
+	_apply_size()
+
+func _on_setting(key: String, _value) -> void:
+	if key == "controls_size":
+		_apply_size()
+
+func _apply_size() -> void:
 	size_scale = float(SaveManager.get_setting("controls_size"))
 	for button in find_children("*", "TouchScreenButton", true, false):
 		button.scale = Vector2.ONE * BUTTON_SCALE * size_scale

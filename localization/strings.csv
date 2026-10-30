@@ -19,3 +19,14 @@ BTN_RESTART,Restart
 BTN_HOME,Home
 YARN_FOUND,Golden Yarn!
 YARN_MISSED,Yarn hidden
+SETTINGS_TITLE,Settings
+SET_MUSIC,Music
+SET_SOUND,Sounds
+SET_BUTTONS,Buttons
+S,S
+M,M
+L,L
+ON,On
+OFF,Off
+BTN_BACK,Back
+BTN_DONE,Done
