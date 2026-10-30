@@ -4,6 +4,7 @@ extends Control
 ## plus the end-of-level card (stars or "out of hearts"). Placeholder look; real screens come in M2.
 
 signal restart_pressed
+signal next_pressed
 
 const HEART_FULL := preload("res://assets/art/objects/heart_full.png")
 const HEART_EMPTY := preload("res://assets/art/objects/heart_empty.png")
@@ -22,7 +23,8 @@ var _fps: Label   ## test builds only: frames per second, for the performance ch
 @onready var _title: Label = $Card/Center/Panel/Box/Title
 @onready var _stars: Array[Node] = $Card/Center/Panel/Box/Stars.get_children()
 @onready var _card_coins: Label = $Card/Center/Panel/Box/Coins
-@onready var _button: Button = $Card/Center/Panel/Box/Again
+@onready var _button: Button = $Card/Center/Panel/Box/Buttons/Again
+@onready var _next: Button = $Card/Center/Panel/Box/Buttons/Next
 
 func _ready() -> void:
 	_card.hide()
@@ -35,6 +37,7 @@ func _ready() -> void:
 	Events.level_completed.connect(_on_completed)
 	Events.level_failed.connect(_on_failed)
 	_button.pressed.connect(restart_pressed.emit)
+	_next.pressed.connect(next_pressed.emit)
 	_show_hearts(GameState.hearts)
 	_show_coins.call_deferred()
 	if OS.is_debug_build():
@@ -81,6 +84,7 @@ func _on_completed(stars: int, coins: int, coin_total: int, _has_yarn: bool) -> 
 	for i in _stars.size():
 		_stars[i].texture = STAR_FULL if i < stars else STAR_EMPTY
 	$Card/Center/Panel/Box/Stars.show()
+	_next.visible = GameState.catalog.next_after(GameState.current_level_id) != null
 	_open_card()
 
 func _on_failed() -> void:
@@ -94,4 +98,4 @@ func _open_card() -> void:
 	_card.modulate.a = 0.0
 	_card.show()
 	create_tween().tween_property(_card, "modulate:a", 1.0, 0.3).set_delay(0.6)
-	_button.grab_focus.call_deferred()
+	(_next if _next.visible else _button).grab_focus.call_deferred()

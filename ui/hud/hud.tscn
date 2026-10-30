@@ -218,9 +218,20 @@ theme_override_font_sizes/font_size = 48
 text = "RESULT_COINS"
 horizontal_alignment = 1
 
-[node name="Again" type="Button" parent="Card/Center/Panel/Box"]
+[node name="Buttons" type="HBoxContainer" parent="Card/Center/Panel/Box"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Again" type="Button" parent="Card/Center/Panel/Box/Buttons"]
 custom_minimum_size = Vector2(380, 120)
 layout_mode = 2
-size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 52
 text = "RESULT_REPLAY"
+
+[node name="Next" type="Button" parent="Card/Center/Panel/Box/Buttons"]
+visible = false
+custom_minimum_size = Vector2(380, 120)
+layout_mode = 2
+theme_override_font_sizes/font_size = 52
+text = "RESULT_NEXT"

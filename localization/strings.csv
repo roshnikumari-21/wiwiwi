@@ -8,3 +8,7 @@ RESULT_FAIL,Out of hearts
 RESULT_COINS,Coins: %d / %d
 RESULT_REPLAY,Play again
 RESULT_RETRY,Try again
+RESULT_NEXT,Next level
+LEVEL_W1_01_TITLE,Meadow Morning
+LEVEL_W1_02_TITLE,Slime Meadow
+LEVEL_W1_03_TITLE,Over the Water

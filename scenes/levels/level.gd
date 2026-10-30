@@ -37,6 +37,7 @@ func _ready() -> void:
 	for goal in get_tree().get_nodes_in_group("goal"):
 		goal.reached.connect(_on_goal_reached.bind(goal))
 	hud.restart_pressed.connect(restart)
+	hud.next_pressed.connect(_go_next)
 
 	GameState.begin_attempt(level_id, get_tree().get_nodes_in_group("coins").size())
 	_respawn_point = spawn.global_position
@@ -94,6 +95,11 @@ func _on_goal_reached(goal: Node) -> void:
 func _respawn() -> void:
 	player.respawn_at(_respawn_point)
 	camera.reset_smoothing()
+
+func _go_next() -> void:
+	var next := GameState.catalog.next_after(level_id)
+	if next:
+		GameState.start_level(next.id)
 
 ## Play the level again from the start (fresh hearts, coins and flags).
 func restart() -> void:

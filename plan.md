@@ -244,7 +244,8 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] World 1 parallax background (30 Oct 2026): sky+hills (far), countryside panorama (mid, mirrored so it repeats; its grass continues below, darkening, so pits never show empty sky). The bushes strip was tried as a near layer and dropped at the owner's request (looked messy); M11: 58 FPS; `tools/art_pipeline/make_background.py`, `scenes/levels/backgrounds/meadow_background.tscn` in `level_base` (every level gets it). Debug builds show an FPS counter (top-right) for the performance check
 - [x] Water in pits (surface strip + underwater body, splash, sink) and new spike-trap art (short/long) replacing the old spikes; level 1-1 has water in all 3 pits; hazard test now 15 checks
 - [x] Light effects (30 Oct 2026): `scenes/fx/fx.gd` (`Fx.spawn`), cut by grid from the effects sheet with `tools/art_pipeline/make_fx.py`: coin flip + sparkles, milk energy sparkle, checkpoint star burst, landing dust (big falls), heart break when hurt, confetti at the hug; `dev/m1_fx_test.gd` checks they appear and clean themselves up
-- [ ] 3 levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
+- [x] 3 levels (30 Oct 2026): 1-1 "Meadow Morning" (basics, 16 coins), 1-2 "Slime Meadow" (4 slimes, milk at half energy, sideways plank over a pond, floating steps to the yarn; 19 coins), 1-3 "Over the Water" (lift plank up a cliff, long spikes with a floating step above each, 4 ponds, 5 slimes, 2 milk; 21 coins). Every main-path gap ≤ 260 px so a tired cat always gets through. Win card has "Next level" (1-1 → 1-2 → 1-3); catalog via `tools/make_level_data.gd`; `dev/m1_levels_test.gd` checks each level loads/finishes and the plank, lift and spike-step moves
+- [ ] Playtest and tune; performance check (M11 + emulator 20:9/tablet)
 
 ### M2 — Vertical slice (≈ 110 h)
 - [x] Art direction set by the concept art in `assets/raw_assets_idea/` (§5.1)
