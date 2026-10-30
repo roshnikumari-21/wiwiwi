@@ -27,6 +27,12 @@ RECIPES = {
         ["spikes", "flag_off", "flag_on", "cat_bed", "floating_island", "signpost"],
         None,
     ),
+    # World 1 slime (green row); the orange row is kept in the sheet for later.
+    "Kawaii Slime Sprite Sheet.png": (
+        ART / "enemies" / "slime",
+        ["slime_idle", "slime_move_0", "slime_move_1", "slime_squash", None, None, None, None],
+        None,
+    ),
     # Girl at the level goal: wait -> crouch -> kneel reaching -> kneel arms wide, then the hug loop.
     "Chibi Girl Hugging Animation Sprites.png": (
         ART / "characters" / "girl",
@@ -48,6 +54,7 @@ RECIPES = {
 # Optional 3rd value = resize factor, to bring a sheet drawn bigger to the same size as the others.
 CENTRED_GROUPS = {
     ART / "objects": [(["coin_0", "coin_1", "coin_2", "coin_3", "coin_4"], "centre")],
+    ART / "enemies" / "slime": [(["slime_idle", "slime_move_0", "slime_move_1", "slime_squash"], "feet")],
     ART / "characters" / "girl": [
         (["girl_wait", "girl_crouch", "girl_kneel_reach", "girl_kneel_open"], "shoe"),
         # The hug sheet is drawn bigger: kneeling height 664 px vs 509 px in the kneel-down sheet.

@@ -5,6 +5,8 @@ extends Node
 signal coin_collected
 signal yarn_collected
 signal hearts_changed(hearts: int)
+signal player_hurt                     ## a hazard or enemy touched the cat
+signal enemy_stomped
 signal energy_changed(energy: float)   ## 0..1
 signal milk_drunk
 signal checkpoint_reached(respawn_position: Vector2)

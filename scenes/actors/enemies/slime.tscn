@@ -1,0 +1,66 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/actors/enemies/slime.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/slime/slime_idle.png" id="2_idle"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/slime/slime_move_0.png" id="3_m0"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/slime/slime_move_1.png" id="4_m1"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/slime/slime_squash.png" id="5_squash"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_slime"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_idle")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_m0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_m1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_m0")
+}],
+"loop": true,
+"name": &"move",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_squash")
+}],
+"loop": false,
+"name": &"squash",
+"speed": 1.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(100, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hit"]
+size = Vector2(112, 76)
+
+[node name="Slime" type="CharacterBody2D" groups=["enemies"]]
+collision_layer = 4
+collision_mask = 1
+floor_snap_length = 12.0
+script = ExtResource("1_script")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.32, 0.32)
+sprite_frames = SubResource("SpriteFrames_slime")
+animation = &"move"
+autoplay = "move"
+offset = Vector2(0, -133.5)
+
+[node name="Body" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="Shape" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -38)
+shape = SubResource("RectangleShape2D_hit")

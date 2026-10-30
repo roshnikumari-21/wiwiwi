@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/checkpoint.tscn" id="5_flag"]
 [ext_resource type="PackedScene" path="res://scenes/objects/goal_girl.tscn" id="6_goal"]
 [ext_resource type="PackedScene" path="res://scenes/objects/milk_bowl.tscn" id="7_milk"]
+[ext_resource type="PackedScene" path="res://scenes/objects/spikes.tscn" id="8_spikes"]
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/slime.tscn" id="9_slime"]
 
 [node name="LevelW1_01" instance=ExtResource("1_base")]
 level_id = "w1_01"
@@ -109,3 +111,10 @@ position = Vector2(5320, 900)
 
 [node name="MilkBowl" parent="Objects" instance=ExtResource("7_milk")]
 position = Vector2(2250, 900)
+
+[node name="Spikes" parent="Objects" instance=ExtResource("8_spikes")]
+position = Vector2(1050, 900)
+
+[node name="Slime" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(4450, 900)
+patrol_distance = 200.0

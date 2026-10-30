@@ -48,7 +48,8 @@
 
 ## 3. Gameplay Rules
 - **Controls feel:** acceleration/deceleration, variable jump height, coyote time, jump buffer. First M1 values (in `player.gd`, tunable in the Inspector): run 520 px/s reached in 0.08 s · full jump ≈ 300 px (0.42 s to apex, faster fall) · tap = short hop ≈ 140 px · coyote 0.12 s · buffer 0.12 s. Cat ≈ 150 px tall on screen.
-- **Failing:** spikes, pits, enemy side-hits cost 1 heart → respawn at last checkpoint (blink on respawn). 0 hearts → Level Failed card → "Try again" restarts the level with fresh hearts, coins and flags.
+- **Failing:** spikes, pits, enemy side-hits cost 1 heart → short hurt pose (knock-back hop, 0.7 s) → respawn at last checkpoint (blink + 1.2 s safe time, so one mistake never costs two hearts). Hazards only announce `Events.player_hurt`; the level applies the rule.
+- **Slime:** patrols around its start point; landing on top squashes it and the cat bounces (no heart lost); side contact hurts. A cat in the hurt pose can't stomp or be hit. 0 hearts → Level Failed card → "Try again" restarts the level with fresh hearts, coins and flags.
 - **Checkpoint:** paw flag; first touch raises it and moves the respawn point there. **Goal (changed 30 Oct 2026):** the girl waits at the end of **every** level (no cat bed). She waits with clasped hands and bounces when the cat comes near; reaching her, she kneels down (crouch → kneel reaching → arms wide), the cat walks in, and they hug (3-frame loop) while hearts float up, then the result card with stars. The world-end reunion (level 10) stays as a bigger story moment.
 - **Energy:** drains slowly while moving (full tank = 35 s of moving, `Player.energy_seconds`); milk refills it to full. At 0 the cat runs at 65 % speed with slower legs and yawns (sleepy idle) when standing: never a fail (a tired cat still clears the widest gaps; tested). The cat only drinks when not already full, so a bowl is not wasted. Each level sets `start_energy` (1-1 starts at 40 % to teach milk). HUD: milk icon + bar, orange below 25 %.
 - **Stars:** ★ reach the goal · ★★ collect ≥ 80% of coins · ★★★ find the hidden Golden Yarn.
@@ -233,7 +234,8 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] Level-end hug: girl at the goal `goal_girl.tscn` (waits → bounces → kneels down in 3 frames → cat walks in → 3-frame hug loop + hearts → result card); cat bed removed; `Player.walk_to()` for cutscenes; pipeline clears trapped white gaps (`hole_min_area`)
 - [x] Hearts, checkpoints, respawn, coins, golden yarn, goal, stars: object scenes in `scenes/objects/` (coin, golden_yarn, checkpoint, goal_girl) using cut concept art; `Events` + `GameState` run the attempt; placeholder HUD (`ui/hud/hud.tscn`: hearts, coins x/y, yarn) + win/fail card; level 1-1 has 16 coins, 1 yarn, 1 flag, the girl; `dev/m1_rules_test.gd` passes (22 checks); runs on the M11
 - [x] Energy + milk: `Player` energy (drain, tired speed, sleepy idle), `milk_bowl.tscn` (full → empty), HUD energy bar, 1 bowl in level 1-1; `dev/m1_energy_test.gd` passes (14 checks)
-- [ ] Slime, spikes, pits, platforms
+- [x] Spikes + slime: shared hurt rule (`Events.player_hurt` → level), `spikes.tscn`, `slime.tscn` (green row of the slime sheet; orange kept for later), 1 spike patch + 1 slime in level 1-1; `dev/m1_hazards_test.gd` passes (11 checks)
+- [ ] Moving + one-way platforms
 - [x] Touch controls in SafeArea (concept-art buttons, opacity/size ready for Settings)
 - [ ] 3 greybox levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
 

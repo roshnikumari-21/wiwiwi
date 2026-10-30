@@ -17,6 +17,10 @@ extends CharacterBody2D
 @export var coyote_time: float = 0.12      ## can still jump this long after walking off a ledge
 @export var jump_buffer: float = 0.12      ## a jump pressed this long before landing still counts
 
+@export_group("Hurt")
+@export var safe_time: float = 1.2         ## after a respawn, hazards can't hurt her for this long
+@export var stomp_bounce: float = 0.7      ## bounce off a stomped enemy, as a share of a full jump
+
 @export_group("Energy")
 @export var energy_seconds: float = 35.0   ## seconds of moving on a full tank
 @export var tired_speed: float = 0.65      ## share of run speed left when energy is empty (never a fail)
@@ -30,6 +34,7 @@ extends CharacterBody2D
 var _breath_time := 0.0
 var energy := 1.0 : set = set_energy   ## 0..1; drains while moving, milk refills it
 var frozen := false     ## true when the level is over: no input, gravity only
+var _safe_left := 0.0   ## seconds of "can't be hurt" left
 var _walk_target := NAN ## while frozen, the game can walk her to this x (e.g. into the girl's arms)
 
 signal arrived          ## reached the walk_to() target
@@ -55,6 +60,7 @@ func _process(delta: float) -> void:
 	_breathe(delta)
 
 func _physics_process(delta: float) -> void:
+	_safe_left = max(_safe_left - delta, 0.0)
 	_apply_gravity(delta)
 	if frozen:
 		_auto_walk(delta)
@@ -169,8 +175,11 @@ func respawn_at(point: Vector2) -> void:
 	velocity = Vector2.ZERO
 	_in_jump = false
 	_fall_peak_speed = 0.0
+	frozen = false
+	_safe_left = safe_time
 	sprite.flip_h = false
-	var blink := create_tween().set_loops(4)
+	sprite.play("idle")
+	var blink := create_tween().set_loops(7)
 	blink.tween_property(sprite, "modulate:a", 0.3, 0.08)
 	blink.tween_property(sprite, "modulate:a", 1.0, 0.08)
 
@@ -191,6 +200,23 @@ func _auto_walk(delta: float) -> void:
 	else:
 		velocity.x = sign(dx) * run_speed * 0.5
 		sprite.flip_h = dx < 0.0
+
+## Hazards ask this before hurting her (just respawned, or already hurt).
+func can_be_hurt() -> bool:
+	return _safe_left <= 0.0 and not frozen
+
+## Got hurt: a little knock-back hop and the hurt pose; the level decides what happens next.
+func knock_back() -> void:
+	frozen = true
+	var away := 1.0 if sprite.flip_h else -1.0
+	velocity = Vector2(away * 220.0, _jump_speed * 0.45)
+	sprite.play("hurt")
+
+## Landed on an enemy: bounce up (holding jump doesn't matter, it's always the same bounce).
+func stomp_bounce_up() -> void:
+	velocity.y = _jump_speed * stomp_bounce
+	_in_jump = true
+	_do_squash(Vector2(0.85, 1.15))
 
 ## Out of hearts: stop and look sad.
 func give_up() -> void:
