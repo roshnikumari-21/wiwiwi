@@ -21,7 +21,7 @@ func _run() -> void:
 		await process_frame
 	var menu = current_scene
 	_check("home page loads", menu != null and menu.name == "MainMenu", menu)
-	menu.get_node("UI/SafeArea/Play").pressed.emit()
+	menu.get_node("Stage/Play").pressed.emit()
 	for i in 60:
 		await process_frame
 	_check("Play opens the level map", current_scene != null and current_scene.name == "LevelMap", current_scene)

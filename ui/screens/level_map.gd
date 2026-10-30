@@ -14,6 +14,8 @@ const LOCKED := preload("res://assets/art/ui/menu/level_locked.png")
 const STAR_FULL := preload("res://assets/art/ui/menu/level_star_full.png")
 const STAR_EMPTY := preload("res://assets/art/ui/menu/level_star_empty.png")
 const CAT := preload("res://assets/art/characters/cat/cat_frames.tres")
+const GIRL := preload("res://assets/art/characters/girl/girl_wait.png")
+const GIRL_SPOT := Vector2(1615, 585)       ## where she waits, just past the last level
 const BUTTON_WIDTH := 150.0                 ## in map pixels
 const STAR_SIZE := 40.0
 
@@ -30,6 +32,7 @@ func _ready() -> void:
 	for i in SPOTS.size():
 		var level: LevelData = levels[i] if i < levels.size() else null
 		_add_spot(i, level, level != null and level.id == next_id)
+	_place_girl()
 	back.pressed.connect(_go_home)
 
 ## The picture always covers the whole screen (wider phones crop a little top and bottom).
@@ -103,6 +106,20 @@ func _place_kitten(spot: Vector2) -> void:
 	hop.tween_interval(2.0)
 	hop.tween_property(cat, "position:y", cat.position.y - 26, 0.18).set_ease(Tween.EASE_OUT)
 	hop.tween_property(cat, "position:y", cat.position.y, 0.22).set_ease(Tween.EASE_IN)
+
+## The girl waits at the end of the path: where the kitten's journey leads.
+func _place_girl() -> void:
+	var girl := Sprite2D.new()
+	girl.name = "Girl"
+	girl.texture = GIRL
+	girl.scale = Vector2(0.2, 0.2)
+	girl.offset = Vector2(0, -GIRL.get_height() * 0.5 + 10)   # her shoe on the spot
+	girl.position = GIRL_SPOT
+	map.add_child(girl)
+	map.move_child(girl, 1)   # behind the level buttons
+	var breathe := create_tween().set_loops().set_trans(Tween.TRANS_SINE)
+	breathe.tween_property(girl, "scale:y", 0.204, 1.3)
+	breathe.tween_property(girl, "scale:y", 0.2, 1.3)
 
 func _play(level_id: String) -> void:
 	for b in _buttons:
