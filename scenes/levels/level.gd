@@ -92,7 +92,7 @@ func _terrain_bounds() -> Rect2:
 	var rect := Rect2()
 	var first := true
 	for piece in terrain.get_children():
-		if piece is GreyboxBlock:
+		if piece is GroundBlock:
 			var r := Rect2(piece.global_position, piece.size)
 			rect = r if first else rect.merge(r)
 			first = false

@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://dev/m1_movement_test.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://scenes/objects/greybox_block.tscn" id="2_block"]
+[ext_resource type="PackedScene" path="res://scenes/objects/ground_block.tscn" id="2_block"]
 [ext_resource type="PackedScene" path="res://scenes/actors/player/player.tscn" id="3_player"]
 [ext_resource type="Script" path="res://scenes/actors/player/player_camera.gd" id="4_camera"]
 [ext_resource type="Script" path="res://ui/components/safe_area.gd" id="5_safe"]

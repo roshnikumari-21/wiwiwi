@@ -56,7 +56,7 @@
 - **Levels:** 1–3 teach, 4–7 combine, 8–9 challenge, 10 finale + owner reunion. 60–150 s each.
 - **Enemies:** World 1 slime; World 2 one new enemy + one new hazard.
 - **Level data:** each level = a scene + a small `LevelData` resource (`data/levels/<id>.tres`: id, world, index, scene path, hint). `data/levels/level_catalog.tres` lists them in order; menus and unlocks read only from it. Regenerate with `tools/make_level_data.gd` after adding a level.
-- **Level building = ground strips, not TileMap (decided 30 Oct 2026):** the World 1 art is a strip kit (left edge, repeating middle, right edge, thin floating piece) with no corners/slopes, so levels are made of resizable ground pieces. M1 uses grey `GreyboxBlock`s; in M2 the same pieces get the art skin, so greybox levels need no rebuild.
+- **Level building = ground strips, not TileMap (decided 30 Oct 2026):** the World 1 art is a strip kit (left edge, repeating middle, right edge, thin floating piece) with no corners/slopes, so levels are made of resizable ground pieces. Pieces are `GroundBlock`s (`scenes/objects/ground_block.gd`, renamed from GreyboxBlock on 30 Oct 2026): set a size and the meadow art follows: repeating grass top, dirt fill below, grass corners and side outlines only where a side is open (a flush neighbour at the same height or higher hides it; a lower neighbour gets a corner and an outline down to its surface), seeded flowers/tufts on top, and the thin 3-piece art for one-way blocks. Kit built by `tools/art_pipeline/make_ground.py` at in-game size.
 - **Save:** local versioned `user://save.json` (progress, coins, stats) with safe writes and migrations; `user://settings.cfg` for device settings. The save already has `wallet` and `cosmetics` fields so a shop needs no migration later.
 
 ## 4. Screens and Flow
@@ -136,13 +136,13 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 | Effects sheet | Dust, coin sparkle, star burst, heart break, checkpoint activation, confetti (5 frames each) | Cut into one-shot animations |
 | Icon sheets | Coin spin (5 frames), milk bowl full/empty, heart full/empty, star full/empty, all menu icons | Cut into a UI atlas |
 | UI asset sheet + control buttons | Pill buttons (4 colours × 3 states), round buttons, cream panel, wooden title sign, ribbon; touch controls ◀ ▶ 🐾 (normal/pressed) | Cut + 9-slice margins; text is added in Godot (translatable) |
-| Meadow tileset + "Meadow Platform Tile Set" | World 1 ground strip skin (edges + repeating middle) and floating pieces | Check the middle piece repeats seamlessly; cut edges |
+| Ground sheets (30 Oct): "Seamless Cartoon Grass and Dirt Tile", "Seamless Cartoon Cobblestone Dirt Texture", "Cartoon Grassy Platform End Tiles", "Cartoon Grassy Platform Tile Set", "Cute Cartoon Nature Game Assets" | World 1 ground: repeating top, dirt fill, end caps, thin one-way platform, decorations | Done: `make_ground.py`. (Older "Meadow tileset" grid has baked-in glow: not used) |
 | Props sheets | Decorations: bushes, mushrooms, rocks, fences, logs, stumps, flowers | Cut |
 | Countryside panorama | World 1 far background | Single flat layer, too small for scrolling → needs separate wide parallax layers |
 | Screen mockups (loading, menu, level map, gameplay, pause, try again, level complete, settings) | **Layout reference** for each screen | Rebuilt in Godot from the cut pieces |
 | App icons + banner | Play Store icon, adaptive icon, feature graphic (banner fits 1024×500) | Adaptive icon needs separate foreground/background layers |
 
-**Still missing (create with the same tool/style):** Golden Yarn Ball · cat fall/land/sleepy frames · moving + one-way platform pieces · seamless World 1 tiles · layered wide backgrounds · HUD frames (hearts bar, coin counter, energy bar) · level-map node set (number, stars, lock) · all World 2 art (sunset town tiles, background, enemy, crumbling tile).
+**Still missing (create with the same tool/style):** layered wide backgrounds · HUD frames (hearts bar, coin counter, energy bar) · level-map node set (number, stars, lock) · all World 2 art (sunset town tiles, background, enemy, crumbling tile).
 
 ## 6. Tech Architecture
 | Autoload | Job |
@@ -237,6 +237,7 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] Spikes + slime: shared hurt rule (`Events.player_hurt` → level), `spikes.tscn`, `slime.tscn` (green row of the slime sheet; orange kept for later), 1 spike patch + 1 slime in level 1-1; `dev/m1_hazards_test.gd` passes (11 checks)
 - [x] Moving + one-way platforms: `moving_platform.tscn` (grass-topped plank art, glides between two points with end pauses, carries the cat, one-way); one-way floating steps were already `GreyboxBlock.one_way`. Level 1-1 now has a 500 px pit before the girl that you cross on the plank; the girl's reach zone starts at the ground edge and the cat stops as soon as she reaches her; `dev/m1_platform_test.gd` passes
 - [x] Touch controls in SafeArea (concept-art buttons, opacity/size ready for Settings)
+- [x] World 1 ground art (30 Oct 2026): 5 new sheets (seamless grass+dirt top, seamless dirt, end caps, thin platform set, decorations) → `assets/art/tiles/meadow/`; caps scaled to the top tile's size and faded into it; all blocks in level 1-1 use it; tests pass
 - [ ] 3 greybox levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
 
 ### M2 — Vertical slice (≈ 110 h)
