@@ -27,6 +27,7 @@ RECIPES = {
         ["spikes", "flag_off", "flag_on", "cat_bed", "floating_island", "signpost"],
         None,
     ),
+    "Cartoon Grass-Topped Wooden Platform.png": (ART / "objects", ["platform_moving"], None),
     # World 1 slime (green row); the orange row is kept in the sheet for later.
     "Kawaii Slime Sprite Sheet.png": (
         ART / "enemies" / "slime",

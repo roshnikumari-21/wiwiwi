@@ -235,7 +235,7 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] Hearts, checkpoints, respawn, coins, golden yarn, goal, stars: object scenes in `scenes/objects/` (coin, golden_yarn, checkpoint, goal_girl) using cut concept art; `Events` + `GameState` run the attempt; placeholder HUD (`ui/hud/hud.tscn`: hearts, coins x/y, yarn) + win/fail card; level 1-1 has 16 coins, 1 yarn, 1 flag, the girl; `dev/m1_rules_test.gd` passes (22 checks); runs on the M11
 - [x] Energy + milk: `Player` energy (drain, tired speed, sleepy idle), `milk_bowl.tscn` (full → empty), HUD energy bar, 1 bowl in level 1-1; `dev/m1_energy_test.gd` passes (14 checks)
 - [x] Spikes + slime: shared hurt rule (`Events.player_hurt` → level), `spikes.tscn`, `slime.tscn` (green row of the slime sheet; orange kept for later), 1 spike patch + 1 slime in level 1-1; `dev/m1_hazards_test.gd` passes (11 checks)
-- [ ] Moving + one-way platforms
+- [x] Moving + one-way platforms: `moving_platform.tscn` (grass-topped plank art, glides between two points with end pauses, carries the cat, one-way); one-way floating steps were already `GreyboxBlock.one_way`. Level 1-1 now has a 500 px pit before the girl that you cross on the plank; the girl's reach zone starts at the ground edge and the cat stops as soon as she reaches her; `dev/m1_platform_test.gd` passes
 - [x] Touch controls in SafeArea (concept-art buttons, opacity/size ready for Settings)
 - [ ] 3 greybox levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
 

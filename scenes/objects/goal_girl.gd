@@ -58,6 +58,7 @@ func _on_body_entered(body: Node2D) -> void:
 
 ## She kneels down, the cat walks into her arms, they hug and hearts float up. Await this.
 func play_reunion(cat: Player) -> void:
+	cat.frozen = true   # she stops here; no more player control
 	if _bounce:
 		_bounce.kill()
 	_breath.kill()

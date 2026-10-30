@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/milk_bowl.tscn" id="7_milk"]
 [ext_resource type="PackedScene" path="res://scenes/objects/spikes.tscn" id="8_spikes"]
 [ext_resource type="PackedScene" path="res://scenes/actors/enemies/slime.tscn" id="9_slime"]
+[ext_resource type="PackedScene" path="res://scenes/objects/moving_platform.tscn" id="10_plank"]
 
 [node name="LevelW1_01" instance=ExtResource("1_base")]
 level_id = "w1_01"
@@ -45,8 +46,8 @@ size = Vector2(256, 40)
 one_way = true
 
 [node name="EndGround" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(4800, 900)
-size = Vector2(900, 400)
+position = Vector2(5300, 900)
+size = Vector2(400, 400)
 
 [node name="RightWall" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(5700, -200)
@@ -107,7 +108,7 @@ position = Vector2(4440, 350)
 position = Vector2(3000, 760)
 
 [node name="GoalGirl" parent="Objects" instance=ExtResource("6_goal")]
-position = Vector2(5320, 900)
+position = Vector2(5520, 900)
 
 [node name="MilkBowl" parent="Objects" instance=ExtResource("7_milk")]
 position = Vector2(2250, 900)
@@ -118,3 +119,7 @@ position = Vector2(1050, 900)
 [node name="Slime" parent="Objects" instance=ExtResource("9_slime")]
 position = Vector2(4450, 900)
 patrol_distance = 200.0
+
+[node name="MovingPlatform" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(4945, 900)
+move_by = Vector2(210, 0)

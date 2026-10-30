@@ -58,8 +58,7 @@ func _run() -> void:
 	for coin in get_nodes_in_group("coins"):
 		await _place(player, coin.global_position + Vector2(0, 50))
 	_check("all coins", gs.coins == 16, gs.coins)
-	await _place(player, Vector2(5150, 900))   # just before the girl
-	player.global_position.x = 5220.0          # step into her reach
+	await _place(player, Vector2(5320, 900))   # off the plank, into the girl's reach
 	await _frames(10)
 	_check("player frozen", player.frozen, "")
 	_check("nothing shown before the hug ends", _completed.is_empty(), _completed)
