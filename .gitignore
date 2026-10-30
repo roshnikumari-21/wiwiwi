@@ -12,3 +12,6 @@
 *.keystore
 *.jks
 export_credentials.cfg
+
+# Java crash reports from Gradle
+hs_err_pid*.log
