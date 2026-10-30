@@ -3,6 +3,8 @@ extends CanvasLayer
 ## Each layer is a TextureRect child whose texture repeats sideways. Its placement is set for the
 ## "reference" camera height (cat standing on normal ground) and nudged as the camera moves up/down.
 
+const BASE_HEIGHT := 1080.0   ## the project's design height; layer tops below are for this height
+
 ## Camera centre height (world y) the layer placements below were set for.
 @export var reference_camera_y: float = 740.0
 
@@ -33,6 +35,9 @@ func _process(_delta: float) -> void:
 		var speed: Array = layers[layer_name]
 		var tile_w := float(rect.texture.get_width())
 		rect.size = Vector2(screen.x + tile_w, rect.texture.get_height())
+		# Taller screens (tablets) add height above and below the centre, like the camera does,
+		# so the layers are placed from the screen centre, not its top edge.
+		var extra_height := (screen.y - BASE_HEIGHT) * 0.5
 		rect.position = Vector2(
 			-fposmod(centre.x * speed[0], tile_w),
-			speed[2] - (centre.y - reference_camera_y) * speed[1])
+			speed[2] + extra_height - (centre.y - reference_camera_y) * speed[1])

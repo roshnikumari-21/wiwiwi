@@ -52,7 +52,9 @@ def main():
 
     far = load("Pastel Rolling Hills and Cloudy Skies.png", 1.5)
     print("  sky colour:", far[3, far.shape[1] // 2, :3].astype(int))
-    save(crossfade_wrap(far, 150), "bg_far.png")
+    far = crossfade_wrap(far, 150)
+    far[:80, :, 3] *= np.linspace(0.0, 1.0, 80)[:, None]   # top edge fades into the plain sky colour
+    save(far, "bg_far.png")
 
     mid = load("Whimsical Pastel Countryside Panorama.png", 1.0)[260:]
     mid = clean_specks(mid)

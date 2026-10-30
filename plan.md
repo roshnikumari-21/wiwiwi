@@ -61,7 +61,7 @@
 - **Enemies:** World 1 slime; World 2 one new enemy + one new hazard.
 - **Level data:** each level = a scene + a small `LevelData` resource (`data/levels/<id>.tres`: id, world, index, scene path, hint). `data/levels/level_catalog.tres` lists them in order; menus and unlocks read only from it. Regenerate with `tools/make_level_data.gd` after adding a level.
 - **Level building = ground strips, not TileMap (decided 30 Oct 2026):** the World 1 art is a strip kit (left edge, repeating middle, right edge, thin floating piece) with no corners/slopes, so levels are made of resizable ground pieces. Pieces are `GroundBlock`s (`scenes/objects/ground_block.gd`, renamed from GreyboxBlock on 30 Oct 2026): set a size and the meadow art follows: repeating grass top, dirt fill below, grass corners and side outlines only where a side is open (a flush neighbour at the same height or higher hides it; a lower neighbour gets a corner and an outline down to its surface), seeded flowers/tufts on top, and the thin 3-piece art for one-way blocks. Kit built by `tools/art_pipeline/make_ground.py` at in-game size.
-- **Save:** local versioned `user://save.json` (progress, coins, stats) with safe writes and migrations; `user://settings.cfg` for device settings. The save already has `wallet` and `cosmetics` fields so a shop needs no migration later.
+- **Save (built 30 Oct 2026, `autoload/save_manager.gd`):** local versioned `user://save.json`, no server. Per level: `done`, best `stars`, `best_coins`, `yarn` (found ever). Unlock rule: level 1 always open; every other level opens when the one before it is done. Saved automatically on level complete, keeping the best result (never goes down). Safe writes: temp file → swap, previous kept as `.bak` (used if the main file is damaged); `_migrate()` upgrades older versions. `user://settings.cfg` (separate): `music_on`, `sound_on`, `controls_size` (touch buttons read it). `wallet` + `cosmetics` exist but stay empty until a shop is decided (no migration needed then). Note: headless tests that finish a level also write the PC's dev save; the save test uses its own files.
 
 ## 4. Screens and Flow
 ```mermaid
@@ -228,7 +228,7 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] Play Games project created (Cloud project "wiwiwi"); game ID `254276654194` in both export presets
 - [x] First AAB export (real package ID, real game ID, signed with the upload key)
 - [x] Project folder renamed to `C:\Godot\Projects\wiwiwi`
-- Carried forward (not blocking M1): ElevenLabs commercial rights check · emulator check for 20:9 + tablet shapes (in M1 performance check)
+- Carried forward: ElevenLabs commercial rights check (before audio goes in, M2)
 
 ### M1 — Prototype, greybox (≈ 70 h)
 - [x] Concept art: `.gdignore` on `raw_assets_idea`; asset pipeline (`tools/art_pipeline/`: `cut_cat.py`, `cut_pieces.py`); 20 aligned cat frames → 8 animations (idle, walk, jump, fall, land, hurt, cheer, sleepy) + touch-button art
@@ -247,9 +247,13 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] Light effects (30 Oct 2026): `scenes/fx/fx.gd` (`Fx.spawn`), cut by grid from the effects sheet with `tools/art_pipeline/make_fx.py`: coin flip + sparkles, milk energy sparkle, checkpoint star burst, landing dust (big falls), heart break when hurt, confetti at the hug; `dev/m1_fx_test.gd` checks they appear and clean themselves up
 - [x] 3 levels (30 Oct 2026): 1-1 "Meadow Morning" (basics, 16 coins), 1-2 "Slime Meadow" (4 slimes, milk at half energy, sideways plank over a pond, floating steps to the yarn; 19 coins), 1-3 "Over the Water" (lift plank up a cliff, long spikes with a floating step above each, 4 ponds, 5 slimes, 2 milk; 21 coins). Every main-path gap ≤ 260 px so a tired cat always gets through. Win card has "Next level" (1-1 → 1-2 → 1-3); catalog via `tools/make_level_data.gd`; `dev/m1_levels_test.gd` checks each level loads/finishes and the plank, lift and spike-step moves
 - [x] Playtest round 1 (30 Oct 2026, owner on the M11): jump button moved 160 px in from the right edge; spikes landed on after the last pond of 1-2 → fair-play rules added and enforced by a test; 1-1 spikes/slime nudged, 1-2 end spikes + 4th slime moved, 1-3 re-laid out with more ground around spikes and the lift (now ~8,200 px)
-- [ ] Playtest and tune (more rounds); performance check (M11 + emulator 20:9/tablet)
+- [x] Screen shapes (30 Oct 2026): checked at 16:9, 20:9 (M11-like) and 4:3/5:4 tablet by windowed runs; fix: background layers are now placed from the screen centre (like the camera) and the far layer's top fades into the sky, so tablets no longer show a line in the sky or a tall dark band. Real-device check on a tablet/emulator still useful in M4 (safe areas, touch)
+- [x] Performance: 58 FPS on the M11 with the background (debug FPS counter)
+- **M1 closed 30 Oct 2026.** Further playtest rounds continue during M2/M3.
 
 ### M2 — Vertical slice (≈ 110 h)
+Order agreed 30 Oct 2026: save system → home page → level map → pause / level complete / try again screens → settings → Android Back button → font. Art: start from the concept screens (Cottage Game Menu, Meadow Level Map, Level Buttons and Stars, Pause Menu, Level Complete, Try Again, Settings Menu); ask the owner for missing pieces (likely: a map background wide enough to scroll, level buttons without baked-in numbers) once cut.
+- [x] SaveManager v1 (30 Oct 2026): progress + unlocks + best results + settings, safe writes, backup, migration; `dev/m2_save_test.gd` (10 checks)
 - [x] Art direction set by the concept art in `assets/raw_assets_idea/` (§5.1)
 - [ ] Fonts chosen to match the concept lettering; Theme resource from the cut UI pieces
 - [ ] Missing art created (§5.1 list); World 1 seamless tiles + layered background
