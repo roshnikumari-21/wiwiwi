@@ -39,6 +39,7 @@ func _ready() -> void:
 	hud.restart_pressed.connect(restart)
 	hud.next_pressed.connect(_go_next)
 	hud.map_pressed.connect(func(): SceneTransition.change_scene("res://ui/screens/level_map.tscn"))
+	hud.home_pressed.connect(func(): SceneTransition.change_scene("res://ui/screens/main_menu.tscn"))
 
 	GameState.begin_attempt(level_id, get_tree().get_nodes_in_group("coins").size())
 	_respawn_point = spawn.global_position

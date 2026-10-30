@@ -4,12 +4,18 @@ DEV_HEADING,Device check
 DEV_FADE_TEST,Test fade
 DEV_TAP_HINT,Tap anywhere with one or more fingers
 RESULT_WIN,Level complete!
-RESULT_FAIL,Out of hearts
+RESULT_FAIL,Try again?
 RESULT_COINS,Coins: %d / %d
-RESULT_REPLAY,Play again
-RESULT_RETRY,Try again
-RESULT_NEXT,Next level
+RESULT_REPLAY,Replay
+RESULT_RETRY,Retry
+RESULT_NEXT,Next
 LEVEL_W1_01_TITLE,Meadow Morning
 LEVEL_W1_02_TITLE,Slime Meadow
 LEVEL_W1_03_TITLE,Over the Water
 RESULT_MAP,Map
+PAUSE_TITLE,Paused
+BTN_RESUME,Resume
+BTN_RESTART,Restart
+BTN_HOME,Home
+YARN_FOUND,Golden Yarn!
+YARN_MISSED,Yarn hidden

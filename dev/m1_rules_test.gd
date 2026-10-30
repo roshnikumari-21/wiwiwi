@@ -44,8 +44,9 @@ func _run() -> void:
 
 	await _place(player, Vector2(3300, 1800))
 	_check("out of hearts -> level failed", _failed and gs.hearts == 0, gs.hearts)
-	_check("fail card shown", hud.get_node("Card").visible, "")
-	_check("fail card title", hud.get_node("Card/Center/Panel/Box/Title").text == "Out of hearts", hud.get_node("Card/Center/Panel/Box/Title").text)
+	_check("try-again popup shown", hud.menu.visible, "")
+	var title = hud.menu.find_child("Title", true, false)
+	_check("try-again title", title != null and title.text == "RESULT_FAIL", title.text if title else null)
 	_check("touch controls hidden", not level.get_node("Hud/SafeArea/TouchControls").visible, "")
 	level.queue_free()
 	await _frames(2)

@@ -26,7 +26,7 @@ func _run() -> void:
 			await physics_frame
 		_check("%s: finished at the girl" % row[0], _completed, "")
 		_check("%s: Next level button %s" % [row[0], "shown" if row[0] != "w1_03" else "hidden"],
-			level.get_node("Hud/SafeArea/Hud/Card/Center/Panel/Box/Buttons/Next").visible == (row[0] != "w1_03"), "")
+			(level.get_node("Hud/SafeArea/Hud").menu.find_child("RESULT_NEXT", true, false) != null) == (row[0] != "w1_03"), "")
 		level.queue_free()
 		await _frames(2)
 

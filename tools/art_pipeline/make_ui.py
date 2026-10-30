@@ -29,7 +29,7 @@ def cells(xs, ys):
             yield r, c, (xs[c], ys[r], xs[c + 1], ys[r + 1])
 
 
-def save_cell(img, box, name, holes=False):
+def save_cell(img, box, name, holes=False, single=False):
     x0, y0, x1, y1 = box
     piece = img[y0:y1, x0:x1].copy()
     if holes:   # clear grey checkerboard trapped inside an outline (e.g. the empty star)
@@ -38,9 +38,10 @@ def save_cell(img, box, name, holes=False):
         labels, n = ndimage.label(grey)
         sizes = ndimage.sum(grey, labels, range(1, n + 1))
         piece[np.isin(labels, np.flatnonzero(sizes > 2000) + 1), 3] = 0
-    # keep only the biggest piece of art (drops slivers of the neighbouring cell)
+    # single: keep only the biggest piece of art (drops slivers of the neighbouring cell).
+    # Not for icons made of separate parts (pause bars, sound waves).
     labels, n = ndimage.label(piece[..., 3] > 20)
-    if n > 1:
+    if single and n > 1:
         sizes = ndimage.sum(np.ones_like(labels), labels, range(1, n + 1))
         piece[(labels > 0) & (labels != np.argmax(sizes) + 1), 3] = 0
     solid = np.argwhere(piece[..., 3] > 20)
@@ -63,7 +64,7 @@ def main():
     nodes = remove_background(load("Cartoon Level Buttons and Stars.png"), neutral_min=100)
     for box, name in zip([(110, 100, 750, 620), (725, 100, 1360, 640), (1340, 190, 1715, 550), (1715, 190, 2090, 550)],
                          ["level_open", "level_locked", "level_star_full", "level_star_empty"]):
-        save_cell(nodes, box, name, holes=True)
+        save_cell(nodes, box, name, holes=True, single=True)
 
     icons = remove_background(load("Cute Cartoon Game UI Icon Sheet.png"))
     for r, c, box in cells([20, 300, 590, 875, 1170, 1460, 1765], [45, 320, 570, 845]):

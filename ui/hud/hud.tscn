@@ -4,19 +4,9 @@
 [ext_resource type="Texture2D" path="res://assets/art/objects/heart_full.png" id="2_heart"]
 [ext_resource type="Texture2D" path="res://assets/art/objects/coin_0.png" id="3_coin"]
 [ext_resource type="Texture2D" path="res://assets/art/objects/yarn.png" id="4_yarn"]
-[ext_resource type="Texture2D" path="res://assets/art/objects/star_empty.png" id="5_star"]
 [ext_resource type="Texture2D" path="res://assets/art/objects/milk_bowl_full.png" id="6_milk"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-content_margin_left = 70.0
-content_margin_top = 50.0
-content_margin_right = 70.0
-content_margin_bottom = 50.0
-bg_color = Color(1, 0.97, 0.92, 1)
-corner_radius_top_left = 40
-corner_radius_top_right = 40
-corner_radius_bottom_right = 40
-corner_radius_bottom_left = 40
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/round_brown_plain.png" id="7_round"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/icon_pause.png" id="8_pause"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar_bg"]
 bg_color = Color(0.36, 0.25, 0.2, 0.55)
@@ -150,94 +140,32 @@ step = 0.0
 value = 1.0
 show_percentage = false
 
-[node name="Card" type="ColorRect" parent="."]
-visible = false
-top_level = true
+[node name="Pause" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -150.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 150.0
+grow_horizontal = 0
+texture_normal = ExtResource("7_round")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="Pause"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 34.0
+offset_top = 32.0
+offset_right = -34.0
+offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.12, 0.08, 0.16, 0.5)
-
-[node name="Center" type="CenterContainer" parent="Card"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Panel" type="PanelContainer" parent="Card/Center"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
-
-[node name="Box" type="VBoxContainer" parent="Card/Center/Panel"]
-layout_mode = 2
-theme_override_constants/separation = 30
-alignment = 1
-
-[node name="Title" type="Label" parent="Card/Center/Panel/Box"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.36, 0.25, 0.2, 1)
-theme_override_font_sizes/font_size = 76
-text = "RESULT_WIN"
-horizontal_alignment = 1
-
-[node name="Stars" type="HBoxContainer" parent="Card/Center/Panel/Box"]
-layout_mode = 2
-theme_override_constants/separation = 20
-alignment = 1
-
-[node name="Star1" type="TextureRect" parent="Card/Center/Panel/Box/Stars"]
-custom_minimum_size = Vector2(150, 145)
-layout_mode = 2
-texture = ExtResource("5_star")
+mouse_filter = 2
+texture = ExtResource("8_pause")
 expand_mode = 1
 stretch_mode = 5
-
-[node name="Star2" type="TextureRect" parent="Card/Center/Panel/Box/Stars"]
-custom_minimum_size = Vector2(150, 145)
-layout_mode = 2
-texture = ExtResource("5_star")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Star3" type="TextureRect" parent="Card/Center/Panel/Box/Stars"]
-custom_minimum_size = Vector2(150, 145)
-layout_mode = 2
-texture = ExtResource("5_star")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Coins" type="Label" parent="Card/Center/Panel/Box"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.36, 0.25, 0.2, 1)
-theme_override_font_sizes/font_size = 48
-text = "RESULT_COINS"
-horizontal_alignment = 1
-
-[node name="Buttons" type="HBoxContainer" parent="Card/Center/Panel/Box"]
-layout_mode = 2
-theme_override_constants/separation = 30
-alignment = 1
-
-[node name="Map" type="Button" parent="Card/Center/Panel/Box/Buttons"]
-custom_minimum_size = Vector2(260, 120)
-layout_mode = 2
-theme_override_font_sizes/font_size = 52
-text = "RESULT_MAP"
-
-[node name="Again" type="Button" parent="Card/Center/Panel/Box/Buttons"]
-custom_minimum_size = Vector2(380, 120)
-layout_mode = 2
-theme_override_font_sizes/font_size = 52
-text = "RESULT_REPLAY"
-
-[node name="Next" type="Button" parent="Card/Center/Panel/Box/Buttons"]
-visible = false
-custom_minimum_size = Vector2(380, 120)
-layout_mode = 2
-theme_override_font_sizes/font_size = 52
-text = "RESULT_NEXT"
