@@ -18,6 +18,7 @@ const ENERGY_LOW_TINT := Color(1.0, 0.62, 0.35)
 @onready var _yarn: TextureRect = $Top/Yarn
 @onready var _energy_bar: ProgressBar = $Energy/Bar
 @onready var _card: Control = $Card
+var _fps: Label   ## test builds only: frames per second, for the performance check
 @onready var _title: Label = $Card/Center/Panel/Box/Title
 @onready var _stars: Array[Node] = $Card/Center/Panel/Box/Stars.get_children()
 @onready var _card_coins: Label = $Card/Center/Panel/Box/Coins
@@ -35,7 +36,18 @@ func _ready() -> void:
 	Events.level_failed.connect(_on_failed)
 	_button.pressed.connect(restart_pressed.emit)
 	_show_hearts(GameState.hearts)
-	_show_coins.call_deferred()  # the level counts its coins right after the HUD is ready
+	_show_coins.call_deferred()
+	if OS.is_debug_build():
+		_fps = Label.new()
+		_fps.add_theme_font_size_override("font_size", 28)
+		_fps.add_theme_color_override("font_color", Color(0.2, 0.2, 0.2, 0.7))
+		_fps.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		_fps.position += Vector2(-150, 10)
+		add_child(_fps)
+
+func _process(_delta: float) -> void:
+	if _fps:
+		_fps.text = "%d FPS" % Engine.get_frames_per_second()  # the level counts its coins right after the HUD is ready
 
 func _show_hearts(hearts: int) -> void:
 	for i in _hearts.size():

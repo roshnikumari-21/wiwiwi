@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/backgrounds/parallax_background.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/meadow/bg_far.png" id="2_far"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/meadow/bg_mid.png" id="3_mid"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/meadow/bg_near.png" id="4_near"]
+
+[node name="MeadowBackground" type="CanvasLayer"]
+layer = -10
+script = ExtResource("1_script")
+
+[node name="Sky" type="ColorRect" parent="."]
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0.4, 0.768627, 0.996078, 1)
+
+[node name="Far" type="TextureRect" parent="."]
+texture = ExtResource("2_far")
+
+[node name="Mid" type="TextureRect" parent="."]
+texture = ExtResource("3_mid")
+
+[node name="Near" type="TextureRect" parent="."]
+texture = ExtResource("4_near")

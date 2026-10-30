@@ -6,9 +6,12 @@
 [ext_resource type="Script" path="res://ui/components/safe_area.gd" id="4_safe"]
 [ext_resource type="PackedScene" path="res://ui/hud/touch_controls.tscn" id="5_touch"]
 [ext_resource type="PackedScene" path="res://ui/hud/hud.tscn" id="6_hud"]
+[ext_resource type="PackedScene" path="res://scenes/levels/backgrounds/meadow_background.tscn" id="7_bg"]
 
 [node name="LevelBase" type="Node2D"]
 script = ExtResource("1_level")
+
+[node name="Background" parent="." instance=ExtResource("7_bg")]
 
 [node name="Terrain" type="Node2D" parent="."]
 

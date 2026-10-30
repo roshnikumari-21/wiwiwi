@@ -142,7 +142,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 | Screen mockups (loading, menu, level map, gameplay, pause, try again, level complete, settings) | **Layout reference** for each screen | Rebuilt in Godot from the cut pieces |
 | App icons + banner | Play Store icon, adaptive icon, feature graphic (banner fits 1024×500) | Adaptive icon needs separate foreground/background layers |
 
-**Still missing (create with the same tool/style):** layered wide backgrounds · HUD frames (hearts bar, coin counter, energy bar) · level-map node set (number, stars, lock) · all World 2 art (sunset town tiles, background, enemy, crumbling tile).
+**Still missing (create with the same tool/style):** nothing for World 1 gameplay (backgrounds done 30 Oct 2026) · HUD frames (hearts bar, coin counter, energy bar) · level-map node set (number, stars, lock) · all World 2 art (sunset town tiles, background, enemy, crumbling tile).
 
 ## 6. Tech Architecture
 | Autoload | Job |
@@ -238,7 +238,8 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] Moving + one-way platforms: `moving_platform.tscn` (grass-topped plank art, glides between two points with end pauses, carries the cat, one-way); one-way floating steps were already `GreyboxBlock.one_way`. Level 1-1 now has a 500 px pit before the girl that you cross on the plank; the girl's reach zone starts at the ground edge and the cat stops as soon as she reaches her; `dev/m1_platform_test.gd` passes
 - [x] Touch controls in SafeArea (concept-art buttons, opacity/size ready for Settings)
 - [x] World 1 ground art (30 Oct 2026): 5 new sheets (seamless grass+dirt top, seamless dirt, end caps, thin platform set, decorations) → `assets/art/tiles/meadow/`; caps scaled to the top tile's size and faded into it; all blocks in level 1-1 use it; tests pass
-- [ ] 3 greybox levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
+- [x] World 1 parallax background (30 Oct 2026): sky+hills (far), countryside panorama (mid, mirrored so it repeats), bushes strip (near, with solid bush colour below so pits never show empty sky); `tools/art_pipeline/make_background.py`, `scenes/levels/backgrounds/meadow_background.tscn` in `level_base` (every level gets it). Debug builds show an FPS counter (top-right) for the performance check
+- [ ] 3 levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
 
 ### M2 — Vertical slice (≈ 110 h)
 - [x] Art direction set by the concept art in `assets/raw_assets_idea/` (§5.1)
