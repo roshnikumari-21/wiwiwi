@@ -132,5 +132,10 @@ func _wobble(button: TextureButton) -> void:
 	for x in [-10.0, 10.0, -6.0, 0.0]:
 		t.tween_property(button, "rotation_degrees", x, 0.06)
 
+## Android Back: to the home page.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		_go_home()
+
 func _go_home() -> void:
 	SceneTransition.change_scene("res://ui/screens/main_menu.tscn")

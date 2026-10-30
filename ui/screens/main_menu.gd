@@ -22,6 +22,7 @@ func _ready() -> void:
 	menu.name = "Menu"
 	$UI.add_child(menu)
 	settings.pressed.connect(menu.show_settings)
+	menu.quit_pressed.connect(func(): get_tree().quit())
 	play.grab_focus.call_deferred()
 	_breathe()
 	_blink_later()
@@ -52,6 +53,11 @@ func _blink_later() -> void:
 		await get_tree().create_timer(0.16).timeout
 	if is_inside_tree():
 		_blink_later()
+
+## Android Back: close Settings, otherwise ask "Leave wiwiwi?" (no quit button on Android).
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and menu and not menu.go_back():
+		menu.show_quit()
 
 func _on_play() -> void:
 	play.disabled = true   # one tap is enough

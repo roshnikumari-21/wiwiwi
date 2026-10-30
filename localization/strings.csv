@@ -30,3 +30,6 @@ ON,On
 OFF,Off
 BTN_BACK,Back
 BTN_DONE,Done
+QUIT_TITLE,Leave wiwiwi?
+BTN_STAY,Stay
+BTN_LEAVE,Leave

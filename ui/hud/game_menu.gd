@@ -10,6 +10,11 @@ signal next_pressed
 signal map_pressed
 signal home_pressed
 signal settings_closed
+signal quit_pressed
+
+## Which popup is showing: "", "pause", "settings", "complete", "fail", "quit".
+var current := ""
+var _settings_from_pause := false
 
 const SIZES := {"S": 0.8, "M": 1.0, "L": 1.2}   ## touch-button size choices
 const UI := "res://assets/art/ui/menu/"
@@ -67,6 +72,7 @@ func _ready() -> void:
 # --- The three popups ---------------------------------------------------------------------------
 
 func show_pause() -> void:
+	current = "pause"
 	_clear()
 	_title("PAUSE_TITLE")
 	_box.add_child(_button("BTN_RESUME", "green", "play", resume_pressed, 640))
@@ -79,6 +85,8 @@ func show_pause() -> void:
 ## Settings: music and sound on/off, touch-button size. Saved at once. `from_pause` puts a Back
 ## button that returns to the pause menu; otherwise it closes (home page).
 func show_settings(from_pause := false) -> void:
+	current = "settings"
+	_settings_from_pause = from_pause
 	_clear()
 	_title("SETTINGS_TITLE")
 	_box.add_child(_toggle("SET_MUSIC", "music_on", "music"))
@@ -112,10 +120,11 @@ func _set_controls_size(value: float) -> void:
 	_refresh_settings()
 
 func _refresh_settings() -> void:
-	show_settings(_box.find_child("BTN_BACK", true, false) != null)
+	show_settings(_settings_from_pause)
 
 
 func show_complete(stars: int, coins: int, coin_total: int, has_yarn: bool, has_next: bool) -> void:
+	current = "complete"
 	_clear()
 	for i in 3:
 		var star := TextureRect.new()
@@ -146,6 +155,7 @@ func show_complete(stars: int, coins: int, coin_total: int, has_yarn: bool, has_
 	_open(0.6)
 
 func show_fail() -> void:
+	current = "fail"
 	_clear()
 	_title("RESULT_FAIL")
 	_box.add_child(_kitten("sleepy"))
@@ -153,8 +163,33 @@ func show_fail() -> void:
 		_button("RESULT_MAP", "red", "none", map_pressed, 300)]))
 	_open(0.6)
 
+## Android Back on the home page: ask before leaving the game.
+func show_quit() -> void:
+	current = "quit"
+	_clear()
+	_title("QUIT_TITLE")
+	_box.add_child(_kitten("sleepy"))
+	_box.add_child(_row([_button("BTN_STAY", "green", "none", settings_closed, 300, close),
+		_button("BTN_LEAVE", "red", "none", quit_pressed, 300)]))
+	_open(0.0)
+
 func close() -> void:
+	current = ""
 	hide()
+
+## Android Back while a popup is open. Returns false when nothing was open (the screen handles it).
+func go_back() -> bool:
+	match current:
+		"pause": resume_pressed.emit()
+		"settings":
+			if _settings_from_pause:
+				show_pause()
+			else:
+				close_settings()
+		"quit": close()
+		"complete", "fail": map_pressed.emit()
+		_: return false
+	return true
 
 # --- Pieces -------------------------------------------------------------------------------------
 

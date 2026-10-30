@@ -99,7 +99,7 @@ flowchart TD
 | Credits | `ui/screens/credits.tscn` |
 | Owner reunion | `scenes/objects/owner/owner.tscn` |
 
-**Android Back button:** every screen handles it (gameplay → pause, menus → previous screen, main menu → "leave?" dialog). No Quit button on Android.
+**Android Back button (built 31 Oct 2026):** level → pause; pause → resume; Settings opened from pause → back to pause; Level complete / Try again → map; map → home; home → closes Settings if open, otherwise "Leave wiwiwi?" (Stay / Leave). No Quit button on Android; `quit_on_go_back=false` so nothing closes by surprise. Checked by `dev/m2_back_test.gd` (9 checks).
 
 ## 5. Assets by Type
 Sources: **Self** = we draw/record · **CC0** = Kenney packs as a base, restyled · **OFL** = open fonts · **AI** = ElevenLabs (⚠ commercial rights depend on plan).
@@ -267,7 +267,8 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 - [x] Font (31 Oct 2026, owner approved): **Fredoka** (Google Fonts, SIL Open Font License 1.1 = free for commercial use, licence kept in `assets/fonts/licenses/Fredoka-OFL.txt`; must ship/credit per OFL in the Credits screen). SemiBold is the default for all text via `ui/theme/wiwiwi_theme.tres` (project setting gui/theme/custom); Bold for titles and pill buttons. Long popup titles shrink to fit the sign.
 - [ ] Missing art created (§5.1 list); World 1 seamless tiles + layered background
 - [ ] Final cat animations, World 1 tileset + parallax, core objects
-- [ ] All screens + transitions + Back button
+- [x] Back button on every screen (31 Oct 2026, see §4)
+- [ ] Remaining screens: loading screen (cat logo), Credits (must credit Fredoka/OFL and other licences)
 - [ ] SaveManager v1, AudioManager + core SFX, juice pass
 - [ ] First Internal testing upload (claims the package, enrolls Play App Signing) → copy app-signing SHA-1
 - [ ] Play Games credentials (app-signing + debug SHA-1) and testers → real sign-in on the phone

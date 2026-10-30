@@ -58,10 +58,19 @@ func _process(_delta: float) -> void:
 	if _fps:
 		_fps.text = "%d FPS" % Engine.get_frames_per_second()
 
+## Android Back: pause; inside a popup, step back (pause -> resume, settings -> pause, result -> map).
+func _on_back() -> void:
+	if menu.visible:
+		menu.go_back()
+	else:
+		pause()
+
 ## Phone call, home button, notification shade: the game pauses itself.
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED]:
 		pause()
+	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		_on_back()
 
 func pause() -> void:
 	if _over or get_tree().paused:
