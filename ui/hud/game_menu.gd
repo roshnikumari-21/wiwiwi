@@ -19,6 +19,7 @@ const COIN := preload(UI + "icon_coin.png")
 const YARN := preload("res://assets/art/objects/yarn.png")
 const CAT := preload("res://assets/art/characters/cat/cat_frames.tres")
 const BROWN := Color(0.36, 0.2, 0.1)
+const BOLD := preload("res://assets/fonts/Fredoka-Bold.ttf")
 
 var _panel: PanelContainer
 var _box: VBoxContainer
@@ -134,7 +135,8 @@ func _title(key: String) -> void:
 	label.set_anchors_preset(Control.PRESET_FULL_RECT)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", 64)
+	label.add_theme_font_override("font", BOLD)
+	label.add_theme_font_size_override("font_size", 64 if tr(key).length() <= 10 else 54)   # long titles fit the sign
 	label.add_theme_color_override("font_color", Color(1, 0.95, 0.78))
 	label.add_theme_color_override("font_outline_color", BROWN)
 	label.add_theme_constant_override("outline_size", 18)

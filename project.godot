@@ -46,6 +46,10 @@ window/handheld/orientation=4
 
 enabled=PackedStringArray("res://addons/GodotPlayGameServices/plugin.cfg")
 
+[gui]
+
+theme/custom="res://ui/theme/wiwiwi_theme.tres"
+
 [input]
 
 move_left={

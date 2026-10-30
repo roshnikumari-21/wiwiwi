@@ -13,6 +13,7 @@ extends Button
 		symbol = value
 		_restyle()
 
+const BOLD := preload("res://assets/fonts/Fredoka-Bold.ttf")
 const END_MARGIN := 50.0   ## px of each rounded end in the pill art (not stretched)
 
 func _ready() -> void:
@@ -35,6 +36,7 @@ func _restyle() -> void:
 	expand_icon = true
 	add_theme_constant_override("icon_max_width", 64)
 	add_theme_constant_override("h_separation", 18)
+	add_theme_font_override("font", BOLD)
 	add_theme_font_size_override("font_size", 50)
 	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
 		add_theme_color_override(c, Color.WHITE)
