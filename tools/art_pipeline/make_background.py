@@ -1,9 +1,11 @@
 """Build the World 1 parallax background layers, at in-game size and repeating seamlessly sideways.
 
   far  - sky, clouds and distant rolling hills  (edges cross-faded so it repeats)
-  mid  - countryside with cottages and trees    (placed next to a mirrored copy: edges always match)
-  near - bushes and flowers strip               (edges cross-faded; solid bush colour added below
-                                                  so looking down into a pit never shows empty sky)
+  mid  - countryside with cottages and trees    (placed next to a mirrored copy: edges always match;
+                                                  its grass continues below, darkening, so looking
+                                                  down into a pit never shows empty sky)
+The bushes strip ("Cartoon Bushes and Flowers Game Border") was tried as a near layer and dropped:
+it looked busy in front of the countryside.
 Run:  python tools/art_pipeline/make_background.py   (prints sizes and the sky colour)
 """
 import numpy as np
@@ -54,16 +56,13 @@ def main():
 
     mid = load("Whimsical Pastel Countryside Panorama.png", 1.0)[260:]
     mid = clean_specks(mid)
-    save(np.concatenate([mid, mid[:, ::-1]], axis=1), "bg_mid.png")
-
-    near = load("Cartoon Bushes and Flowers Game Border.png", 1.0)[470:]
-    near = crossfade_wrap(near, 120)
-    bush = near[-6:, :, :3].reshape(-1, 3).mean(axis=0)
-    below = np.zeros((420, near.shape[1], 4), np.float32)
-    below[..., :3] = bush * 0.85   # a touch darker: the shade under the bushes
+    mid = np.concatenate([mid, mid[:, ::-1]], axis=1)
+    grass = mid[-8:, :, :3].reshape(-1, 3).mean(axis=0)
+    below = np.zeros((500, mid.shape[1], 4), np.float32)
+    shade = np.linspace(1.0, 0.7, 500)[:, None, None]   # darker the deeper you look
+    below[..., :3] = grass * shade
     below[..., 3] = 255
-    save(np.concatenate([near, below], axis=0), "bg_near.png")
-
+    save(np.concatenate([mid, below], axis=0), "bg_mid.png")
 
 if __name__ == "__main__":
     main()

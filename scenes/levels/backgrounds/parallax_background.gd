@@ -10,7 +10,6 @@ extends CanvasLayer
 @export var layers := {
 	"Far": [0.1, 0.05, -140.0],
 	"Mid": [0.3, 0.15, 210.0],
-	"Near": [0.55, 0.4, 600.0],
 }
 
 func _ready() -> void:

@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://scenes/levels/backgrounds/parallax_background.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/art/backgrounds/meadow/bg_far.png" id="2_far"]
 [ext_resource type="Texture2D" path="res://assets/art/backgrounds/meadow/bg_mid.png" id="3_mid"]
-[ext_resource type="Texture2D" path="res://assets/art/backgrounds/meadow/bg_near.png" id="4_near"]
 
 [node name="MeadowBackground" type="CanvasLayer"]
 layer = -10
@@ -20,6 +19,3 @@ texture = ExtResource("2_far")
 
 [node name="Mid" type="TextureRect" parent="."]
 texture = ExtResource("3_mid")
-
-[node name="Near" type="TextureRect" parent="."]
-texture = ExtResource("4_near")
