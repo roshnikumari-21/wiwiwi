@@ -1,10 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/objects/spikes.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/art/objects/spikes.png" id="2_spikes"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_spikes"]
-size = Vector2(130, 36)
+[ext_resource type="Texture2D" path="res://assets/art/objects/spikes_short.png" id="2_short"]
 
 [node name="Spikes" type="Area2D"]
 collision_layer = 16
@@ -12,10 +9,8 @@ collision_mask = 2
 script = ExtResource("1_script")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.36, 0.36)
-texture = ExtResource("2_spikes")
-offset = Vector2(0, -91)
+scale = Vector2(0.26, 0.26)
+texture = ExtResource("2_short")
+offset = Vector2(0, -134)
 
 [node name="Shape" type="CollisionShape2D" parent="."]
-position = Vector2(0, -20)
-shape = SubResource("RectangleShape2D_spikes")

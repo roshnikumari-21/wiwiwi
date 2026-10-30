@@ -6,6 +6,7 @@ signal coin_collected
 signal yarn_collected
 signal hearts_changed(hearts: int)
 signal player_hurt                     ## a hazard or enemy touched the cat
+signal player_fell_in_water
 signal enemy_stomped
 signal energy_changed(energy: float)   ## 0..1
 signal milk_drunk

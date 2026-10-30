@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/spikes.tscn" id="8_spikes"]
 [ext_resource type="PackedScene" path="res://scenes/actors/enemies/slime.tscn" id="9_slime"]
 [ext_resource type="PackedScene" path="res://scenes/objects/moving_platform.tscn" id="10_plank"]
+[ext_resource type="PackedScene" path="res://scenes/objects/water.tscn" id="11_water"]
 
 [node name="LevelW1_01" instance=ExtResource("1_base")]
 level_id = "w1_01"
@@ -123,3 +124,15 @@ patrol_distance = 200.0
 [node name="MovingPlatform" parent="Objects" instance=ExtResource("10_plank")]
 position = Vector2(4945, 900)
 move_by = Vector2(210, 0)
+
+[node name="Water1" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(1400, 1000)
+width = 200.0
+
+[node name="Water2" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(3200, 1000)
+width = 300.0
+
+[node name="Water3" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(4800, 1000)
+width = 500.0

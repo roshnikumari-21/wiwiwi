@@ -24,10 +24,11 @@ RECIPES = {
     "Magical Golden Yarn Ball Icons.png": (ART / "objects", ["yarn", "yarn_glow"], None),
     "Cute Cat Platformer Asset Sprite Sheet.png": (
         ART / "objects",
-        ["spikes", "flag_off", "flag_on", "cat_bed", "floating_island", "signpost"],
+        [None, "flag_off", "flag_on", "cat_bed", "floating_island", "signpost"],   # old spikes: replaced by the spike trap sheet
         None,
     ),
     "Cartoon Grass-Topped Wooden Platform.png": (ART / "objects", ["platform_moving"], None),
+    "Cartoon Spike Trap Platforms.png": (ART / "objects", ["spikes_short", "spikes_long"], None),
     # World 1 slime (green row); the orange row is kept in the sheet for later.
     "Kawaii Slime Sprite Sheet.png": (
         ART / "enemies" / "slime",

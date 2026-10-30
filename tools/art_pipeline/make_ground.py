@@ -6,6 +6,7 @@ Ground strips (see plan.md §3) are drawn from:
   caps   - left/right ends with grass curling over the edge
   thin   - left / middle / right of the thin one-way floating platforms
   decos  - flowers, tufts and a rock scattered on top
+  water  - wavy surface strip (repeats sideways) + underwater body, for pits
 
 Run:  python tools/art_pipeline/make_ground.py   (prints the numbers ground_block.gd uses)
 """
@@ -23,6 +24,12 @@ CAP_SCALE = GROUND_SCALE * 351 / 204
 FILL_SCALE = 0.32       # the dirt texture's stones are drawn smaller; this matches the top tile's stones
 THIN_SCALE = 0.42       # thin platforms: grass band ~45 px, a little lighter than the ground
 DECO_SCALE = 0.22       # flowers ~58 px tall next to a ~150 px cat
+WATER_SURFACE_SCALE = 0.37   # waves ~55 px tall
+WATER_BODY_SCALE = 0.75
+WATER_BODY_EXTRA = 500       # game px of deep-water colour added below the bubbles
+WATER_SURFACE_KEEP = 44      # game px of the strip kept: below this its segments have notches
+WATER_BODY_SKIP = 85         # game px of the body's own light top bands skipped: from here its blue
+                             # matches the strip's bottom, so the two meet without a line
 
 TOP_SURFACE = 295       # first fully solid grass row in the top tile (the cat walks here)
 TOP_CROP_BOTTOM = 1236  # rows below are a soft, half-transparent fringe
@@ -117,6 +124,27 @@ def main():
         out = scaled(to_image(cut(img, box)), DECO_SCALE)
         out.save(OUT / f"{name}.png", optimize=True)
         numbers[name] = out.size
+
+    # Water: the surface strip's left and right ends are cross-faded so it repeats; the body gets
+    # its deepest colour continued below so a pit of any depth stays filled.
+    img = remove_background(load("Cartoon Water Wave and Underwater Tiles.png"))
+    surface_box, body_box = find_sprites(img)
+    surface = to_image(cut(img, surface_box))
+    surface = scaled(surface, WATER_SURFACE_SCALE)
+    a = np.asarray(surface).astype(np.float32)
+    band = 24
+    t = np.linspace(0.0, 1.0, band)[None, :, None]
+    a = np.concatenate([a[:, :band] * t + a[:, -band:] * (1.0 - t), a[:, band:-band]], axis=1)
+    a = a[:WATER_SURFACE_KEEP]
+    Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).save(OUT / "water_surface.png", optimize=True)
+    numbers["water_surface"] = (a.shape[1], a.shape[0])
+    body = np.asarray(scaled(to_image(cut(img, body_box)), WATER_BODY_SCALE)).astype(np.float32)
+    body = body[WATER_BODY_SKIP:-2, 3:-3]   # skip the top bands; trim the soft edge columns
+    deep = np.empty((WATER_BODY_EXTRA, body.shape[1], 4), np.float32)
+    deep[:] = body[-6:, :, :].reshape(-1, 4).mean(axis=0)   # one smooth deep colour, no streaks
+    body = np.concatenate([body, deep], axis=0)
+    Image.fromarray(np.clip(body, 0, 255).astype(np.uint8)).save(OUT / "water_body.png", optimize=True)
+    numbers["water_body"] = (body.shape[1], body.shape[0])
 
     for k, v in numbers.items():
         print(f"  {k}: {v}")

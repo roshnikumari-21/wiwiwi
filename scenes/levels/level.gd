@@ -21,6 +21,7 @@ var _fall_line: float
 var _respawn_point: Vector2
 var _over := false   ## true once the level is won or lost
 const HURT_PAUSE := 0.7  ## seconds of the hurt pose before she reappears at the flag
+const SINK_PAUSE := 0.8  ## seconds of sinking after a splash before she reappears at the flag
 
 func _ready() -> void:
 	bounds = _terrain_bounds()
@@ -32,6 +33,7 @@ func _ready() -> void:
 
 	Events.checkpoint_reached.connect(func(point: Vector2): _respawn_point = point)
 	Events.player_hurt.connect(_on_hurt)
+	Events.player_fell_in_water.connect(_on_fell_in_water)
 	for goal in get_tree().get_nodes_in_group("goal"):
 		goal.reached.connect(_on_goal_reached.bind(goal))
 	hud.restart_pressed.connect(restart)
@@ -52,6 +54,15 @@ func _on_fell() -> void:
 		_respawn()
 	else:
 		_fail()
+
+## Water in a pit: a splash, she sinks out of sight, then the same rule as a pit fall.
+func _on_fell_in_water() -> void:
+	if _over:
+		return
+	player.sink()
+	await get_tree().create_timer(SINK_PAUSE).timeout
+	if not _over:
+		_on_fell()
 
 ## Spikes or an enemy: lose a heart, a short hurt pose, then back to the last flag (or the level is lost).
 func _on_hurt() -> void:

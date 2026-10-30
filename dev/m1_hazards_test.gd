@@ -54,6 +54,21 @@ func _run() -> void:
 	await _frames(70)
 	_check("squashed slime goes away", not is_instance_valid(slime), "")
 
+	# Water: falling in splashes, she sinks, loses a heart and comes back at the respawn point.
+	await _frames(80)
+	gs.hearts = 3
+	player.global_position = Vector2(1500, 960)
+	player.velocity = Vector2(0, 400)
+	for i in 30:   # until she reaches the water
+		await physics_frame
+		if player.frozen:
+			break
+	_check("water: she sinks (no control)", player.frozen, player.global_position)
+	_check("water: splash shown", level.get_node("Objects/Water1").find_children("*", "CPUParticles2D", false, false).size() == 1, "")
+	await _frames(60)   # the sinking pause, then the heart and the respawn
+	_check("water: heart lost", gs.hearts == 2, gs.hearts)
+	_check("water: back at the start, visible", player.global_position.distance_to(Vector2(200, 900)) < 5 and not player.frozen and player.sprite.modulate.a > 0.2, [player.global_position, player.sprite.modulate.a])
+
 	print("RESULT: %s" % ("ALL PASS" if _fails == 0 else "%d FAILED" % _fails))
 	quit(_fails)
 

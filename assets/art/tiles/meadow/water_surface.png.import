@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dc0m7t4y65ldo"
-path="res://.godot/imported/spikes.png-54e9898b112a54fc01bca976f2aa6372.ctex"
+uid="uid://dm8s73blnhxvt"
+path="res://.godot/imported/water_surface.png-2d0b70757b664e5047cdbc7ac663f4d3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/objects/spikes.png"
-dest_files=["res://.godot/imported/spikes.png-54e9898b112a54fc01bca976f2aa6372.ctex"]
+source_file="res://assets/art/tiles/meadow/water_surface.png"
+dest_files=["res://.godot/imported/water_surface.png-2d0b70757b664e5047cdbc7ac663f4d3.ctex"]
 
 [params]
 

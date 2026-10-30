@@ -178,6 +178,7 @@ func respawn_at(point: Vector2) -> void:
 	frozen = false
 	_safe_left = safe_time
 	sprite.flip_h = false
+	sprite.modulate.a = 1.0
 	sprite.play("idle")
 	var blink := create_tween().set_loops(7)
 	blink.tween_property(sprite, "modulate:a", 0.3, 0.08)
@@ -217,6 +218,12 @@ func stomp_bounce_up() -> void:
 	velocity.y = _jump_speed * stomp_bounce
 	_in_jump = true
 	_do_squash(Vector2(0.85, 1.15))
+
+## Fell into water: she drifts down and fades out under the waves.
+func sink() -> void:
+	frozen = true
+	velocity = Vector2(velocity.x * 0.2, minf(velocity.y, 200.0))
+	create_tween().tween_property(sprite, "modulate:a", 0.0, 0.5)
 
 ## Out of hearts: stop and look sad.
 func give_up() -> void:
