@@ -29,6 +29,13 @@ func start_level(level_id: String) -> void:
 		return
 	SceneTransition.change_scene(level.scene_path)
 
+## The level the Play button should open: the first one not finished yet (or the last one).
+func next_level_to_play() -> LevelData:
+	for level in catalog.levels:
+		if not SaveManager.is_done(level.id):
+			return level
+	return catalog.levels[-1]
+
 ## Called by the level when it loads.
 func begin_attempt(level_id: String, coins_in_level: int) -> void:
 	current_level_id = level_id

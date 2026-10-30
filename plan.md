@@ -253,6 +253,8 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 
 ### M2 — Vertical slice (≈ 110 h)
 Order agreed 30 Oct 2026: save system → home page → level map → pause / level complete / try again screens → settings → Android Back button → font. Art: start from the concept screens (Cottage Game Menu, Meadow Level Map, Level Buttons and Stars, Pause Menu, Level Complete, Try Again, Settings Menu); ask the owner for missing pieces (likely: a map background wide enough to scroll, level buttons without baked-in numbers) once cut.
+- [x] Home page (31 Oct 2026): `ui/screens/main_menu.tscn` is now the start scene: drifting meadow background (`parallax_background.gd` got a `drift` option), the kitten on the grass, wooden-sign title (stand-in), big pulsing yellow Play button → first level not finished (`GameState.next_level_to_play()`; the level map takes this over next). Settings/trophy buttons left out until those screens exist (no dead buttons). UI kit cut by `tools/art_pipeline/make_ui.py` → `assets/art/ui/menu/` (pills ×4 colours ×3 states, round buttons, 18 icons, leafy panel, wooden sign, ribbon). `dev/m2_menu_test.gd`
+- **Needed from the owner:** the wiwiwi **logo as its own transparent PNG** (it only exists painted into the menu/loading concepts; cutting it out failed because its outline isn't closed everywhere). Until then the title is the wooden sign + text.
 - [x] SaveManager v1 (30 Oct 2026): progress + unlocks + best results + settings, safe writes, backup, migration; `dev/m2_save_test.gd` (10 checks)
 - [x] Art direction set by the concept art in `assets/raw_assets_idea/` (§5.1)
 - [ ] Fonts chosen to match the concept lettering; Theme resource from the cut UI pieces

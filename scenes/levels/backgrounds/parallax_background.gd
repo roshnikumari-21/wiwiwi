@@ -5,6 +5,8 @@ extends CanvasLayer
 
 const BASE_HEIGHT := 1080.0   ## the project's design height; layer tops below are for this height
 
+@export var drift: float = 0.0   ## px per second the layers slide on their own (menus: a gentle breeze)
+
 ## Camera centre height (world y) the layer placements below were set for.
 @export var reference_camera_y: float = 740.0
 
@@ -23,11 +25,14 @@ func _ready() -> void:
 			child.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 			child.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-func _process(_delta: float) -> void:
+var _drift_x := 0.0
+
+func _process(delta: float) -> void:
 	var camera := get_viewport().get_camera_2d()
 	if camera == null:
 		return
-	var centre := camera.get_screen_center_position()
+	_drift_x += drift * delta
+	var centre := camera.get_screen_center_position() + Vector2(_drift_x, 0)
 	var screen := get_viewport().get_visible_rect().size
 	$Sky.size = screen
 	for layer_name in layers:

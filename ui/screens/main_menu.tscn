@@ -1,0 +1,102 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/screens/main_menu.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/levels/backgrounds/meadow_background.tscn" id="2_bg"]
+[ext_resource type="PackedScene" path="res://scenes/objects/ground_block.tscn" id="3_ground"]
+[ext_resource type="SpriteFrames" path="res://assets/art/characters/cat/cat_frames.tres" id="4_cat"]
+[ext_resource type="Script" path="res://ui/components/safe_area.gd" id="5_safe"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/sign_wood.png" id="6_sign"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/pill_yellow_normal.png" id="7_pill"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/pill_yellow_pressed.png" id="8_pill_p"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/icon_play.png" id="9_play"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="Background" parent="." instance=ExtResource("2_bg")]
+drift = 22.0
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="Camera" type="Camera2D" parent="World"]
+position = Vector2(960, 560)
+
+[node name="Ground" parent="World" instance=ExtResource("3_ground")]
+position = Vector2(-600, 860)
+size = Vector2(3200, 400)
+
+[node name="Kitten" type="AnimatedSprite2D" parent="World"]
+position = Vector2(560, 860)
+scale = Vector2(1.05, 1.05)
+sprite_frames = ExtResource("4_cat")
+animation = &"idle"
+autoplay = "idle"
+offset = Vector2(0, -131)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="SafeArea" type="MarginContainer" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_safe")
+
+[node name="Logo" type="TextureRect" parent="UI/SafeArea"]
+custom_minimum_size = Vector2(900, 244)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 2
+texture = ExtResource("6_sign")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="UI/SafeArea/Logo"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.75, 1)
+theme_override_colors/font_outline_color = Color(0.42, 0.24, 0.12, 1)
+theme_override_constants/outline_size = 28
+theme_override_font_sizes/font_size = 130
+text = "APP_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Play" type="TextureButton" parent="UI/SafeArea"]
+custom_minimum_size = Vector2(500, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture_normal = ExtResource("7_pill")
+texture_pressed = ExtResource("8_pill_p")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Icon" type="TextureRect" parent="UI/SafeArea/Play"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 22.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("9_play")
+expand_mode = 1
+stretch_mode = 5
