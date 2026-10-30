@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/ground_block.tscn" id="3_ground"]
 [ext_resource type="SpriteFrames" path="res://assets/art/characters/cat/cat_frames.tres" id="4_cat"]
 [ext_resource type="Script" path="res://ui/components/safe_area.gd" id="5_safe"]
-[ext_resource type="Texture2D" path="res://assets/art/ui/menu/sign_wood.png" id="6_sign"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/logo.png" id="6_logo"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/menu/pill_yellow_normal.png" id="7_pill"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/menu/pill_yellow_pressed.png" id="8_pill_p"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/menu/icon_play.png" id="9_play"]
@@ -52,30 +52,14 @@ mouse_filter = 2
 script = ExtResource("5_safe")
 
 [node name="Logo" type="TextureRect" parent="UI/SafeArea"]
-custom_minimum_size = Vector2(900, 244)
+custom_minimum_size = Vector2(680, 514)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 mouse_filter = 2
-texture = ExtResource("6_sign")
+texture = ExtResource("6_logo")
 expand_mode = 1
 stretch_mode = 5
-
-[node name="Title" type="Label" parent="UI/SafeArea/Logo"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 6.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(1, 0.95, 0.75, 1)
-theme_override_colors/font_outline_color = Color(0.42, 0.24, 0.12, 1)
-theme_override_constants/outline_size = 28
-theme_override_font_sizes/font_size = 130
-text = "APP_TITLE"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="Play" type="TextureButton" parent="UI/SafeArea"]
 custom_minimum_size = Vector2(500, 150)

@@ -5,6 +5,7 @@ sparkles never become separate pieces. Output: assets/art/ui/menu/.
 Run:  python tools/art_pipeline/make_ui.py
 """
 import numpy as np
+from PIL import Image
 from scipy import ndimage
 
 from pipeline import ART, load, remove_background, to_image
@@ -67,6 +68,15 @@ def main():
     icons = remove_background(load("Cute Cartoon Game UI Icon Sheet.png"))
     for r, c, box in cells([20, 300, 590, 875, 1170, 1460, 1765], [45, 320, 570, 845]):
         save_cell(icons, box, f"icon_{ICONS[r][c]}")
+    # The logo is already transparent (its preview's dark glow is colour data hidden under alpha 0):
+    # trim it, clear that hidden colour, and shrink it to a size the home page can use.
+    logo = load("Kawaii Cat Wiwiwi Garden Logo.png")
+    logo[logo[..., 3] < 8] = 0
+    solid = np.argwhere(logo[..., 3] > 8)
+    (t, l), (b, r) = solid.min(axis=0), solid.max(axis=0) + 1
+    image = to_image(logo[t:b, l:r])
+    image = image.resize((900, round(image.height * 900 / image.width)), Image.LANCZOS)
+    image.save(OUT / "logo.png", optimize=True)
     print("  cut", len(list(OUT.glob("*.png"))), "pieces")
 
 

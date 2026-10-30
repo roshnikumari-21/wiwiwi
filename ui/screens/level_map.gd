@@ -4,10 +4,10 @@ extends Control
 ## level to play it. Spots past the last built level stay locked ("coming soon").
 
 const MAP_SIZE := Vector2(1672, 941)        ## size of the map picture; spots below are in its pixels
-## Level spots along the path (same numbers as tools/art_pipeline/make_map.py).
+## Level spots: the round pads painted along the map's path.
 const SPOTS: Array[Vector2] = [
-	Vector2(143, 345), Vector2(316, 375), Vector2(461, 460), Vector2(680, 540), Vector2(845, 563),
-	Vector2(990, 645), Vector2(1137, 675), Vector2(1290, 703), Vector2(1432, 685), Vector2(1553, 617),
+	Vector2(132, 358), Vector2(318, 380), Vector2(470, 473), Vector2(690, 545), Vector2(858, 578),
+	Vector2(1000, 652), Vector2(1142, 684), Vector2(1295, 708), Vector2(1440, 698), Vector2(1560, 640),
 ]
 const OPEN := preload("res://assets/art/ui/menu/level_open.png")
 const LOCKED := preload("res://assets/art/ui/menu/level_locked.png")
