@@ -115,11 +115,11 @@ position = Vector2(5520, 900)
 position = Vector2(2250, 900)
 
 [node name="Spikes" parent="Objects" instance=ExtResource("8_spikes")]
-position = Vector2(1050, 900)
+position = Vector2(950, 900)
 
 [node name="Slime" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(4450, 900)
-patrol_distance = 200.0
+position = Vector2(4200, 900)
+patrol_distance = 150.0
 
 [node name="MovingPlatform" parent="Objects" instance=ExtResource("10_plank")]
 position = Vector2(4945, 900)

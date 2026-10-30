@@ -30,7 +30,7 @@ func _run() -> void:
 	_check("flag: star burst plays", _fx_count(objects) == 1, _fx_count(objects))
 	await _frames(40)
 
-	await _place(player, Vector2(1050, 900))  # spikes
+	await _place(player, Vector2(950, 900))   # spikes
 	_check("hurt: heart break plays", _fx_count(level) == 1, _fx_count(level))
 	await _frames(80)
 

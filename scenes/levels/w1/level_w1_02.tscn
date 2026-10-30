@@ -75,20 +75,20 @@ position = Vector2(3990, 900)
 move_by = Vector2(330, 0)
 
 [node name="Slime1" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(800, 900)
-patrol_distance = 200.0
+position = Vector2(750, 900)
+patrol_distance = 150.0
 
 [node name="Slime2" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(3350, 900)
-patrol_distance = 250.0
+position = Vector2(1950, 900)
+patrol_distance = 120.0
 
 [node name="Slime3" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(5350, 900)
+position = Vector2(3300, 900)
 patrol_distance = 250.0
 
 [node name="Slime4" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(6550, 900)
-patrol_distance = 150.0
+position = Vector2(5300, 900)
+patrol_distance = 250.0
 
 [node name="MilkBowl1" parent="Objects" instance=ExtResource("7_milk")]
 position = Vector2(3000, 900)
@@ -100,7 +100,7 @@ position = Vector2(2600, 780)
 position = Vector2(4600, 900)
 
 [node name="Spikes1" parent="Objects" instance=ExtResource("8_spikes")]
-position = Vector2(6300, 900)
+position = Vector2(6700, 900)
 
 [node name="Coin1" parent="Objects" instance=ExtResource("3_coin")]
 position = Vector2(400, 840)
@@ -151,13 +151,13 @@ position = Vector2(4828, 640)
 position = Vector2(5178, 500)
 
 [node name="Coin17" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(6300, 770)
+position = Vector2(6450, 840)
 
 [node name="Coin18" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(6700, 840)
+position = Vector2(6550, 840)
 
 [node name="Coin19" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(6850, 840)
+position = Vector2(6700, 760)
 
 [node name="GoldenYarn" parent="Objects" instance=ExtResource("4_yarn")]
 position = Vector2(5250, 340)

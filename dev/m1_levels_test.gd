@@ -48,19 +48,19 @@ func _run() -> void:
 	player = level.get_node("Player")
 	await _frames(80)
 	var lift = level.get_node("Objects/Plank1")
-	await _ride(player, lift, Vector2(2025, 900), Vector2(2025, 630))
+	await _ride(player, lift, Vector2(2425, 900), Vector2(2425, 630))
 	_check("1-3: lift reached the top with her", player.global_position.y < 640.0 and player.is_on_floor(), player.global_position)
 	Input.action_press("move_right")
 	await _frames(25)
 	Input.action_release("move_right")
 	await _frames(5)
-	_check("1-3: she walks off onto the cliff", player.global_position.x > 2220.0 and absf(player.global_position.y - 640.0) < 4.0 and player.is_on_floor(), player.global_position)
+	_check("1-3: she walks off onto the cliff", player.global_position.x > 2620.0 and absf(player.global_position.y - 640.0) < 4.0 and player.is_on_floor(), player.global_position)
 
 	# 1-3: a tired cat can still hop onto the step over the long spikes.
 	player.energy = 0.0
-	await _place(player, Vector2(1200, 900))
+	await _place(player, Vector2(1400, 900))
 	Input.action_press("move_right")
-	while player.global_position.x < 1270.0:
+	while player.global_position.x < 1470.0:
 		await physics_frame
 	Input.action_press("jump")
 	await _frames(40)

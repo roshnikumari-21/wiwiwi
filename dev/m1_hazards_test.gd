@@ -3,7 +3,7 @@ extends SceneTree
 ## Run: godot --headless --path . --script res://dev/m1_hazards_test.gd
 
 const LEVEL := "res://scenes/levels/w1/level_w1_01.tscn"
-const SPIKES_AT := Vector2(1050, 900)
+const SPIKES_AT := Vector2(950, 900)
 
 var _fails := 0
 var _stomps := 0
