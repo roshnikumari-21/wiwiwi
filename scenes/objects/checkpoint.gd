@@ -14,4 +14,5 @@ func _on_body_entered(body: Node2D) -> void:
 	var pop := create_tween()
 	pop.tween_property($Sprite, "scale", base * 1.2, 0.1)
 	pop.tween_property($Sprite, "scale", base, 0.2).set_trans(Tween.TRANS_BACK)
+	Fx.spawn(self, &"stars", global_position + Vector2(0, -190), 0.9)
 	Events.checkpoint_reached.emit(global_position)

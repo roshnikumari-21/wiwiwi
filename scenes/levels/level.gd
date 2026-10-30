@@ -69,6 +69,7 @@ func _on_hurt() -> void:
 	if _over or not player.can_be_hurt():
 		return
 	player.knock_back()
+	Fx.spawn(player, &"heart", player.global_position + Vector2(0, -170), 0.55)
 	if GameState.lose_heart():
 		await get_tree().create_timer(HURT_PAUSE).timeout
 		if not _over:

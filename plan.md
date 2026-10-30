@@ -45,6 +45,7 @@
 | Renderer | Compatibility (widest low-end support), target 60 FPS |
 | Input | Touch only: left, right, jump, pause |
 | Text | All strings through `tr()` + CSV, ready for more languages |
+| Effects / performance budget (decided 30 Oct 2026) | **Light effects only:** short one-shot 5-frame sprites (`Fx.spawn`, ~0.3 s, remove themselves). No glow/bloom, lights, shaders, large particle clouds or always-on ambient effects; little screen shake. Sound carries most of the "juice" (M2). Budget: 60 FPS on the Galaxy M11 (currently 58 with the background) |
 
 ## 3. Gameplay Rules
 - **Controls feel:** acceleration/deceleration, variable jump height, coyote time, jump buffer. First M1 values (in `player.gd`, tunable in the Inspector): run 520 px/s reached in 0.08 s · full jump ≈ 300 px (0.42 s to apex, faster fall) · tap = short hop ≈ 140 px · coyote 0.12 s · buffer 0.12 s. Cat ≈ 150 px tall on screen.
@@ -242,6 +243,7 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] World 1 ground art (30 Oct 2026): 5 new sheets (seamless grass+dirt top, seamless dirt, end caps, thin platform set, decorations) → `assets/art/tiles/meadow/`; caps scaled to the top tile's size and faded into it; all blocks in level 1-1 use it; tests pass
 - [x] World 1 parallax background (30 Oct 2026): sky+hills (far), countryside panorama (mid, mirrored so it repeats; its grass continues below, darkening, so pits never show empty sky). The bushes strip was tried as a near layer and dropped at the owner's request (looked messy); M11: 58 FPS; `tools/art_pipeline/make_background.py`, `scenes/levels/backgrounds/meadow_background.tscn` in `level_base` (every level gets it). Debug builds show an FPS counter (top-right) for the performance check
 - [x] Water in pits (surface strip + underwater body, splash, sink) and new spike-trap art (short/long) replacing the old spikes; level 1-1 has water in all 3 pits; hazard test now 15 checks
+- [x] Light effects (30 Oct 2026): `scenes/fx/fx.gd` (`Fx.spawn`), cut by grid from the effects sheet with `tools/art_pipeline/make_fx.py`: coin flip + sparkles, milk energy sparkle, checkpoint star burst, landing dust (big falls), heart break when hurt, confetti at the hug; `dev/m1_fx_test.gd` checks they appear and clean themselves up
 - [ ] 3 levels; playtest and tune; performance check (M11 + emulator 20:9/tablet)
 
 ### M2 — Vertical slice (≈ 110 h)
@@ -285,6 +287,8 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 | AI audio not licensed for commercial use | Check in M0; regenerate or replace |
 | Only one real test phone (Galaxy M11) | Emulator for other shapes; Play pre-launch report + closed-test phones (M4) |
 | Art bottleneck / scope creep | CC0 bases; new ideas go to a v1.1 list |
+| App size (debug APK ~176 MB, mostly debug engine code for several CPU types; last release AAB ~53 MB) | Before release: debug builds arm64 only, remove unused art (cat bed, signpost, floating island), keep textures ≤ 2048 px wide, check the AAB download size |
+| Level building is the biggest time cost (20 levels) | Reusable pieces only (ground, water, spikes, slime, plank, background); each level = arranging pieces + a playtest |
 | Concept art not game-ready (no transparency, not on a grid, tiles not seamless, frames drift) | Scripted cleanup pipeline; regenerate missing/unsuitable pieces in the same style |
 | Rights for AI-generated art (ChatGPT) | OpenAI terms assign output to us; re-check before launch and keep a record |
 

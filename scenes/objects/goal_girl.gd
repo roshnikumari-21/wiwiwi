@@ -70,6 +70,7 @@ func play_reunion(cat: Player) -> void:
 	await cat.arrived
 	cat.visible = false
 	_hug_loop()
+	Fx.spawn(self, &"confetti", global_position + Vector2(cat_hug_x, -330), 1.3)
 	for i in 3:
 		_float_heart(Vector2(cat_hug_x + i * 55.0, -380.0), i * 0.3)
 	await get_tree().create_timer(hug_time).timeout

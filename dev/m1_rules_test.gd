@@ -56,6 +56,8 @@ func _run() -> void:
 	await _frames(2)
 	_check("fresh attempt resets", gs.hearts == 3 and gs.coins == 0 and not gs.has_yarn, [gs.hearts, gs.coins, gs.has_yarn])
 	for coin in get_nodes_in_group("coins"):
+		if not is_instance_valid(coin):   # already picked up next to the previous one
+			continue
 		await _place(player, coin.global_position + Vector2(0, 50))
 	_check("all coins", gs.coins == 16, gs.coins)
 	await _place(player, Vector2(5320, 900))   # off the plank, into the girl's reach

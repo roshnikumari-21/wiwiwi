@@ -110,6 +110,7 @@ func _after_move() -> void:
 		if _fall_peak_speed > 500.0:
 			_do_squash(Vector2(1.18, 0.82))
 			sprite.play("land")
+			Fx.spawn(self, &"dust", global_position + Vector2(0, -30), 0.45)
 		_fall_peak_speed = 0.0
 	_was_on_floor = is_on_floor()
 

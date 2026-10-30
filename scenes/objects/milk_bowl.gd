@@ -18,6 +18,7 @@ func _physics_process(_delta: float) -> void:
 func _drink(cat: Player) -> void:
 	_empty = true
 	cat.refill_energy()
+	Fx.spawn(self, &"sparkle", cat.global_position + Vector2(0, -90), 0.8)
 	Events.milk_drunk.emit()
 	$Sprite.texture = EMPTY
 	var base: Vector2 = $Sprite.scale
