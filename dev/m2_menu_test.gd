@@ -24,7 +24,24 @@ func _run() -> void:
 	menu.get_node("UI/SafeArea/Play").pressed.emit()
 	for i in 60:
 		await process_frame
-	_check("Play opens level 1-2", current_scene != null and current_scene.get("level_id") == "w1_02", current_scene)
+	_check("Play opens the level map", current_scene != null and current_scene.name == "LevelMap", current_scene)
+	var map = current_scene
+	_check("map: 1-1 and 1-2 open, 1-3 locked", map.get_node("Map/Level2").texture_normal == map.OPEN and map.get_node("Map/Level3").texture_normal == map.LOCKED, "")
+	_check("map: 1-1 shows 3 stars", map.get_node("Map/Level1").get_children().filter(func(n): return n is TextureRect and n.texture == map.STAR_FULL).size() == 3, "")
+	_check("map: spots after the built levels are locked", map.get_node("Map/Level10").texture_normal == map.LOCKED, "")
+	_check("map: kitten waits on level 2", map.get_node("Map/Kitten").position.x == map.SPOTS[1].x, map.get_node("Map/Kitten").position)
+	map.get_node("Map/Level3").pressed.emit()   # locked: nothing happens
+	for i in 30:
+		await process_frame
+	_check("map: tapping a locked level does nothing", current_scene == map, current_scene)
+	map.get_node("Map/Level2").pressed.emit()
+	for i in 60:
+		await process_frame
+	_check("map: tapping level 2 opens 1-2", current_scene != null and current_scene.get("level_id") == "w1_02", current_scene)
+	current_scene.get_node("Hud/SafeArea/Hud").map_pressed.emit()
+	for i in 60:
+		await process_frame
+	_check("result card Map button returns to the map", current_scene != null and current_scene.name == "LevelMap", current_scene)
 
 	for path in ["user://test_menu_save.json", "user://test_menu_save.json.bak"]:
 		if FileAccess.file_exists(path):

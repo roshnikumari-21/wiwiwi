@@ -5,6 +5,7 @@ extends Control
 
 signal restart_pressed
 signal next_pressed
+signal map_pressed
 
 const HEART_FULL := preload("res://assets/art/objects/heart_full.png")
 const HEART_EMPTY := preload("res://assets/art/objects/heart_empty.png")
@@ -38,6 +39,7 @@ func _ready() -> void:
 	Events.level_failed.connect(_on_failed)
 	_button.pressed.connect(restart_pressed.emit)
 	_next.pressed.connect(next_pressed.emit)
+	$Card/Center/Panel/Box/Buttons/Map.pressed.connect(map_pressed.emit)
 	_show_hearts(GameState.hearts)
 	_show_coins.call_deferred()
 	if OS.is_debug_build():

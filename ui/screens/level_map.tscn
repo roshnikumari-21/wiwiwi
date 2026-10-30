@@ -1,0 +1,66 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/screens/level_map.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/map/map_w1.png" id="2_map"]
+[ext_resource type="Script" path="res://ui/components/safe_area.gd" id="3_safe"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/round_brown_plain.png" id="4_round"]
+[ext_resource type="Texture2D" path="res://assets/art/ui/menu/icon_home.png" id="5_home"]
+
+[node name="LevelMap" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="Map" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 1672.0
+offset_bottom = 941.0
+mouse_filter = 2
+
+[node name="Picture" type="TextureRect" parent="Map"]
+layout_mode = 0
+offset_right = 1672.0
+offset_bottom = 941.0
+mouse_filter = 2
+texture = ExtResource("2_map")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="SafeArea" type="MarginContainer" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_safe")
+
+[node name="Back" type="TextureButton" parent="UI/SafeArea"]
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture_normal = ExtResource("4_round")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="UI/SafeArea/Back"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 30.0
+offset_right = -32.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_home")
+expand_mode = 1
+stretch_mode = 5

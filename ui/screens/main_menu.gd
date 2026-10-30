@@ -1,6 +1,6 @@
 extends Control
 ## Home page: the meadow drifts by, the kitten sits on the grass, a big Play button.
-## Play opens the first level not finished yet (the level map will take over this in the next step).
+## Play opens the level map.
 
 @onready var play: TextureButton = $UI/SafeArea/Play
 
@@ -14,4 +14,4 @@ func _ready() -> void:
 
 func _on_play() -> void:
 	play.disabled = true   # one tap is enough
-	GameState.start_level(GameState.next_level_to_play().id)
+	SceneTransition.change_scene("res://ui/screens/level_map.tscn")
