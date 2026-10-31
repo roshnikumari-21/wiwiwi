@@ -154,6 +154,27 @@ func show_complete(stars: int, coins: int, coin_total: int, has_yarn: bool, has_
 	_box.add_child(_row(buttons))
 	_open(0.6)
 
+## After the world's last level: total stars for the whole world, then home or map.
+func show_world_complete(world: int, total_stars: int, max_stars: int) -> void:
+	current = "complete"
+	_clear()
+	_title("WORLD%d_DONE" % world)
+	var tagline := _label("HOME_SWEET", 0)
+	tagline.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_box.add_child(tagline)
+	var star_row := _row([_kitten("cheer"), _icon(STAR_FULL, 110, Color.WHITE)])
+	var count := Label.new()
+	count.name = "WorldStars"
+	count.text = "%d / %d" % [total_stars, max_stars]
+	count.add_theme_font_override("font", BOLD)
+	count.add_theme_font_size_override("font_size", 72)
+	count.add_theme_color_override("font_color", BROWN)
+	star_row.add_child(count)
+	_box.add_child(star_row)
+	_box.add_child(_row([_button("RESULT_MAP", "brown", "none", map_pressed, 260),
+		_button("BTN_HOME", "green", "home", home_pressed, 320)]))
+	_open(0.6)
+
 func show_fail() -> void:
 	current = "fail"
 	_clear()

@@ -6,6 +6,13 @@ extends Control
 const STAGE_SIZE := Vector2(1774, 887)     ## size of the porch picture; Stage children use its pixels
 const KITTEN_OPEN := preload("res://assets/art/ui/home/kitten_lying.png")
 const KITTEN_BLINK := preload("res://assets/art/ui/home/kitten_lying_blink.png")
+## World 1 finished: the girl is home too, hugging the kitten on the porch (reward).
+const HUG_FRAMES: Array[Texture2D] = [
+	preload("res://assets/art/characters/girl/girl_hug_0.png"),
+	preload("res://assets/art/characters/girl/girl_hug_1.png"),
+	preload("res://assets/art/characters/girl/girl_hug_2.png"),
+]
+const FINALE_LEVEL := "w1_10"
 
 @onready var stage: Control = $Stage
 @onready var kitten: Sprite2D = $Stage/Kitten
@@ -24,11 +31,30 @@ func _ready() -> void:
 	settings.pressed.connect(menu.show_settings)
 	menu.quit_pressed.connect(func(): get_tree().quit())
 	play.grab_focus.call_deferred()
-	_breathe()
-	_blink_later()
+	if SaveManager.is_done(FINALE_LEVEL):
+		_show_reunited()
+	else:
+		_breathe()
+		_blink_later()
 	var sway := create_tween().set_loops().set_trans(Tween.TRANS_SINE)
 	sway.tween_property(logo, "rotation_degrees", 1.2, 1.8)
 	sway.tween_property(logo, "rotation_degrees", -1.2, 1.8)
+
+## Reward after World 1: the girl kneels on the rug hugging the kitten (same gentle loop as the level end).
+func _show_reunited() -> void:
+	kitten.hide()
+	var hug := Sprite2D.new()
+	hug.name = "Reunited"
+	hug.texture = HUG_FRAMES[0]
+	hug.scale = Vector2(0.62, 0.62)
+	hug.offset = Vector2(-60, -HUG_FRAMES[0].get_height() * 0.5 + 10)
+	hug.position = Vector2(905, 712)
+	stage.add_child(hug)
+	stage.move_child(hug, kitten.get_index())
+	var loop := create_tween().set_loops()
+	for i in [0, 1, 2, 1]:
+		loop.tween_callback(func(): hug.texture = HUG_FRAMES[i])
+		loop.tween_interval(0.6)
 
 ## The porch always covers the whole screen (very wide or tall screens crop its edges a little).
 func _fit() -> void:

@@ -13,20 +13,22 @@ func _run() -> void:
 	var gs = root.get_node("GameState")
 	root.get_node("Events").level_completed.connect(func(_s, _c, _t, _y): _completed = true)
 
-	for row in [["w1_01", 16], ["w1_02", 19], ["w1_03", 21], ["w1_04", 21], ["w1_05", 25], ["w1_06", 22], ["w1_07", 23], ["w1_08", 25], ["w1_09", 25]]:
+	for row in [["w1_01", 16], ["w1_02", 19], ["w1_03", 21], ["w1_04", 21], ["w1_05", 25], ["w1_06", 22], ["w1_07", 23], ["w1_08", 25], ["w1_09", 25], ["w1_10", 27]]:
 		var level = await _load(row[0])
 		_check("%s: loads, %d coins" % row, gs.coin_total == row[1] and gs.current_level_id == row[0], [gs.current_level_id, gs.coin_total])
 		_check("%s: has a flag and the girl" % row[0], get_nodes_in_group("goal").size() == 1 and level.get_node("Objects").find_children("Checkpoint*", "", false).size() >= 1, "")
 		var girl: Node2D = get_nodes_in_group("goal")[0]
 		_completed = false
 		await _place(level.get_node("Player"), girl.global_position + Vector2(-150, 0))
-		for i in 300:
+		for i in 700:   # the world finale's hug is longer
 			if _completed:
 				break
 			await physics_frame
 		_check("%s: finished at the girl" % row[0], _completed, "")
-		_check("%s: Next level button %s" % [row[0], "shown" if row[0] != "w1_09" else "hidden"],
-			(level.get_node("Hud/SafeArea/Hud").menu.find_child("RESULT_NEXT", true, false) != null) == (row[0] != "w1_09"), "")
+		_check("%s: Next level button %s" % [row[0], "shown" if row[0] != "w1_10" else "hidden"],
+			(level.get_node("Hud/SafeArea/Hud").menu.find_child("RESULT_NEXT", true, false) != null) == (row[0] != "w1_10"), "")
+		if row[0] == "w1_10":
+			_check("w1_10: finale shows World 1 complete with total stars", level.get_node("Hud/SafeArea/Hud").menu.find_child("WorldStars", true, false) != null, "")
 		level.queue_free()
 		await _frames(2)
 

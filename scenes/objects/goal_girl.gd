@@ -57,7 +57,8 @@ func _on_body_entered(body: Node2D) -> void:
 	reached.emit()
 
 ## She kneels down, the cat walks into her arms, they hug and hearts float up. Await this.
-func play_reunion(cat: Player) -> void:
+## `big` = the world finale: a longer hug with waves of confetti and more hearts.
+func play_reunion(cat: Player, big := false) -> void:
 	cat.frozen = true   # she stops here; no more player control
 	if _bounce:
 		_bounce.kill()
@@ -73,6 +74,12 @@ func play_reunion(cat: Player) -> void:
 	Fx.spawn(self, &"confetti", global_position + Vector2(cat_hug_x, -330), 1.3)
 	for i in 3:
 		_float_heart(Vector2(cat_hug_x + i * 55.0, -380.0), i * 0.3)
+	if big:
+		for wave in 3:   # more confetti and hearts, spread around her
+			await get_tree().create_timer(0.8).timeout
+			Fx.spawn(self, &"confetti", global_position + Vector2(cat_hug_x + randf_range(-260.0, 260.0), -420.0), 1.6)
+			for i in 3:
+				_float_heart(Vector2(cat_hug_x + randf_range(-200.0, 200.0), -380.0), i * 0.25)
 	await get_tree().create_timer(hug_time).timeout
 
 func _hug_loop() -> void:

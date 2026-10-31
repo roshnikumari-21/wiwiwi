@@ -120,7 +120,15 @@ func _on_yarn() -> void:
 
 func _on_completed(stars: int, coins: int, coin_total: int, has_yarn: bool) -> void:
 	_end()
-	menu.show_complete(stars, coins, coin_total, has_yarn, GameState.catalog.next_after(GameState.current_level_id) != null)
+	var level := GameState.current_level()
+	if level != null and level.is_reunion:   # the world's last level: the save has already counted it
+		var total := 0
+		var levels := GameState.catalog.in_world(level.world)
+		for l in levels:
+			total += SaveManager.stars(l.id)
+		menu.show_world_complete(level.world, total, levels.size() * 3)
+	else:
+		menu.show_complete(stars, coins, coin_total, has_yarn, GameState.catalog.next_after(GameState.current_level_id) != null)
 
 func _on_failed() -> void:
 	_end()

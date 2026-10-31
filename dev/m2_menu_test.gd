@@ -43,6 +43,12 @@ func _run() -> void:
 		await process_frame
 	_check("result card Map button returns to the map", current_scene != null and current_scene.name == "LevelMap", current_scene)
 
+	save.record_result("w1_10", 3, 27, true)
+	change_scene_to_file("res://ui/screens/main_menu.tscn")
+	for i in 10:
+		await process_frame
+	_check("after World 1: the girl hugs the kitten on the porch", current_scene.get_node_or_null("Stage/Reunited") != null and not current_scene.get_node("Stage/Kitten").visible, "")
+
 	for path in ["user://test_menu_save.json", "user://test_menu_save.json.bak"]:
 		if FileAccess.file_exists(path):
 			DirAccess.remove_absolute(path)

@@ -91,7 +91,8 @@ func _on_goal_reached(goal: Node) -> void:
 		return
 	_over = true
 	touch_controls.hide()
-	await goal.play_reunion(player)
+	var level_data := GameState.current_level()
+	await goal.play_reunion(player, level_data != null and level_data.is_reunion)
 	Events.level_completed.emit(GameState.stars(), GameState.coins, GameState.coin_total, GameState.has_yarn)
 
 func _respawn() -> void:
