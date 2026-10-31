@@ -5,6 +5,11 @@
 [ext_resource type="Script" path="res://ui/components/safe_area.gd" id="3_safe"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/menu/round_brown_plain.png" id="4_round"]
 [ext_resource type="Texture2D" path="res://assets/art/ui/menu/icon_home.png" id="5_home"]
+[ext_resource type="Shader" path="res://ui/screens/map_edge_fade.gdshader" id="6_fade"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fade"]
+shader = ExtResource("6_fade")
+shader_parameter/fade = 0.0
 
 [node name="LevelMap" type="Control"]
 layout_mode = 3
@@ -16,6 +21,14 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_script")
 
+[node name="Backdrop" type="TextureRect" parent="."]
+modulate = Color(0.78, 0.84, 0.78, 1)
+layout_mode = 0
+offset_right = 1672.0
+offset_bottom = 941.0
+mouse_filter = 2
+texture = ExtResource("2_map")
+
 [node name="Map" type="Control" parent="."]
 anchors_preset = 0
 offset_right = 1672.0
@@ -23,6 +36,7 @@ offset_bottom = 941.0
 mouse_filter = 2
 
 [node name="Picture" type="TextureRect" parent="Map"]
+material = SubResource("ShaderMaterial_fade")
 layout_mode = 0
 offset_right = 1672.0
 offset_bottom = 941.0

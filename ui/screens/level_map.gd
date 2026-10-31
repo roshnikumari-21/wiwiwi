@@ -18,8 +18,10 @@ const GIRL := preload("res://assets/art/characters/girl/girl_wait.png")
 const GIRL_SPOT := Vector2(1615, 585)       ## where she waits, just past the last level
 const BUTTON_WIDTH := 150.0                 ## in map pixels
 const STAR_SIZE := 40.0
+const PATH_WIDTH := 1640.0                  ## map pixels that must stay on screen: level 1 to the girl
 
 @onready var map: Control = $Map
+@onready var backdrop: TextureRect = $Backdrop
 @onready var back: TextureButton = $UI/SafeArea/Back
 
 var _buttons: Array[TextureButton] = []
@@ -36,12 +38,19 @@ func _ready() -> void:
 	_place_girl()
 	back.pressed.connect(_go_home)
 
-## The picture always covers the whole screen (wider phones crop a little top and bottom).
+## The picture covers the whole screen (wider phones crop a little top and bottom). On squarer
+## screens (tablets, 4:3 / 16:10) covering would cut off level 1 and the girl, so the map shrinks
+## until the whole path fits, and a dimmed copy behind it fills the strips above and below.
 func _fit() -> void:
 	var screen := get_viewport_rect().size
-	var s := maxf(screen.x / MAP_SIZE.x, screen.y / MAP_SIZE.y)
+	var cover := maxf(screen.x / MAP_SIZE.x, screen.y / MAP_SIZE.y)
+	var s := minf(cover, screen.x / PATH_WIDTH)
 	map.scale = Vector2(s, s)
 	map.position = (screen - MAP_SIZE * s) * 0.5
+	backdrop.scale = Vector2(cover, cover)
+	backdrop.position = (screen - MAP_SIZE * cover) * 0.5
+	backdrop.visible = s < cover
+	($Map/Picture.material as ShaderMaterial).set_shader_parameter("fade", 0.07 if s < cover else 0.0)
 
 func _add_spot(i: int, level: LevelData, is_next: bool) -> void:
 	var unlocked := level != null and SaveManager.is_unlocked(level.id)

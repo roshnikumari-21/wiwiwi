@@ -41,7 +41,7 @@
 | Min Android | 7.0 (API 24, Godot default) |
 | Orientation | Landscape only (Sensor Landscape) |
 | Resolution | Base 1920×1080, stretch `canvas_items`, aspect `expand` |
-| Screen shapes | Wider phones show more world sideways; tablets show more above/below. All UI inside a **SafeArea** container (notches, edge-to-edge). |
+| Screen shapes | Wider phones show more world sideways; tablets show more above/below. All UI inside a **SafeArea** container (notches, edge-to-edge). **Tablets supported** (1 Nov 2026 check, see §11 M2): the Play listing allows large/xlarge screens; every screen checked at 4:3 and 16:10. |
 | Renderer | Compatibility (widest low-end support), target 60 FPS |
 | Input | Touch only: left, right, jump, pause |
 | Text | All strings through `tr()` + CSV, ready for more languages |
@@ -250,6 +250,7 @@ Decision: build the game first; store upload and Play Games sign-in test move to
 - [x] 3 levels (30 Oct 2026): 1-1 "Meadow Morning" (basics, 16 coins), 1-2 "Slime Meadow" (4 slimes, milk at half energy, sideways plank over a pond, floating steps to the yarn; 19 coins), 1-3 "Over the Water" (lift plank up a cliff, long spikes with a floating step above each, 4 ponds, 5 slimes, 2 milk; 21 coins). Every main-path gap ≤ 260 px so a tired cat always gets through. Win card has "Next level" (1-1 → 1-2 → 1-3); catalog via `tools/make_level_data.gd`; `dev/m1_levels_test.gd` checks each level loads/finishes and the plank, lift and spike-step moves
 - [x] Playtest round 1 (30 Oct 2026, owner on the M11): jump button moved 160 px in from the right edge; spikes landed on after the last pond of 1-2 → fair-play rules added and enforced by a test; 1-1 spikes/slime nudged, 1-2 end spikes + 4th slime moved, 1-3 re-laid out with more ground around spikes and the lift (now ~8,200 px)
 - [x] Screen shapes (30 Oct 2026): checked at 16:9, 20:9 (M11-like) and 4:3/5:4 tablet by windowed runs; fix: background layers are now placed from the screen centre (like the camera) and the far layer's top fades into the sky, so tablets no longer show a line in the sky or a tall dark band. Real-device check on a tablet/emulator still useful in M4 (safe areas, touch)
+- [x] Tablet check (1 Nov 2026, owner asked "is it suitable for tablets?"): export allows small→xlarge screens; home, settings, map, a level with HUD + touch buttons, pause and level-complete screenshotted at 4:3 (1440×1080) and 16:10 (1280×800). All fine except the **level map**, which covered the screen and so cut off level 1 and the girl on squarer screens. Fix: the map shrinks until the whole path (`PATH_WIDTH` 1640 map px) fits, a dimmed copy fills the strips above/below, and the picture's top/bottom edges fade into it (`ui/screens/map_edge_fade.gdshader`). Phones (16:9, 20:9) unchanged. Touch buttons stay in the corners at the same size; bigger tablets can pick L in Settings. Still to do in M4: one real tablet or emulator run.
 - [x] Performance: 58 FPS on the M11 with the background (debug FPS counter)
 - **M1 closed 30 Oct 2026.** Further playtest rounds continue during M2/M3.
 
