@@ -284,7 +284,10 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 - [x] Level 1-6 "Slime Parade" (31 Oct 2026): 7 slimes; a long slime field with an optional floating bridge above it (3 steps) holding the Golden Yarn, mushroom, long spikes with a step, a plank over a pond; 22 coins, start energy 70 %
 - [x] Level 1-7 "Long Way Home": the longest so far (~9,400 px), starts at 30 % energy with 3 milk bowls spaced out; lift up a cliff, two mushrooms, long + short spikes, two planks over a wide pond, 4 slimes; yarn above the cliff's far end (full jump); 23 coins. Tested: a cat with zero energy still clears its ponds and uses the lift
 - Owner played 1-4 and 1-5 (31 Oct 2026): "really nice to play"
-- [ ] World 1 levels 8–10 + owner reunion (8–9 challenge, 10 finale)
+- [x] Level 1-8 "Windmill Way" (31 Oct 2026, challenge): mushroom up a high cliff, **three moving planks in a row** over a 1,500 px pond (yarn floats above the middle plank — jump from it), lift up a second cliff with two slimes, long spikes twice; 25 coins, start energy 50 %
+- [x] Level 1-9 "Last Stretch" (challenge): a **mushroom staircase** (two bounces up two cliffs) to a high step with the yarn, two planks, long spikes, lift, five slimes, ponds; 25 coins, start energy 40 %
+- [x] Both pass the fair-play check (one slime moved after landing too close to the 1-8 lift); tests cover the three-plank crossing with no heart lost, the 1-8 yarn, both staircase bounces and the 1-9 yarn
+- [ ] Level 1-10 finale + the big World 1 reunion (needs a decision on how the reunion should feel; maybe 1–2 art pieces)
 - [ ] World 2 tileset, parallax, enemy, hazard, levels 1–10
 - [ ] Remaining animations, music, SFX
 - [ ] All achievements + leaderboards (+ offline queue)

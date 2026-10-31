@@ -13,7 +13,7 @@ func _run() -> void:
 	var gs = root.get_node("GameState")
 	root.get_node("Events").level_completed.connect(func(_s, _c, _t, _y): _completed = true)
 
-	for row in [["w1_01", 16], ["w1_02", 19], ["w1_03", 21], ["w1_04", 21], ["w1_05", 25], ["w1_06", 22], ["w1_07", 23]]:
+	for row in [["w1_01", 16], ["w1_02", 19], ["w1_03", 21], ["w1_04", 21], ["w1_05", 25], ["w1_06", 22], ["w1_07", 23], ["w1_08", 25], ["w1_09", 25]]:
 		var level = await _load(row[0])
 		_check("%s: loads, %d coins" % row, gs.coin_total == row[1] and gs.current_level_id == row[0], [gs.current_level_id, gs.coin_total])
 		_check("%s: has a flag and the girl" % row[0], get_nodes_in_group("goal").size() == 1 and level.get_node("Objects").find_children("Checkpoint*", "", false).size() >= 1, "")
@@ -25,8 +25,8 @@ func _run() -> void:
 				break
 			await physics_frame
 		_check("%s: finished at the girl" % row[0], _completed, "")
-		_check("%s: Next level button %s" % [row[0], "shown" if row[0] != "w1_07" else "hidden"],
-			(level.get_node("Hud/SafeArea/Hud").menu.find_child("RESULT_NEXT", true, false) != null) == (row[0] != "w1_07"), "")
+		_check("%s: Next level button %s" % [row[0], "shown" if row[0] != "w1_09" else "hidden"],
+			(level.get_node("Hud/SafeArea/Hud").menu.find_child("RESULT_NEXT", true, false) != null) == (row[0] != "w1_09"), "")
 		level.queue_free()
 		await _frames(2)
 
@@ -197,6 +197,59 @@ func _run() -> void:
 	await _frames(40)
 	Input.action_release("move_right")
 	_check("1-7: lift up to the cliff (tired)", player.is_on_floor() and absf(player.global_position.y - 540.0) < 4.0, player.global_position)
+
+	level.queue_free()
+	await _frames(2)
+
+	# 1-8: three planks in a row over the big pond, plank to plank, no heart lost.
+	level = await _load("w1_08")
+	player = level.get_node("Player")
+	await _frames(80)
+	var gs8 = root.get_node("GameState")
+	await _ride(player, level.get_node("Objects/Plank1"), Vector2(3840, 900), Vector2(4170, 900))
+	for hop in 3:
+		Input.action_press("move_right")
+		Input.action_press("jump")
+		await _frames(25)
+		Input.action_release("jump")
+		for i in 70:
+			await physics_frame
+			if player.is_on_floor():
+				break
+		Input.action_release("move_right")
+	_check("1-8: across three planks to the far shore, no heart lost", player.is_on_floor() and player.global_position.x > 5200.0 and gs8.hearts == 3, [player.global_position, gs8.hearts])
+
+	# 1-8: the Golden Yarn above the middle plank can be reached by a jump from it.
+	await _ride(player, level.get_node("Objects/Plank2"), Vector2(4260, 900), Vector2(4590, 900))
+	await _place(player, Vector2(4470, 898))
+	Input.action_press("jump")
+	await _frames(30)
+	Input.action_release("jump")
+	await _frames(20)
+	_check("1-8: yarn reachable from the middle plank", gs8.has_yarn, player.global_position)
+	level.queue_free()
+	await _frames(2)
+
+	# 1-9: the mushroom staircase: two bounces up two cliffs, then the yarn with a full jump.
+	level = await _load("w1_09")
+	player = level.get_node("Player")
+	await _frames(80)
+	var gs9 = root.get_node("GameState")
+	for stair in [[Vector2(2050, 700), 560.0], [Vector2(2750, 360), 260.0]]:
+		await _place(player, stair[0])
+		Input.action_press("move_right")
+		for i in 150:
+			await physics_frame
+			if player.is_on_floor() and i > 10:
+				break
+		Input.action_release("move_right")
+		_check("1-9: mushroom bounce up to y %d" % stair[1], player.is_on_floor() and absf(player.global_position.y - stair[1]) < 4.0, player.global_position)
+	await _place(player, Vector2(3450, 260))
+	Input.action_press("jump")
+	await _frames(30)
+	Input.action_release("jump")
+	await _frames(20)
+	_check("1-9: yarn above the top step with a full jump", gs9.has_yarn, player.global_position)
 
 	print("RESULT: %s" % ("ALL PASS" if _fails == 0 else "%d FAILED" % _fails))
 	quit(_fails)

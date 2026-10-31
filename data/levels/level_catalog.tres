@@ -9,7 +9,9 @@
 [ext_resource type="Resource" path="res://data/levels/w1_05.tres" id="6_3axxx"]
 [ext_resource type="Resource" path="res://data/levels/w1_06.tres" id="7_dgrg0"]
 [ext_resource type="Resource" path="res://data/levels/w1_07.tres" id="8_d3mo5"]
+[ext_resource type="Resource" path="res://data/levels/w1_08.tres" id="9_6trxd"]
+[ext_resource type="Resource" path="res://data/levels/w1_09.tres" id="10_4ih6a"]
 
 [resource]
 script = ExtResource("3_2utja")
-levels = Array[ExtResource("1_l4oc3")]([ExtResource("2_ku8p1"), ExtResource("3_mb7x6"), ExtResource("4_oluu4"), ExtResource("5_oluu4"), ExtResource("6_3axxx"), ExtResource("7_dgrg0"), ExtResource("8_d3mo5")])
+levels = Array[ExtResource("1_l4oc3")]([ExtResource("2_ku8p1"), ExtResource("3_mb7x6"), ExtResource("4_oluu4"), ExtResource("5_oluu4"), ExtResource("6_3axxx"), ExtResource("7_dgrg0"), ExtResource("8_d3mo5"), ExtResource("9_6trxd"), ExtResource("10_4ih6a")])
