@@ -103,14 +103,10 @@ position = Vector2(3300, 260)
 patrol_distance = 80.0
 
 [node name="Slime3" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(7100, 520)
-patrol_distance = 80.0
+position = Vector2(7150, 520)
+patrol_distance = 100.0
 
 [node name="Slime4" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(7400, 520)
-patrol_distance = 60.0
-
-[node name="Slime5" parent="Objects" instance=ExtResource("9_slime")]
 position = Vector2(8870, 900)
 patrol_distance = 60.0
 

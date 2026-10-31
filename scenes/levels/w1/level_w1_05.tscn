@@ -91,7 +91,7 @@ move_by = Vector2(0, -400)
 
 [node name="Slime1" parent="Objects" instance=ExtResource("9_slime")]
 position = Vector2(3900, 900)
-patrol_distance = 150.0
+patrol_distance = 110.0
 
 [node name="Slime2" parent="Objects" instance=ExtResource("9_slime")]
 position = Vector2(6900, 480)

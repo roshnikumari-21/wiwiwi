@@ -78,31 +78,27 @@ position = Vector2(5440, 900)
 move_by = Vector2(320, 0)
 
 [node name="Slime1" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(650, 900)
-patrol_distance = 100.0
+position = Vector2(550, 900)
+patrol_distance = 70.0
 
 [node name="Slime2" parent="Objects" instance=ExtResource("9_slime")]
 position = Vector2(1150, 900)
-patrol_distance = 100.0
+patrol_distance = 80.0
 
 [node name="Slime3" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(2300, 900)
-patrol_distance = 100.0
+position = Vector2(2350, 900)
+patrol_distance = 80.0
 
 [node name="Slime4" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(2750, 900)
+position = Vector2(3100, 900)
 patrol_distance = 80.0
 
 [node name="Slime5" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(3150, 900)
-patrol_distance = 100.0
-
-[node name="Slime6" parent="Objects" instance=ExtResource("9_slime")]
 position = Vector2(6400, 900)
 patrol_distance = 120.0
 
-[node name="Slime7" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(7000, 900)
+[node name="Slime6" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(7050, 900)
 patrol_distance = 120.0
 
 [node name="MilkBowl1" parent="Objects" instance=ExtResource("7_milk")]

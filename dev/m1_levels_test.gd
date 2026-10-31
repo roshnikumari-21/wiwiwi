@@ -219,6 +219,20 @@ func _run() -> void:
 		Input.action_release("move_right")
 	_check("1-8: across three planks to the far shore, no heart lost", player.is_on_floor() and player.global_position.x > 5200.0 and gs8.hearts == 3, [player.global_position, gs8.hearts])
 
+	# 1-8 (owner playtest): off the lift onto the cliff, jump the slime, land safely beyond it.
+	await _ride(player, level.get_node("Objects/Plank4"), Vector2(6575, 900), Vector2(6575, 500))
+	var h8: int = gs8.hearts
+	Input.action_press("move_right")
+	var slime8 = level.get_node("Objects/Slime3")
+	while player.global_position.x < slime8.global_position.x - 200.0 and player.global_position.x < 7600.0:   # time it to the slime
+		await physics_frame
+	Input.action_press("jump")
+	await _frames(25)
+	Input.action_release("jump")
+	await _frames(60)
+	Input.action_release("move_right")
+	_check("1-8: lift -> jump the cliff slime -> land, no heart lost", gs8.hearts == h8 and player.global_position.x > 7400.0, [player.global_position, gs8.hearts])
+
 	# 1-8: the Golden Yarn above the middle plank can be reached by a jump from it.
 	await _ride(player, level.get_node("Objects/Plank2"), Vector2(4260, 900), Vector2(4590, 900))
 	await _place(player, Vector2(4470, 898))
