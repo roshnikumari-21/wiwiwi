@@ -48,6 +48,10 @@ RECIPES = {
     ),
 }
 
+# Pieces cut far bigger than they ever appear in the game: shrunk to this width (px) to keep the
+# app small. Their scenes use a matching bigger scale (yarn_glow 0.5, platform_moving 0.5).
+SHRINK = {ART / "objects": {"yarn_glow": 236, "platform_moving": 604, "yarn": 200}}
+
 # Pieces that animate together: put on one same-size canvas so they don't jump between frames.
 # "centre" = middle of the canvas (spinning coin); "feet" = bottom-centre (poses swapped on the ground);
 # "shoe" = bottom of the canvas, her right shoe on the centre line (it stays planted while she kneels);
@@ -102,6 +106,13 @@ def main():
                 piece = to_image(cut(img, box))
                 piece.save(out_dir / f"{name}.png", optimize=True)
                 print(f"  {name}: {piece.width}x{piece.height}")
+
+    for out_dir, pieces in SHRINK.items():
+        for name, width in pieces.items():
+            im = Image.open(out_dir / f"{name}.png")
+            im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
+            im.save(out_dir / f"{name}.png", optimize=True)
+            print(f"  shrunk {name} to {im.width}x{im.height}")
 
     for out_dir, groups in CENTRED_GROUPS.items():
         for group, anchor, *resize in groups:

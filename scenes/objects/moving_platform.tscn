@@ -12,9 +12,9 @@ collision_mask = 0
 script = ExtResource("1_script")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.18, 0.18)
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_plank")
-offset = Vector2(0, 102)
+offset = Vector2(0, 36.7)
 
 [node name="Top" type="CollisionShape2D" parent="."]
 position = Vector2(0, 15)
