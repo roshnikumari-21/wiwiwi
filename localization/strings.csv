@@ -42,3 +42,9 @@ LEVEL_W1_09_TITLE,Last Stretch
 LEVEL_W1_10_TITLE,Home Again
 WORLD1_DONE,World 1 complete!
 HOME_SWEET,Home sweet home!
+CREDITS_TITLE,Credits
+CREDITS_MADE_BY,wiwiwi by DigiCraft
+CREDITS_THANKS,"Thank you for playing! A cozy game about a little kitten finding her way home."
+CREDITS_ART_AUDIO,Art and sound
+CREDITS_ART_AUDIO_TEXT,"Art made with ChatGPT image generation, music and sound effects made with ElevenLabs, all directed and edited by DigiCraft."
+CREDITS_ENGINE_PARTS,Parts of Godot Engine

@@ -97,9 +97,67 @@ func show_settings(from_pause := false) -> void:
 			"none", settings_closed, 116, _set_controls_size.bind(SIZES[key]))
 		size_row.add_child(b)
 	_box.add_child(size_row)
-	_box.add_child(_button("BTN_BACK" if from_pause else "BTN_DONE", "green", "none", settings_closed, 400,
-		show_pause if from_pause else close_settings))
+	_box.add_child(_row([_button("CREDITS_TITLE", "brown", "none", settings_closed, 260, show_credits),
+		_button("BTN_BACK" if from_pause else "BTN_DONE", "green", "none", settings_closed, 300,
+		show_pause if from_pause else close_settings)]))
 	_open(0.0)
+
+## Credits and the licence texts the game must ship (Godot MIT + its third-party parts, Fredoka OFL,
+## the Play Games plugin MIT). Godot's own texts come from the engine, so they always match the
+## version the game was built with. Scrolls with a finger; Back returns to Settings.
+func show_credits() -> void:
+	current = "credits"
+	_clear()
+	_title("CREDITS_TITLE")
+	var scroll := ScrollContainer.new()
+	scroll.name = "CreditsScroll"
+	scroll.custom_minimum_size = Vector2(1100, 470)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var text := VBoxContainer.new()
+	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	text.add_theme_constant_override("separation", 14)
+	scroll.add_child(text)
+	_credit(text, "CREDITS_MADE_BY", "", 44)
+	_credit(text, "", "CREDITS_THANKS", 30)
+	_credit(text, "CREDITS_ART_AUDIO", "CREDITS_ART_AUDIO_TEXT", 30)
+	_credit(text, "Godot Engine", Engine.get_license_text(), 22)
+	_credit(text, "Fredoka", _read("res://assets/fonts/licenses/Fredoka-OFL.txt"), 22)
+	_credit(text, "Godot Play Game Services", _read("res://addons/GodotPlayGameServices/LICENSE"), 22)
+	var parts := ""
+	for part in Engine.get_copyright_info():
+		parts += "%s
+" % part["name"]
+		for c in part["parts"]:
+			parts += "  © %s (%s)
+" % [", ".join(c["copyright"]), c["license"]]
+	_credit(text, "CREDITS_ENGINE_PARTS", parts, 20)
+	var licenses := Engine.get_license_info()
+	for name in licenses:
+		_credit(text, name, licenses[name], 18)
+	_box.add_child(scroll)
+	_box.add_child(_button("BTN_BACK", "green", "none", settings_closed, 300, show_settings.bind(_settings_from_pause)))
+	_open(0.0)
+
+func _credit(into: VBoxContainer, heading: String, body: String, size: int) -> void:
+	if heading != "":
+		var h := Label.new()
+		h.text = heading
+		h.add_theme_font_override("font", BOLD)
+		h.add_theme_font_size_override("font_size", maxi(size + 6, 30))
+		h.add_theme_color_override("font_color", BROWN)
+		into.add_child(h)
+	if body != "":
+		var b := Label.new()
+		b.text = body
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.custom_minimum_size = Vector2(1040, 0)
+		b.add_theme_font_size_override("font_size", size)
+		b.add_theme_color_override("font_color", Color(0.4, 0.3, 0.24))
+		into.add_child(b)
+
+func _read(path: String) -> String:
+	return FileAccess.get_file_as_string(path) if FileAccess.file_exists(path) else ""
 
 func close_settings() -> void:
 	close()
@@ -209,6 +267,7 @@ func go_back() -> bool:
 			else:
 				close_settings()
 		"quit": close()
+		"credits": show_settings(_settings_from_pause)
 		"complete", "fail": map_pressed.emit()
 		_: return false
 	return true

@@ -31,6 +31,17 @@ func _run() -> void:
 	menu.find_child("L", true, false).pressed.emit()
 	await _frames(2)
 	_check("size L saved", is_equal_approx(save.get_setting("controls_size"), 1.2), save.get_setting("controls_size"))
+	menu.find_child("CREDITS_TITLE", true, false).pressed.emit()
+	await _frames(3)
+	var credits_text := ""
+	for l in menu.find_children("*", "Label", true, false):
+		credits_text += l.text
+	_check("Credits: DigiCraft, Godot licence, Fredoka OFL, Play Games plugin licence",
+		menu.current == "credits" and "CREDITS_MADE_BY" in credits_text and "Godot Engine contributors" in credits_text
+		and "SIL Open Font License" in credits_text and "Jacob Ib" in credits_text, menu.current)
+	menu.go_back()
+	await _frames(3)
+	_check("Back from Credits returns to Settings", menu.current == "settings", menu.current)
 	menu.find_child("BTN_DONE", true, false).pressed.emit()
 	await _frames(2)
 	_check("Done closes Settings", not menu.visible, "")
