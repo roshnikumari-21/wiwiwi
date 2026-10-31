@@ -35,7 +35,7 @@ Play Console shows a "set up your app" list. Answers that match the game as buil
 - **App access:** all functionality is available without special access (no login).
 - **Ads:** No, the app has no ads.
 - **Content rating** (questionnaire): category **Game**. Answer honestly — cartoon kitten, slimes that squash and fade (no blood), no in-game purchases, no chat, no user-made content, no gambling, no location sharing.
-- **Target audience:** ⚠ **decision for you.** Picking any age group **under 13** puts the app under Google's **Families policy** (stricter rules for every SDK in the app, including Play Games). Claude's recommendation for the first test: **13 and over** now, and decide about children before the public launch (we'd check the Families rules for Play Games first).
+- **Target audience:** ✅ **decided: 13 and over** (choose the 13+ age groups only). Picking any age group **under 13** puts the app under Google's **Families policy** (stricter rules for every SDK in the app, including Play Games). Claude's recommendation for the first test: **13 and over** now, and decide about children before the public launch (we'd check the Families rules for Play Games first).
 - **Data safety:** wiwiwi itself collects and shares **no** data (progress and settings stay on the phone; no server). The **Google Play Games Services** library is in the app, so read Google's Data safety guidance for Play Games Services and declare what it says it collects.
 - **Privacy policy:** already set — `https://wiwiwi.digicraft.one/privacy`.
 - Government / financial / health / news features: **No**.
