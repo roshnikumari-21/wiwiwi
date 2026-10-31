@@ -111,6 +111,7 @@ func _place_kitten(spot: Vector2) -> void:
 	cat.scale = Vector2(0.42, 0.42)
 	cat.offset = Vector2(0, -131)
 	cat.position = spot + Vector2(0, -48)
+	CatSkins.apply(cat)
 	map.add_child(cat)
 	var hop := create_tween().set_loops()
 	hop.tween_interval(2.0)

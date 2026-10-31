@@ -12,9 +12,10 @@ signal home_pressed
 signal settings_closed
 signal quit_pressed
 
-## Which popup is showing: "", "pause", "settings", "complete", "fail", "quit".
+## Which popup is showing: "", "pause", "settings", "complete", "fail", "quit", "notice", "shop".
 var current := ""
 var _settings_from_pause := false
+var _shop_index := 0   ## which cat the shop is showing
 
 const SIZES := {"S": 0.8, "M": 1.0, "L": 1.2}   ## touch-button size choices
 const UI := "res://assets/art/ui/menu/"
@@ -266,6 +267,72 @@ func show_notice(title_key: String, text_key: String) -> void:
 	_box.add_child(_row([_button("BTN_OK", "green", "none", settings_closed, 300, close)]))
 	_open(0.0)
 
+## Cat Shop: one big cat at a time, arrows to look through them, and Buy / Choose below.
+func show_cat_shop(index := -1) -> void:
+	current = "shop"
+	if index < 0:   # opening: start at the chosen cat
+		index = CatSkins.ALL.find(CatSkins.find(SaveManager.chosen_cat()))
+	_shop_index = posmod(index, CatSkins.ALL.size())
+	var skin: Dictionary = CatSkins.ALL[_shop_index]
+	_clear()
+	_title("SHOP_TITLE")
+	var purse := StatPill.new(COIN)
+	purse.name = "Purse"
+	purse.set_text(str(SaveManager.purse()))
+	purse.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_box.add_child(purse)
+	var cat := _kitten("cheer" if SaveManager.owns_cat(skin.id) else "idle")
+	cat.custom_minimum_size = Vector2(400, 300)   # the star of this popup: bigger than usual
+	var sprite: AnimatedSprite2D = cat.get_child(0)
+	sprite.scale = Vector2(1.1, 1.1)
+	sprite.position = Vector2(200, 295)
+	CatSkins.apply(sprite, skin.id)
+	var name_label := _label(skin.name, 0)
+	name_label.name = "CatName"
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_label.add_theme_font_override("font", BOLD)
+	var middle := VBoxContainer.new()
+	middle.add_child(cat)
+	middle.add_child(name_label)
+	_box.add_child(_row([_arrow(-1), middle, _arrow(1)]))
+	var main: PillButton
+	if skin.id == SaveManager.chosen_cat():
+		main = _button("BTN_CHOSEN", "green", "none", settings_closed, 330, func(): pass)
+		main.disabled = true
+	elif SaveManager.owns_cat(skin.id):
+		main = _button("BTN_CHOOSE", "yellow", "none", settings_closed, 330, func():
+			SaveManager.choose_cat(skin.id)
+			show_cat_shop(_shop_index))
+	elif SaveManager.purse() >= skin.price:
+		main = _button(str(skin.price), "green", "coin", settings_closed, 330, func():
+			SaveManager.buy_cat(skin.id)
+			AudioManager.play_sfx("sfx_confetti")
+			AudioManager.play_sfx("sfx_meow_happy")
+			show_cat_shop(_shop_index))
+	else:
+		main = _button(tr("SHOP_NEED") % skin.price, "brown", "coin", settings_closed, 330, func(): pass)
+		main.disabled = true
+	main.name = "ShopMain"
+	_box.add_child(_row([main, _button("BTN_DONE", "brown", "none", settings_closed, 260, close)]))
+	_open(0.0)
+
+func _arrow(step: int) -> TextureButton:
+	var b := TextureButton.new()
+	b.name = "Next" if step > 0 else "Previous"
+	b.texture_normal = preload(UI + "round_brown_plain.png")
+	b.ignore_texture_size = true
+	b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	b.custom_minimum_size = Vector2(110, 110)
+	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var icon := _icon(preload(UI + "icon_next.png"), 0, Color.WHITE)
+	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	icon.offset_left = 28; icon.offset_right = -28; icon.offset_top = 26; icon.offset_bottom = -30
+	icon.flip_h = step < 0
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(icon)
+	b.pressed.connect(func(): show_cat_shop(_shop_index + step))
+	return b
+
 func close() -> void:
 	current = ""
 	hide()
@@ -279,7 +346,7 @@ func go_back() -> bool:
 				show_pause()
 			else:
 				close_settings()
-		"quit", "notice": close()
+		"quit", "notice", "shop": close()
 		"credits": show_settings(_settings_from_pause)
 		"complete", "fail": map_pressed.emit()
 		_: return false
@@ -352,6 +419,7 @@ func _kitten(animation: String) -> Control:
 	cat.scale = Vector2(0.78, 0.78)
 	cat.offset = Vector2(0, -131)
 	cat.position = Vector2(150, 215)
+	CatSkins.apply(cat)
 	holder.add_child(cat)
 	return holder
 

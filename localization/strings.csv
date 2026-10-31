@@ -52,3 +52,13 @@ BTN_OK,OK
 PLAY_GAMES_TITLE,Play Games
 PLAY_GAMES_UNAVAILABLE,"Leaderboards and achievements open on Android phones with Google Play Games."
 PLAY_GAMES_SIGN_IN_FAILED,"Couldn't sign in to Google Play Games. Check the internet and try again."
+SHOP_TITLE,Cat Shop
+BTN_CHOOSE,Choose
+BTN_CHOSEN,Chosen
+SHOP_NEED,Need %d
+CAT_GINGER,Ginger
+CAT_SNOWY,Snowy
+CAT_COCOA,Cocoa
+CAT_MISTY,Misty
+CAT_TUXEDO,Tuxedo
+CAT_BUBBLEGUM,Bubblegum

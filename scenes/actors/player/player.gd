@@ -52,6 +52,7 @@ var _jump_speed: float
 var _rise_gravity: float
 
 func _ready() -> void:
+	CatSkins.apply(sprite)   # the colour chosen in the Cat Shop
 	_base_scale = sprite.scale
 	_rise_gravity = 2.0 * jump_height / (time_to_apex * time_to_apex)
 	_jump_speed = -2.0 * jump_height / time_to_apex

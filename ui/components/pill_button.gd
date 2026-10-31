@@ -8,7 +8,7 @@ extends Button
 	set(value):
 		colour = value
 		_restyle()
-@export_enum("none", "play", "replay", "home", "next", "settings", "pause") var symbol: String = "none":
+@export_enum("none", "play", "replay", "home", "next", "settings", "pause", "coin") var symbol: String = "none":
 	set(value):
 		symbol = value
 		_restyle()

@@ -71,6 +71,7 @@ func play_reunion(cat: Player, big := false) -> void:
 	cat.walk_to(global_position.x + cat_hug_x)
 	await cat.arrived
 	cat.visible = false
+	CatSkins.apply(girl, "", CatSkins.HUG_REGION)   # the kitten in the hug pictures wears the chosen colour
 	_hug_loop()
 	AudioManager.play_sfx("sfx_meow_happy")
 	AudioManager.start_purr()

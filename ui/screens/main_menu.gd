@@ -1,7 +1,9 @@
 extends Control
 ## Home page: the cottage porch. The kitten lies on her cushion, breathing and blinking now and then,
 ## the wooden-sign logo sways gently, and the big Play button opens the level map.
-## The round button opens Settings. Top-right: stars, Golden Yarns and the coin purse. Trophy / achievements buttons join with Play Games (no dead buttons).
+## Round buttons beside Play: Achievements (trophy), Settings, Leaderboards and the Cat Shop (paw).
+## The Play Games ones sign in first if needed and explain kindly when Play Games isn't there (PC).
+## Top-right: stars, Golden Yarns and the coin purse.
 
 const STAGE_SIZE := Vector2(1774, 887)     ## size of the porch picture; Stage children use its pixels
 const KITTEN_OPEN := preload("res://assets/art/ui/home/kitten_lying.png")
@@ -17,6 +19,7 @@ const COIN := preload("res://assets/art/objects/coin_0.png")
 @onready var settings: TextureButton = $Stage/Settings
 @onready var achievements: TextureButton = $Stage/Achievements
 @onready var leaderboards: TextureButton = $Stage/Leaderboards
+@onready var cat_shop: TextureButton = $Stage/CatShop
 var menu: GameMenu
 var _stars := StatPill.new(STAR)
 var _yarns := StatPill.new(YARN)
@@ -34,6 +37,7 @@ func _ready() -> void:
 	menu.quit_pressed.connect(func(): get_tree().quit())
 	achievements.pressed.connect(PlayServices.show_achievements)
 	leaderboards.pressed.connect(PlayServices.show_leaderboards)
+	cat_shop.pressed.connect(menu.show_cat_shop)
 	PlayServices.open_failed.connect(_on_play_games_failed)
 	play.grab_focus.call_deferred()
 	_add_top_bar()
@@ -70,6 +74,7 @@ func _show_progress() -> void:
 	_stars.set_text("%d / %d" % [stars.x, stars.y])
 	_yarns.set_text("%d / %d" % [yarns.x, yarns.y])
 	_coins.set_text(str(SaveManager.purse()))
+	CatSkins.apply(kitten)   # the cushion kitten wears the colour chosen in the Cat Shop
 
 func _breathe() -> void:
 	var base := kitten.scale

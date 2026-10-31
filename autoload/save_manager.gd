@@ -61,6 +61,32 @@ func record_result(level_id: String, star_count: int, coins: int, yarn: bool) ->
 	save_game()
 	progress_changed.emit()
 
+# --- Cat Shop -------------------------------------------------------------------------------
+# "cosmetics" lists the cats bought; the ginger kitten is everyone's from the start.
+
+func owns_cat(id: String) -> bool:
+	return id == CatSkins.DEFAULT or id in _data["cosmetics"]
+
+func chosen_cat() -> String:
+	return _data.get("cat", CatSkins.DEFAULT)
+
+## Pays and adds the cat, then chooses it. False (nothing changes) if the purse is too light.
+func buy_cat(id: String) -> bool:
+	if owns_cat(id):
+		return true
+	if not spend_coins(CatSkins.find(id).price):
+		return false
+	_data["cosmetics"].append(id)
+	choose_cat(id)
+	return true
+
+func choose_cat(id: String) -> void:
+	if not owns_cat(id):
+		return
+	_data["cat"] = id
+	save_game()
+	progress_changed.emit()
+
 func save_game() -> void:
 	var tmp := save_path + ".tmp"
 	var file := FileAccess.open(tmp, FileAccess.WRITE)
@@ -125,7 +151,7 @@ func _level(level_id: String) -> Dictionary:
 
 func _fresh() -> Dictionary:
 	# wallet + cosmetics are empty slots for a future shop, so it needs no save migration.
-	return {"version": VERSION, "levels": {}, "wallet": {"coins": 0}, "cosmetics": []}
+	return {"version": VERSION, "levels": {}, "wallet": {"coins": 0}, "cosmetics": [], "cat": "ginger"}
 
 ## Bring an older save up to the current version, step by step.
 func _migrate(data: Dictionary) -> Dictionary:
