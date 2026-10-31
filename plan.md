@@ -100,6 +100,13 @@ flowchart TD
 | Credits | `ui/screens/credits.tscn` |
 | Owner reunion | `scenes/objects/owner/owner.tscn` |
 
+**Home page v3 + Cat Shop (decided 1 Nov 2026, co-founder: "the home page has very few buttons").** Built in this order, one step at a time:
+1. ✅ **Coin purse + top bar.** Every coin picked up in a *finished* level goes into a saved purse (`wallet.coins` in save.json; replays earn again; coins from an unfinished run are not kept). Home page top-right shows three wooden pills: ⭐ stars won / 30, 🧶 Golden Yarns / 10, 🪙 purse (`ui/components/stat_pill.gd`, `SaveManager.total_stars/total_yarns/purse/add_coins/spend_coins`). Test: `dev/m2_purse_test.gd`.
+2. Leaderboard + Achievements round buttons beside the settings gear (Play Games; fully working after the app-signing SHA-1).
+3. **Cat Shop** (🐾 button): buy and choose cat colours with coins. v1 = **recolours of the current kitten** by a colour shader (no new art; every pose stays identical), about 4–5 cats priced ~150 / 300 / 500 / 800 (World 1 holds ~300 coins). The chosen cat is used everywhere (levels, map, home cushion, hug). Truly different breeds later = the owners supply a full matching set (22 level frames + 2 home frames) per cat; they slot into the same shop.
+4. Pet the kitten: tap her on the home page → purr, eyes close, hearts float up.
+Later: daily gift box (only once coins have a use, i.e. after the shop).
+
 **Android Back button (built 31 Oct 2026):** level → pause; pause → resume; Settings opened from pause → back to pause; Level complete / Try again → map; map → home; home → closes Settings if open, otherwise "Leave wiwiwi?" (Stay / Leave). No Quit button on Android; `quit_on_go_back=false` so nothing closes by surprise. Checked by `dev/m2_back_test.gd` (9 checks).
 
 ## 5. Assets by Type

@@ -1,11 +1,14 @@
 extends Control
 ## Home page: the cottage porch. The kitten lies on her cushion, breathing and blinking now and then,
 ## the wooden-sign logo sways gently, and the big Play button opens the level map.
-## The round button opens Settings. Trophy / achievements buttons join with Play Games (no dead buttons).
+## The round button opens Settings. Top-right: stars, Golden Yarns and the coin purse. Trophy / achievements buttons join with Play Games (no dead buttons).
 
 const STAGE_SIZE := Vector2(1774, 887)     ## size of the porch picture; Stage children use its pixels
 const KITTEN_OPEN := preload("res://assets/art/ui/home/kitten_lying.png")
 const KITTEN_BLINK := preload("res://assets/art/ui/home/kitten_lying_blink.png")
+const STAR := preload("res://assets/art/ui/menu/level_star_full.png")
+const YARN := preload("res://assets/art/objects/yarn.png")
+const COIN := preload("res://assets/art/objects/coin_0.png")
 
 @onready var stage: Control = $Stage
 @onready var kitten: Sprite2D = $Stage/Kitten
@@ -13,6 +16,9 @@ const KITTEN_BLINK := preload("res://assets/art/ui/home/kitten_lying_blink.png")
 @onready var play: TextureButton = $Stage/Play
 @onready var settings: TextureButton = $Stage/Settings
 var menu: GameMenu
+var _stars := StatPill.new(STAR)
+var _yarns := StatPill.new(YARN)
+var _coins := StatPill.new(COIN)
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_fit)
@@ -25,6 +31,7 @@ func _ready() -> void:
 	settings.pressed.connect(menu.show_settings)
 	menu.quit_pressed.connect(func(): get_tree().quit())
 	play.grab_focus.call_deferred()
+	_add_top_bar()
 	_breathe()
 	_blink_later()
 	var sway := create_tween().set_loops().set_trans(Tween.TRANS_SINE)
@@ -37,6 +44,27 @@ func _fit() -> void:
 	var s := maxf(screen.x / STAGE_SIZE.x, screen.y / STAGE_SIZE.y)
 	stage.scale = Vector2(s, s)
 	stage.position = (screen - STAGE_SIZE * s) * 0.5
+
+## Top-right: stars won, Golden Yarns found and the coin purse.
+func _add_top_bar() -> void:
+	var bar := HBoxContainer.new()
+	bar.name = "TopBar"
+	bar.size_flags_horizontal = Control.SIZE_SHRINK_END
+	bar.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	bar.add_theme_constant_override("separation", 16)
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for pill in [_stars, _yarns, _coins]:
+		bar.add_child(pill)
+	$UI/SafeArea.add_child(bar)
+	_show_progress()
+	SaveManager.progress_changed.connect(_show_progress)
+
+func _show_progress() -> void:
+	var stars := SaveManager.total_stars()
+	var yarns := SaveManager.total_yarns()
+	_stars.set_text("%d / %d" % [stars.x, stars.y])
+	_yarns.set_text("%d / %d" % [yarns.x, yarns.y])
+	_coins.set_text(str(SaveManager.purse()))
 
 func _breathe() -> void:
 	var base := kitten.scale

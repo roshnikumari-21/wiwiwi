@@ -80,7 +80,45 @@ func reset_progress() -> void:
 	progress_changed.emit()
 
 func _on_level_completed(star_count: int, coins: int, _coin_total: int, yarn: bool) -> void:
+	_data["wallet"]["coins"] = purse() + coins   # record_result below saves it
 	record_result(GameState.current_level_id, star_count, coins, yarn)
+
+## Stars won over all levels, and how many there are to win (3 per level).
+func total_stars() -> Vector2i:
+	var levels: Array = GameState.catalog.levels
+	var got := 0
+	for level in levels:
+		got += stars(level.id)
+	return Vector2i(got, levels.size() * 3)
+
+## Golden Yarns found, and how many there are (1 per level).
+func total_yarns() -> Vector2i:
+	var levels: Array = GameState.catalog.levels
+	var got := 0
+	for level in levels:
+		got += int(has_yarn(level.id))
+	return Vector2i(got, levels.size())
+
+# --- Coin purse -----------------------------------------------------------------------------
+# Every coin picked up in a finished level goes in the purse (replays earn more), to spend in the
+# Cat Shop. Coins from a level that wasn't finished are not kept.
+
+func purse() -> int:
+	return int(_data["wallet"].get("coins", 0))
+
+func add_coins(amount: int) -> void:
+	_data["wallet"]["coins"] = purse() + amount
+	save_game()
+	progress_changed.emit()
+
+## Takes the coins if there are enough; returns false (and takes nothing) if not.
+func spend_coins(amount: int) -> bool:
+	if amount > purse():
+		return false
+	_data["wallet"]["coins"] = purse() - amount
+	save_game()
+	progress_changed.emit()
+	return true
 
 func _level(level_id: String) -> Dictionary:
 	return _data["levels"].get(level_id, {})
