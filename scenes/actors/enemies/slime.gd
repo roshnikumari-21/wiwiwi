@@ -1,14 +1,18 @@
 class_name Slime
 extends CharacterBody2D
-## World 1 slime. Patrols left and right around where it was placed. Landing on top squashes it
-## (the cat bounces); touching it from the side costs a heart. Origin = bottom centre.
+## World 1 slime. Patrols left and right around where it was placed. Origin = bottom centre.
+## Fair-play rules (owner playtest, 31 Oct 2026: jumping over slimes kept hurting):
+##  - the cat in the air never gets hurt by a slime: if her feet are above its middle she squashes
+##    it and bounces on (rising or falling), otherwise she just passes by
+##  - only walking into it on the ground hurts, and that touch zone is narrower than the slime
 
 @export var speed: float = 90.0
 @export var patrol_distance: float = 220.0   ## how far it wanders each way from its start
 @export var start_left: bool = false
 
 const GRAVITY := 3000.0
-const STOMP_HEIGHT := 40.0   ## the cat's feet must be at least this far above the slime's base
+const STOMP_ABOVE := 30.0    ## an airborne cat whose feet are higher than this above the base squashes it
+const HURT_REACH := 70.0     ## on the ground, centres closer than this hurt (bodies are 92 + 100 wide)
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 @onready var hitbox: Area2D = $Hitbox
@@ -38,10 +42,12 @@ func _check_cat() -> void:
 		if not body is Player or body.frozen:   # ignore her while she's in the hurt pose
 			continue
 		var cat := body as Player
-		if cat.velocity.y > 0.0 and cat.global_position.y < global_position.y - STOMP_HEIGHT:
-			cat.stomp_bounce_up()
-			_squash()
-		elif cat.can_be_hurt():
+		if not cat.is_on_floor():
+			if cat.global_position.y < global_position.y - STOMP_ABOVE:
+				cat.stomp_bounce_up()
+				_squash()
+			return   # in the air but low: taking off or landing beside it, no harm
+		if absf(cat.global_position.x - global_position.x) < HURT_REACH and cat.can_be_hurt():
 			Events.player_hurt.emit()
 
 func _squash() -> void:

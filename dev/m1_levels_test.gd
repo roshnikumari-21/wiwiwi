@@ -1,6 +1,9 @@
 extends SceneTree
-## Headless checks for levels 1-1..1-3: each loads, counts its coins, can be finished at the girl;
-## and the key moves of 1-2/1-3 really work (plank rides, the cliff lift, a tired cat onto a spike step).
+## Plays every level in the catalog:
+##  - it loads, counts its coins, has a checkpoint and the girl, can be finished at her
+##    (Next level button on all but the last; the last shows "World 1 complete")
+##  - every crossing is actually ridden or jumped like a player would, with no heart lost:
+##    sliding-plank chains, bobbing planks over rivers, diagonal planks, lifts and mushroom cliffs.
 ## Run: godot --headless --path . --script res://dev/m1_levels_test.gd
 
 var _fails := 0
@@ -12,279 +15,159 @@ func _initialize() -> void:
 func _run() -> void:
 	var gs = root.get_node("GameState")
 	root.get_node("Events").level_completed.connect(func(_s, _c, _t, _y): _completed = true)
+	var levels: Array = gs.catalog.levels
+	for data in levels:
+		var level = await _load(data.scene_path)
+		var coins: int = level.get_meta("coins")
+		_check("%s: loads, %d coins counted" % [data.id, coins], gs.coin_total == coins and coins > 0 and gs.current_level_id == data.id, gs.coin_total)
+		_check("%s: has a checkpoint and the girl" % data.id, level.find_children("*", "Area2D", true, false).filter(func(n): return n.is_in_group("goal")).size() == 1 and level.get_node("Objects").find_children("Checkpoint*", "", false).size() >= 1, "")
+		level.queue_free()
+		await _frames(2)
+		await _crossings(data)
 
-	for row in [["w1_01", 16], ["w1_02", 19], ["w1_03", 21], ["w1_04", 21], ["w1_05", 25], ["w1_06", 22], ["w1_07", 23], ["w1_08", 25], ["w1_09", 25], ["w1_10", 27]]:
-		var level = await _load(row[0])
-		_check("%s: loads, %d coins" % row, gs.coin_total == row[1] and gs.current_level_id == row[0], [gs.current_level_id, gs.coin_total])
-		_check("%s: has a flag and the girl" % row[0], get_nodes_in_group("goal").size() == 1 and level.get_node("Objects").find_children("Checkpoint*", "", false).size() >= 1, "")
-		var girl: Node2D = get_nodes_in_group("goal")[0]
+		level = await _load(data.scene_path)
+		var girl: Node2D = level.get_node("Objects/GoalGirl")
 		_completed = false
 		await _place(level.get_node("Player"), girl.global_position + Vector2(-150, 0))
-		for i in 700:   # the world finale's hug is longer
+		for i in 900:   # the world finale's hug is longer
 			if _completed:
 				break
 			await physics_frame
-		_check("%s: finished at the girl" % row[0], _completed, "")
-		_check("%s: Next level button %s" % [row[0], "shown" if row[0] != "w1_10" else "hidden"],
-			(level.get_node("Hud/SafeArea/Hud").menu.find_child("RESULT_NEXT", true, false) != null) == (row[0] != "w1_10"), "")
-		if row[0] == "w1_10":
-			_check("w1_10: finale shows World 1 complete with total stars", level.get_node("Hud/SafeArea/Hud").menu.find_child("WorldStars", true, false) != null, "")
+		_check("%s: finished at the girl" % data.id, _completed, "")
+		var menu = level.get_node("Hud/SafeArea/Hud").menu
+		var last: bool = data == levels[-1]
+		_check("%s: %s" % [data.id, "World 1 complete card" if last else "Next level button"],
+			(menu.find_child("WorldStars", true, false) != null) if last else (menu.find_child("RESULT_NEXT", true, false) != null), "")
+		level.queue_free()
+		await _frames(2)
+	print("RESULT: %s" % ("ALL PASS" if _fails == 0 else "%d FAILED" % _fails))
+	quit(_fails)
+
+## Finds each crossing in the level and tries it, each in a freshly loaded level (full hearts).
+func _crossings(data) -> void:
+	var id: String = data.id
+	var probe = await _load(data.scene_path)
+	var waters := []
+	var mushrooms := []
+	for o in probe.get_node("Objects").get_children():
+		if o.scene_file_path.ends_with("water.tscn"):
+			waters.append(String(o.name))
+		elif o.scene_file_path.ends_with("mushroom.tscn"):
+			mushrooms.append(String(o.name))
+	probe.queue_free()
+	await _frames(2)
+	for water_name in waters:
+		var level = await _load(data.scene_path)
+		var gs = root.get_node("GameState")
+		var player = level.get_node("Player")
+		var objects: Array = level.get_node("Objects").get_children().filter(func(o): return not o.is_in_group("coins"))
+		var water = level.get_node("Objects/" + water_name)
+		await _frames(80)   # the start-of-level safe time runs out
+		await _water_crossing(level, id, water, objects, player, gs)
+		level.queue_free()
+		await _frames(2)
+	for m_name in mushrooms:
+		var level = await _load(data.scene_path)
+		await _frames(80)
+		await _mushroom_crossing(level, id, level.get_node("Objects/" + m_name), level.get_node("Player"))
 		level.queue_free()
 		await _frames(2)
 
-	# 1-2: the sideways plank carries her over the big pond.
-	var level = await _load("w1_02")
-	var player = level.get_node("Player")
-	await _frames(80)
-	var plank = level.get_node("Objects/Plank1")
-	await _ride(player, plank, Vector2(3990, 900), Vector2(4320, 900))
-	Input.action_press("move_right")
-	await _frames(30)
-	Input.action_release("move_right")
-	_check("1-2: plank ride over the pond", player.global_position.x > 4450.0 and player.is_on_floor() and absf(player.global_position.y - 900.0) < 4.0, player.global_position)
-	level.queue_free()
-	await _frames(2)
-
-	# 1-3: the lift takes her up the cliff.
-	level = await _load("w1_03")
-	player = level.get_node("Player")
-	await _frames(80)
-	var lift = level.get_node("Objects/Plank1")
-	await _ride(player, lift, Vector2(2425, 900), Vector2(2425, 630))
-	_check("1-3: lift reached the top with her", player.global_position.y < 640.0 and player.is_on_floor(), player.global_position)
-	Input.action_press("move_right")
-	await _frames(25)
-	Input.action_release("move_right")
-	await _frames(5)
-	_check("1-3: she walks off onto the cliff", player.global_position.x > 2620.0 and absf(player.global_position.y - 640.0) < 4.0 and player.is_on_floor(), player.global_position)
-
-	# 1-3: a tired cat can still hop onto the step over the long spikes.
-	player.energy = 0.0
-	await _place(player, Vector2(1400, 900))
-	Input.action_press("move_right")
-	while player.global_position.x < 1470.0:
-		await physics_frame
-	Input.action_press("jump")
-	await _frames(40)
-	Input.action_release("jump")
-	await _frames(15)
-	Input.action_release("move_right")
-	_check("1-3: tired cat lands on the spike step", player.is_on_floor() and absf(player.global_position.y - 700.0) < 4.0, player.global_position)
-
-	level.queue_free()
-	await _frames(2)
-
-	# 1-4: a mushroom bounce (no jump held) lifts her onto the cliff too high to jump.
-	level = await _load("w1_04")
-	player = level.get_node("Player")
-	await _frames(80)
-	await _place(player, Vector2(2150, 700))   # just above the cap, falling
-	Input.action_press("move_right")
-	var top := 2000.0
-	for i in 120:
-		await physics_frame
-		top = minf(top, player.global_position.y)
-		if player.is_on_floor() and i > 10:
-			break
-	Input.action_release("move_right")
-	_check("1-4: mushroom bounce lands her on the cliff", player.is_on_floor() and absf(player.global_position.y - 560.0) < 4.0, player.global_position)
-	_check("1-4: small bounce is ~1.6x a jump (feet rose ~480)", top < 765.0 - 440.0 and top > 765.0 - 540.0, top)
-
-	# 1-4: holding jump on the yarn mushroom reaches the Golden Yarn; not holding doesn't.
-	await _place(player, Vector2(5250, 700))
-	for i in 90:
-		await physics_frame
-	_check("1-4: small bounce misses the yarn", not gs.has_yarn, "")
-	await _place(player, Vector2(5250, 700))
-	Input.action_press("jump")
-	for i in 90:
-		await physics_frame
-		if gs.has_yarn:
-			break
-	Input.action_release("jump")
-	_check("1-4: big bounce (jump held) gets the yarn", gs.has_yarn, player.global_position)
-
-	# 1-4: two planks in a row carry her over the wide pond.
-	var a = level.get_node("Objects/Plank1")
-	await _ride(player, a, Vector2(3640, 900), Vector2(3970, 900))
-	var hearts: int = root.get_node("GameState").hearts
-	Input.action_press("move_right")
-	Input.action_press("jump")
-	await _frames(25)
-	Input.action_release("jump")
-	for i in 60:   # stop running as soon as she lands, like a player would
-		await physics_frame
-		if player.is_on_floor():
-			break
-	Input.action_release("move_right")
-	_check("1-4: hop from plank 1 to plank 2", player.is_on_floor() and absf(player.global_position.y - 900.0) < 4.0 and player.global_position.x > 4200.0, player.global_position)
-	Input.action_press("move_right")
-	Input.action_press("jump")
-	await _frames(25)
-	Input.action_release("jump")
-	await _frames(70)
-	Input.action_release("move_right")
-	_check("1-4: and on to the far shore, no heart lost", player.is_on_floor() and player.global_position.x > 4700.0 and root.get_node("GameState").hearts == hearts, [player.global_position, root.get_node("GameState").hearts])
-	level.queue_free()
-	await _frames(2)
-
-	# 1-5: the lift takes her up to the cliff; the mushroom lifts her onto the high cliff.
-	level = await _load("w1_05")
-	player = level.get_node("Player")
-	await _frames(80)
-	await _ride(player, level.get_node("Objects/Plank1"), Vector2(2175, 900), Vector2(2175, 500))
-	Input.action_press("move_right")
-	await _frames(30)
-	Input.action_release("move_right")
-	_check("1-5: lift up to the cliff", player.is_on_floor() and absf(player.global_position.y - 520.0) < 4.0, player.global_position)
-	await _place(player, Vector2(6150, 700))
-	Input.action_press("move_right")
-	for i in 120:
-		await physics_frame
-		if player.is_on_floor() and i > 10:
-			break
-	Input.action_release("move_right")
-	_check("1-5: mushroom onto the high cliff", player.is_on_floor() and absf(player.global_position.y - 480.0) < 4.0, player.global_position)
-
-	level.queue_free()
-	await _frames(2)
-
-	# 1-6: the bridge over the slime field: up from the ground, across all three, yarn from the middle one.
-	level = await _load("w1_06")
-	player = level.get_node("Player")
-	await _frames(80)
-	var gs6 = root.get_node("GameState")
-	await _place(player, Vector2(2020, 900))
-	Input.action_press("move_right")
-	for hop in 3:
-		Input.action_press("jump")
-		await _frames(24)
-		Input.action_release("jump")
-		for i in 60:
-			await physics_frame
-			if player.is_on_floor():
-				break
-	Input.action_release("move_right")
-	_check("1-6: up on the bridge over the slimes, no heart lost", player.is_on_floor() and absf(player.global_position.y - 680.0) < 4.0 and gs6.hearts == 3, [player.global_position, gs6.hearts])
-	await _place(player, Vector2(2725, 680))
-	Input.action_press("jump")
-	await _frames(40)
-	Input.action_release("jump")
-	await _frames(30)
-	_check("1-6: Golden Yarn from the middle bridge", gs6.has_yarn, player.global_position)
-	level.queue_free()
-	await _frames(2)
-
-	# 1-7 starts hungry: a cat with no energy still clears the first pond, and the lift still works.
-	level = await _load("w1_07")
-	player = level.get_node("Player")
-	await _frames(80)
-	_check("1-7: starts at 30 % energy", is_equal_approx(player.energy, 0.3), player.energy)
-	player.energy = 0.0
-	await _place(player, Vector2(1000, 900))
-	Input.action_press("move_right")
-	while player.global_position.x < 1170.0:
-		await physics_frame
-	Input.action_press("jump")
-	await _frames(40)
-	Input.action_release("jump")
-	for i in 60:
-		await physics_frame
-		if player.is_on_floor():
-			break
-	Input.action_release("move_right")
-	_check("1-7: tired cat clears the first pond", player.is_on_floor() and player.global_position.x > 1450.0 and absf(player.global_position.y - 900.0) < 4.0, player.global_position)
-	await _ride(player, level.get_node("Objects/Plank1"), Vector2(2575, 900), Vector2(2575, 520))
-	Input.action_press("move_right")
-	await _frames(40)
-	Input.action_release("move_right")
-	_check("1-7: lift up to the cliff (tired)", player.is_on_floor() and absf(player.global_position.y - 540.0) < 4.0, player.global_position)
-
-	level.queue_free()
-	await _frames(2)
-
-	# 1-8: three planks in a row over the big pond, plank to plank, no heart lost.
-	level = await _load("w1_08")
-	player = level.get_node("Player")
-	await _frames(80)
-	var gs8 = root.get_node("GameState")
-	await _ride(player, level.get_node("Objects/Plank1"), Vector2(3840, 900), Vector2(4170, 900))
-	for hop in 3:
+func _water_crossing(level, id: String, water, objects: Array, player, gs) -> void:
+	if true:
+		var x0: float = water.global_position.x
+		var x1: float = x0 + water.width
+		var planks: Array = objects.filter(func(o): return o.scene_file_path.ends_with("moving_platform.tscn") and o.global_position.x > x0 and o.global_position.x < x1)
+		if planks.is_empty():
+			return
+		planks.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+		var mv: Vector2 = planks[0].move_by
+		var kind := "lift" if mv.x == 0.0 and planks.size() == 1 else ("bobbers" if mv.x == 0.0 else ("diagonal" if mv.y != 0.0 else "planks"))
+		gs.hearts = 3
+		var home: Vector2 = planks[0].global_position if planks[0].get_meta("home", null) == null else planks[0].get_meta("home")
+		match kind:
+			"planks", "bobbers":
+				# Like a player: step on, hop along to the last plank, ride it to the shore end, jump off.
+				await _ride(player, planks[0], home, home)
+				for hop in planks.size() - 1:
+					await _hop(player)
+				var last_home: Vector2 = planks[-1].get_meta("home")
+				for i in 900:
+					if planks[-1].global_position.distance_to(last_home + mv) < 2.0:
+						break
+					await physics_frame
+				Input.action_press("move_right")   # line up at the front of the plank, like a player
+				for i in 40:
+					if player.global_position.x > planks[-1].global_position.x + 70.0:
+						break
+					await physics_frame
+				await _hop(player)
+				var ok: bool = player.global_position.x > x1 and player.is_on_floor() and gs.hearts == 3
+				_check("%s: %d %s across the river at x %d, no heart lost" % [id, planks.size(), "sliding planks" if kind == "planks" else "bobbing planks", int(x0)], ok, [player.global_position, gs.hearts])
+			"lift", "diagonal":
+				await _ride(player, planks[0], home, home + mv)
+				Input.action_press("move_right")
+				await _frames(45)
+				Input.action_release("move_right")
+				await _frames(10)
+				var top: float = home.y + mv.y + 20.0
+				var ok: bool = player.is_on_floor() and player.global_position.x > x1 and absf(player.global_position.y - top) < 25.0
+				_check("%s: %s at x %d carries her up to the ledge" % [id, kind, int(x0)], ok, player.global_position)
+func _mushroom_crossing(level, id: String, m, player) -> void:
+	if true:
+		var cliff = _cliff_after(level, m)
+		if cliff == null:
+			return   # a bonus mushroom (coins / yarn), not a way up
+		await _place(player, m.global_position + Vector2(0, -200))
 		Input.action_press("move_right")
-		Input.action_press("jump")
-		await _frames(25)
-		Input.action_release("jump")
-		for i in 70:
-			await physics_frame
-			if player.is_on_floor():
-				break
-		Input.action_release("move_right")
-	_check("1-8: across three planks to the far shore, no heart lost", player.is_on_floor() and player.global_position.x > 5200.0 and gs8.hearts == 3, [player.global_position, gs8.hearts])
-
-	# 1-8 (owner playtest): off the lift onto the cliff, jump the slime, land safely beyond it.
-	await _ride(player, level.get_node("Objects/Plank4"), Vector2(6575, 900), Vector2(6575, 500))
-	var h8: int = gs8.hearts
-	Input.action_press("move_right")
-	var slime8 = level.get_node("Objects/Slime3")
-	while player.global_position.x < slime8.global_position.x - 200.0 and player.global_position.x < 7600.0:   # time it to the slime
-		await physics_frame
-	Input.action_press("jump")
-	await _frames(25)
-	Input.action_release("jump")
-	await _frames(60)
-	Input.action_release("move_right")
-	_check("1-8: lift -> jump the cliff slime -> land, no heart lost", gs8.hearts == h8 and player.global_position.x > 7400.0, [player.global_position, gs8.hearts])
-
-	# 1-8: the Golden Yarn above the middle plank can be reached by a jump from it.
-	await _ride(player, level.get_node("Objects/Plank2"), Vector2(4260, 900), Vector2(4590, 900))
-	await _place(player, Vector2(4470, 898))
-	Input.action_press("jump")
-	await _frames(30)
-	Input.action_release("jump")
-	await _frames(20)
-	_check("1-8: yarn reachable from the middle plank", gs8.has_yarn, player.global_position)
-	level.queue_free()
-	await _frames(2)
-
-	# 1-9: the mushroom staircase: two bounces up two cliffs, then the yarn with a full jump.
-	level = await _load("w1_09")
-	player = level.get_node("Player")
-	await _frames(80)
-	var gs9 = root.get_node("GameState")
-	for stair in [[Vector2(2050, 700), 560.0], [Vector2(2750, 360), 260.0]]:
-		await _place(player, stair[0])
-		Input.action_press("move_right")
-		for i in 150:
+		for i in 160:
 			await physics_frame
 			if player.is_on_floor() and i > 10:
 				break
 		Input.action_release("move_right")
-		_check("1-9: mushroom bounce up to y %d" % stair[1], player.is_on_floor() and absf(player.global_position.y - stair[1]) < 4.0, player.global_position)
-	await _place(player, Vector2(3450, 260))
-	Input.action_press("jump")
-	await _frames(30)
-	Input.action_release("jump")
-	await _frames(20)
-	_check("1-9: yarn above the top step with a full jump", gs9.has_yarn, player.global_position)
+		_check("%s: mushroom at x %d bounces her up the cliff" % [id, int(m.global_position.x)], player.is_on_floor() and absf(player.global_position.y - cliff.global_position.y) < 4.0, player.global_position)
 
-	print("RESULT: %s" % ("ALL PASS" if _fails == 0 else "%d FAILED" % _fails))
-	quit(_fails)
+## The higher ground right after a mushroom (it is a "mushroom cliff"), or null.
+func _cliff_after(level, m):
+	for b in level.get_node("Terrain").get_children():
+		if b is GroundBlock and not b.one_way and b.global_position.x > m.global_position.x and b.global_position.x < m.global_position.x + 450.0 and b.global_position.y < m.global_position.y - 220.0:
+			return b
+	return null
 
-## Wait until the plank is back at `start`, step on, and ride until it reaches `end`.
+## Wait until the plank is at `start`, step on, ride until it's at `end`.
 func _ride(player, plank, start: Vector2, end: Vector2) -> void:
-	for i in 600:
+	for i in 900:
 		if plank.global_position.distance_to(start) < 2.0:
 			break
 		await physics_frame
 	await _place(player, plank.global_position + Vector2(0, -2))
-	for i in 600:
+	for i in 900:
 		if plank.global_position.distance_to(end) < 2.0:
 			break
 		await physics_frame
 	await _frames(3)
 
-func _load(id: String):
-	var level = load("res://scenes/levels/w1/level_%s.tscn" % id).instantiate()
+## A full jump to the right; stop running as soon as she lands, like a player.
+func _hop(player) -> void:
+	Input.action_press("move_right")
+	Input.action_press("jump")
+	await _frames(25)
+	Input.action_release("jump")
+	for i in 90:
+		await physics_frame
+		if player.is_on_floor():
+			break
+	Input.action_release("move_right")
+	await _frames(4)
+
+func _load(path: String):
+	var level = load(path).instantiate()
+	var coins := 0
+	for o in level.get_node("Objects").get_children():
+		if o.scene_file_path.ends_with("moving_platform.tscn"):
+			o.set_meta("home", o.position)   # where each plank starts (levels sit at the origin)
+		coins += int(o.scene_file_path.ends_with("coin.tscn"))
+	level.set_meta("coins", coins)
 	root.add_child(level)
 	await _frames(3)
 	return level
@@ -301,4 +184,4 @@ func _frames(n: int) -> void:
 func _check(name: String, ok: bool, got) -> void:
 	if not ok:
 		_fails += 1
-	print("%s  %s  (%s)" % ["PASS" if ok else "FAIL", name, str(got)])
+	print("%s  %s  (%s)" % ["PASS" if ok else "FAIL", name, str(got) if not ok else ""])

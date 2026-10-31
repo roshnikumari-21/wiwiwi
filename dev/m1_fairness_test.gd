@@ -23,6 +23,8 @@ func _run() -> void:
 		await physics_frame
 		var problems := _audit(level)
 		_check("%s: fair landings and take-offs" % data.id, problems.is_empty(), "\n    " + "\n    ".join(problems))
+		var blocked := _path(level)
+		_check("%s: every gap and cliff on the way is passable" % data.id, blocked.is_empty(), "\n    " + "\n    ".join(blocked))
 		level.queue_free()
 		await physics_frame
 	print("RESULT: %s" % ("ALL PASS" if _fails == 0 else "%d FAILED" % _fails))
@@ -75,6 +77,44 @@ func _audit(level: Node) -> Array[String]:
 			if room < BETWEEN_HAZARDS:
 				problems.append("%s and %s have only %d px between them (needs %d)" % [a[2], b[2], int(room), int(BETWEEN_HAZARDS)])
 			break   # only the next hazard on the same height matters
+	return problems
+
+## Walks the ground from start to end: each gap or rise must be jumpable, or have a plank, a lift or
+## a mushroom that gets the cat across or up. (Numbers from player.gd: jump ~300 up / ~395 across;
+## a tired cat still clears 300 px; a mushroom's small bounce lifts ~480 px above its cap.)
+func _path(level: Node) -> Array[String]:
+	var problems: Array[String] = []
+	var ground := []
+	for b in level.get_node("Terrain").get_children():
+		if b is GroundBlock and not b.one_way and b.size.x > 200.0:
+			ground.append(b)
+	ground.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+	var planks := []
+	var mushrooms := []
+	for o in level.get_node("Objects").get_children():
+		if o.scene_file_path.ends_with("moving_platform.tscn"):
+			planks.append(o)
+		elif o.scene_file_path.ends_with("mushroom.tscn"):
+			mushrooms.append(o)
+	for i in ground.size() - 1:
+		var a = ground[i]
+		var b = ground[i + 1]
+		var edge: float = a.global_position.x + a.size.x
+		var gap: float = b.global_position.x - edge
+		var rise: float = a.global_position.y - b.global_position.y   # > 0: the next ground is higher
+		if gap <= 300.0 and rise <= 220.0:
+			continue
+		var helped := false
+		for p in planks:
+			var px: float = p.global_position.x
+			if px > edge - 200.0 and px < b.global_position.x + 200.0 and (rise <= 0.0 or -p.move_by.y >= rise):
+				helped = true
+		for m in mushrooms:
+			var mx: float = m.global_position.x
+			if mx > edge - 450.0 and mx < edge and absf(m.global_position.y - a.global_position.y) < 2.0 and rise <= 440.0 and gap <= 120.0:
+				helped = true
+		if not helped:
+			problems.append("at x %d: gap %d px, rise %d px, nothing to get across" % [int(edge), int(gap), int(rise)])
 	return problems
 
 func _check(name: String, ok: bool, got) -> void:

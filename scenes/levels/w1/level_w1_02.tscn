@@ -5,16 +5,17 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/coin.tscn" id="3_coin"]
 [ext_resource type="PackedScene" path="res://scenes/objects/golden_yarn.tscn" id="4_yarn"]
 [ext_resource type="PackedScene" path="res://scenes/objects/checkpoint.tscn" id="5_flag"]
-[ext_resource type="PackedScene" path="res://scenes/objects/goal_girl.tscn" id="6_goal"]
+[ext_resource type="PackedScene" path="res://scenes/objects/goal_girl.tscn" id="6_girl"]
 [ext_resource type="PackedScene" path="res://scenes/objects/milk_bowl.tscn" id="7_milk"]
 [ext_resource type="PackedScene" path="res://scenes/objects/spikes.tscn" id="8_spikes"]
 [ext_resource type="PackedScene" path="res://scenes/actors/enemies/slime.tscn" id="9_slime"]
 [ext_resource type="PackedScene" path="res://scenes/objects/moving_platform.tscn" id="10_plank"]
 [ext_resource type="PackedScene" path="res://scenes/objects/water.tscn" id="11_water"]
+[ext_resource type="PackedScene" path="res://scenes/objects/mushroom.tscn" id="12_mushroom"]
 
 [node name="LevelW1_02" instance=ExtResource("1_base")]
 level_id = "w1_02"
-start_energy = 0.5
+start_energy = 0.6
 
 [node name="LeftWall" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(-128, -200)
@@ -22,145 +23,155 @@ size = Vector2(128, 1500)
 
 [node name="Ground1" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(0, 900)
-size = Vector2(1200, 400)
+size = Vector2(1300, 400)
 
 [node name="Ground2" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(1450, 900)
-size = Vector2(900, 400)
-
-[node name="StepUp" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(2350, 780)
-size = Vector2(500, 520)
+position = Vector2(1520, 900)
+size = Vector2(1250, 400)
 
 [node name="Ground3" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(2850, 900)
+position = Vector2(3010, 900)
 size = Vector2(1000, 400)
 
 [node name="Ground4" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(4450, 900)
-size = Vector2(1400, 400)
-
-[node name="FloatStep1" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(4700, 700)
-size = Vector2(256, 40)
-one_way = true
-
-[node name="FloatStep2" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(5050, 560)
-size = Vector2(256, 40)
-one_way = true
+position = Vector2(4735, 900)
+size = Vector2(1500, 400)
 
 [node name="Ground5" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(6100, 900)
-size = Vector2(1300, 400)
+position = Vector2(6235, 740)
+size = Vector2(900, 560)
+
+[node name="Ground6" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(7135, 900)
+size = Vector2(900, 400)
+
+[node name="Ground7" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(8035, 900)
+size = Vector2(900, 400)
 
 [node name="RightWall" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(7400, -200)
+position = Vector2(8935, -200)
 size = Vector2(128, 1500)
 
-[node name="Water1" parent="Objects" instance=ExtResource("11_water")]
-position = Vector2(1200, 1000)
-width = 250.0
-
-[node name="Water2" parent="Objects" instance=ExtResource("11_water")]
-position = Vector2(3850, 1000)
-width = 600.0
-
-[node name="Water3" parent="Objects" instance=ExtResource("11_water")]
-position = Vector2(5850, 1000)
-width = 250.0
-
-[node name="Plank1" parent="Objects" instance=ExtResource("10_plank")]
-position = Vector2(3990, 900)
-move_by = Vector2(330, 0)
-
 [node name="Slime1" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(750, 900)
-patrol_distance = 150.0
-
-[node name="Slime2" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(1950, 900)
-patrol_distance = 120.0
-
-[node name="Slime3" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(3300, 900)
-patrol_distance = 250.0
-
-[node name="Slime4" parent="Objects" instance=ExtResource("9_slime")]
-position = Vector2(5300, 900)
-patrol_distance = 250.0
-
-[node name="MilkBowl1" parent="Objects" instance=ExtResource("7_milk")]
-position = Vector2(3000, 900)
-
-[node name="Checkpoint1" parent="Objects" instance=ExtResource("5_flag")]
-position = Vector2(2600, 780)
-
-[node name="Checkpoint2" parent="Objects" instance=ExtResource("5_flag")]
-position = Vector2(4600, 900)
-
-[node name="Spikes1" parent="Objects" instance=ExtResource("8_spikes")]
-position = Vector2(6700, 900)
+position = Vector2(900, 900)
+patrol_distance = 80.0
 
 [node name="Coin1" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(400, 840)
+position = Vector2(900, 670)
 
 [node name="Coin2" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(500, 840)
+position = Vector2(400, 840)
 
 [node name="Coin3" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(1270, 760)
+position = Vector2(520, 840)
 
 [node name="Coin4" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(1325, 720)
+position = Vector2(640, 840)
+
+[node name="Water1" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(1300, 1000)
+width = 220.0
 
 [node name="Coin5" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(1380, 760)
+position = Vector2(1325, 740)
 
 [node name="Coin6" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(1700, 840)
+position = Vector2(1410, 700)
 
 [node name="Coin7" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(1850, 840)
+position = Vector2(1495, 740)
+
+[node name="Slime2" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(2120, 900)
+patrol_distance = 80.0
 
 [node name="Coin8" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(2000, 840)
+position = Vector2(2120, 670)
+
+[node name="Checkpoint1" parent="Objects" instance=ExtResource("5_flag")]
+position = Vector2(1670, 900)
+
+[node name="Water2" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(2770, 1000)
+width = 240.0
 
 [node name="Coin9" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(2500, 720)
+position = Vector2(2800, 740)
 
 [node name="Coin10" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(2700, 720)
+position = Vector2(2890, 700)
 
 [node name="Coin11" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(3100, 840)
+position = Vector2(2980, 740)
+
+[node name="Milk1" parent="Objects" instance=ExtResource("7_milk")]
+position = Vector2(3360, 900)
 
 [node name="Coin12" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(3250, 840)
+position = Vector2(3510, 840)
 
 [node name="Coin13" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(4100, 840)
+position = Vector2(3630, 840)
+
+[node name="Water3" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(4010, 1000)
+width = 725.0
+
+[node name="Plank1" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(4150, 900)
+move_by = Vector2(330, 0)
+travel_time = 2.6
 
 [node name="Coin14" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(4250, 840)
+position = Vector2(4315, 780)
+
+[node name="Slime3" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(5185, 900)
+patrol_distance = 70.0
 
 [node name="Coin15" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(4828, 640)
+position = Vector2(5185, 670)
+
+[node name="Slime4" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(5735, 900)
+patrol_distance = 70.0
 
 [node name="Coin16" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(5178, 500)
+position = Vector2(5735, 670)
 
 [node name="Coin17" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(6450, 840)
+position = Vector2(6035, 840)
 
 [node name="Coin18" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(6550, 840)
+position = Vector2(6435, 680)
 
 [node name="Coin19" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(6700, 760)
+position = Vector2(6585, 680)
+
+[node name="Coin20" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(6735, 680)
+
+[node name="Mushroom1" parent="Objects" instance=ExtResource("12_mushroom")]
+position = Vector2(7585, 900)
+
+[node name="Coin21" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(7585, 620)
+
+[node name="Coin22" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(7585, 480)
 
 [node name="GoldenYarn" parent="Objects" instance=ExtResource("4_yarn")]
-position = Vector2(5250, 340)
+position = Vector2(7585, 120)
 
-[node name="GoalGirl" parent="Objects" instance=ExtResource("6_goal")]
-position = Vector2(7150, 900)
+[node name="Coin23" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(8185, 840)
+
+[node name="Coin24" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(8335, 840)
+
+[node name="Coin25" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(8485, 840)
+
+[node name="GoalGirl" parent="Objects" instance=ExtResource("6_girl")]
+position = Vector2(8735, 900)
