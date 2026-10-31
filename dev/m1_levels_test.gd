@@ -13,7 +13,7 @@ func _run() -> void:
 	var gs = root.get_node("GameState")
 	root.get_node("Events").level_completed.connect(func(_s, _c, _t, _y): _completed = true)
 
-	for row in [["w1_01", 16], ["w1_02", 19], ["w1_03", 21], ["w1_04", 21], ["w1_05", 25]]:
+	for row in [["w1_01", 16], ["w1_02", 19], ["w1_03", 21], ["w1_04", 21], ["w1_05", 25], ["w1_06", 22], ["w1_07", 23]]:
 		var level = await _load(row[0])
 		_check("%s: loads, %d coins" % row, gs.coin_total == row[1] and gs.current_level_id == row[0], [gs.current_level_id, gs.coin_total])
 		_check("%s: has a flag and the girl" % row[0], get_nodes_in_group("goal").size() == 1 and level.get_node("Objects").find_children("Checkpoint*", "", false).size() >= 1, "")
@@ -25,8 +25,8 @@ func _run() -> void:
 				break
 			await physics_frame
 		_check("%s: finished at the girl" % row[0], _completed, "")
-		_check("%s: Next level button %s" % [row[0], "shown" if row[0] != "w1_05" else "hidden"],
-			(level.get_node("Hud/SafeArea/Hud").menu.find_child("RESULT_NEXT", true, false) != null) == (row[0] != "w1_05"), "")
+		_check("%s: Next level button %s" % [row[0], "shown" if row[0] != "w1_07" else "hidden"],
+			(level.get_node("Hud/SafeArea/Hud").menu.find_child("RESULT_NEXT", true, false) != null) == (row[0] != "w1_07"), "")
 		level.queue_free()
 		await _frames(2)
 
@@ -143,6 +143,60 @@ func _run() -> void:
 			break
 	Input.action_release("move_right")
 	_check("1-5: mushroom onto the high cliff", player.is_on_floor() and absf(player.global_position.y - 480.0) < 4.0, player.global_position)
+
+	level.queue_free()
+	await _frames(2)
+
+	# 1-6: the bridge over the slime field: up from the ground, across all three, yarn from the middle one.
+	level = await _load("w1_06")
+	player = level.get_node("Player")
+	await _frames(80)
+	var gs6 = root.get_node("GameState")
+	await _place(player, Vector2(2020, 900))
+	Input.action_press("move_right")
+	for hop in 3:
+		Input.action_press("jump")
+		await _frames(24)
+		Input.action_release("jump")
+		for i in 60:
+			await physics_frame
+			if player.is_on_floor():
+				break
+	Input.action_release("move_right")
+	_check("1-6: up on the bridge over the slimes, no heart lost", player.is_on_floor() and absf(player.global_position.y - 680.0) < 4.0 and gs6.hearts == 3, [player.global_position, gs6.hearts])
+	await _place(player, Vector2(2725, 680))
+	Input.action_press("jump")
+	await _frames(40)
+	Input.action_release("jump")
+	await _frames(30)
+	_check("1-6: Golden Yarn from the middle bridge", gs6.has_yarn, player.global_position)
+	level.queue_free()
+	await _frames(2)
+
+	# 1-7 starts hungry: a cat with no energy still clears the first pond, and the lift still works.
+	level = await _load("w1_07")
+	player = level.get_node("Player")
+	await _frames(80)
+	_check("1-7: starts at 30 % energy", is_equal_approx(player.energy, 0.3), player.energy)
+	player.energy = 0.0
+	await _place(player, Vector2(1000, 900))
+	Input.action_press("move_right")
+	while player.global_position.x < 1170.0:
+		await physics_frame
+	Input.action_press("jump")
+	await _frames(40)
+	Input.action_release("jump")
+	for i in 60:
+		await physics_frame
+		if player.is_on_floor():
+			break
+	Input.action_release("move_right")
+	_check("1-7: tired cat clears the first pond", player.is_on_floor() and player.global_position.x > 1450.0 and absf(player.global_position.y - 900.0) < 4.0, player.global_position)
+	await _ride(player, level.get_node("Objects/Plank1"), Vector2(2575, 900), Vector2(2575, 520))
+	Input.action_press("move_right")
+	await _frames(40)
+	Input.action_release("move_right")
+	_check("1-7: lift up to the cliff (tired)", player.is_on_floor() and absf(player.global_position.y - 540.0) < 4.0, player.global_position)
 
 	print("RESULT: %s" % ("ALL PASS" if _fails == 0 else "%d FAILED" % _fails))
 	quit(_fails)

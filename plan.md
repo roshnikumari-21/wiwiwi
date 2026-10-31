@@ -281,7 +281,10 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 - [x] Level 1-4 "Mushroom Hill" (31 Oct 2026): mushroom intro (coin column above the first one), mushroom up a cliff, two moving planks in a row over a wide pond (150 px hops), yarn above a mushroom (needs the held bounce); 21 coins, start energy 60 %
 - [x] Level 1-5 "Up and Over": long spikes with a step above, lift up a cliff, a high path (floating steps + ledge with the yarn) over a low path (slime, spikes, milk), mushroom up to a high cliff; 25 coins, 2 milk, start energy 50 %
 - [x] Both pass the fair-play check; `dev/m1_levels_test.gd` now also checks the mushroom (cliff, small vs big bounce for the yarn), the two-plank crossing with no heart lost, and the 1-5 lift and mushroom. Fix found on the way: background layers showed a thin line at their top edge when the camera rose high (texture wrap) — edge rows made transparent in `make_background.py`.
-- [ ] World 1 levels 6–10 + owner reunion
+- [x] Level 1-6 "Slime Parade" (31 Oct 2026): 7 slimes; a long slime field with an optional floating bridge above it (3 steps) holding the Golden Yarn, mushroom, long spikes with a step, a plank over a pond; 22 coins, start energy 70 %
+- [x] Level 1-7 "Long Way Home": the longest so far (~9,400 px), starts at 30 % energy with 3 milk bowls spaced out; lift up a cliff, two mushrooms, long + short spikes, two planks over a wide pond, 4 slimes; yarn above the cliff's far end (full jump); 23 coins. Tested: a cat with zero energy still clears its ponds and uses the lift
+- Owner played 1-4 and 1-5 (31 Oct 2026): "really nice to play"
+- [ ] World 1 levels 8–10 + owner reunion (8–9 challenge, 10 finale)
 - [ ] World 2 tileset, parallax, enemy, hazard, levels 1–10
 - [ ] Remaining animations, music, SFX
 - [ ] All achievements + leaderboards (+ offline queue)
