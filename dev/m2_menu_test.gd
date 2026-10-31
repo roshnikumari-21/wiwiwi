@@ -47,7 +47,7 @@ func _run() -> void:
 	change_scene_to_file("res://ui/screens/main_menu.tscn")
 	for i in 10:
 		await process_frame
-	_check("after World 1: the girl hugs the kitten on the porch", current_scene.get_node_or_null("Stage/Reunited") != null and not current_scene.get_node("Stage/Kitten").visible, "")
+	_check("after World 1 the home page still shows the kitten alone (owner decision)", current_scene.get_node_or_null("Stage/Reunited") == null and current_scene.get_node("Stage/Kitten").visible, "")
 
 	for path in ["user://test_menu_save.json", "user://test_menu_save.json.bak"]:
 		if FileAccess.file_exists(path):
