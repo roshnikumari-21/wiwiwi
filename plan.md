@@ -270,6 +270,7 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 - [x] Back button on every screen (31 Oct 2026, see §4)
 - [ ] Remaining screens: loading screen (cat logo), Credits (must credit Fredoka/OFL and other licences)
 - [ ] SaveManager v1, AudioManager + core SFX, juice pass
+- **Decided 31 Oct 2026 (owner):** build World 1 up to level 10 (with the reunion finale) **before** the first Play Console upload. Consequence: Play Games sign-in / leaderboard / achievements also wait, since they need the app-signing SHA-1 from that upload; levels 4–10 move ahead of them.
 - [ ] First Internal testing upload (claims the package, enrolls Play App Signing) → copy app-signing SHA-1
 - [ ] Play Games credentials (app-signing + debug SHA-1) and testers → real sign-in on the phone
 - [ ] Play Games: sign-in + 1 leaderboard + 2 achievements
