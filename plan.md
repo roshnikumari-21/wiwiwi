@@ -275,7 +275,8 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 - **Audio still missing:** `mus_reunion` (finale music — the 1-10 hug uses meow + purr + confetti until then) and `sfx_milk` (milk uses a brighter star pop). ⚠ Confirm the ElevenLabs plan used allows commercial use (free plan doesn't).
 - [ ] Juice pass
 - **Decided 31 Oct 2026 (owner):** build World 1 up to level 10 (with the reunion finale) **before** the first Play Console upload. Consequence: Play Games sign-in / leaderboard / achievements also wait, since they need the app-signing SHA-1 from that upload; levels 4–10 move ahead of them.
-- [ ] First Internal testing upload (claims the package, enrolls Play App Signing) → copy app-signing SHA-1
+- [x] Upload prepared (1 Nov 2026): version **0.1.0** (code 1); signed release AAB `builds/wiwiwi-release.aab` (69 MB total, **~43 MB per phone**, both CPU types, signed with the upload key — SHA-1 checked); store images in `store_assets/` (icon 512, feature graphic 1024×500 from the porch, 6 screenshots 1920×1055: home, map, slimes, mushroom, river, hug); owner checklist `docs/play_internal_testing_checklist.md` (upload, testers, forms, where to copy the app-signing SHA-1). ⚠ Testers must uninstall the debug-signed test build before installing from Play. **Open decision for the owner:** target audience (under-13 → Families policy).
+- [ ] First Internal testing upload by the owner (claims the package, enrolls Play App Signing) → send the app-signing SHA-1
 - [ ] Play Games credentials (app-signing + debug SHA-1) and testers → real sign-in on the phone
 - [ ] Play Games: sign-in + 1 leaderboard + 2 achievements
 - [ ] 3 polished World 1 levels; playtest
