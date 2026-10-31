@@ -5,7 +5,9 @@
 [ext_resource type="Script" path="res://scenes/levels/level_catalog.gd" id="3_2utja"]
 [ext_resource type="Resource" path="res://data/levels/w1_02.tres" id="3_mb7x6"]
 [ext_resource type="Resource" path="res://data/levels/w1_03.tres" id="4_oluu4"]
+[ext_resource type="Resource" path="res://data/levels/w1_04.tres" id="5_oluu4"]
+[ext_resource type="Resource" path="res://data/levels/w1_05.tres" id="6_3axxx"]
 
 [resource]
 script = ExtResource("3_2utja")
-levels = Array[ExtResource("1_l4oc3")]([ExtResource("2_ku8p1"), ExtResource("3_mb7x6"), ExtResource("4_oluu4")])
+levels = Array[ExtResource("1_l4oc3")]([ExtResource("2_ku8p1"), ExtResource("3_mb7x6"), ExtResource("4_oluu4"), ExtResource("5_oluu4"), ExtResource("6_3axxx")])

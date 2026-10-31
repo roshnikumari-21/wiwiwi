@@ -8,6 +8,8 @@ const LEVELS := [
 	["w1_01", 1, 1, "res://scenes/levels/w1/level_w1_01.tscn"],
 	["w1_02", 1, 2, "res://scenes/levels/w1/level_w1_02.tscn"],
 	["w1_03", 1, 3, "res://scenes/levels/w1/level_w1_03.tscn"],
+	["w1_04", 1, 4, "res://scenes/levels/w1/level_w1_04.tscn"],
+	["w1_05", 1, 5, "res://scenes/levels/w1/level_w1_05.tscn"],
 ]
 
 func _initialize() -> void:

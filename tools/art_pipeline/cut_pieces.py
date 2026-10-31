@@ -27,6 +27,7 @@ RECIPES = {
         [None, "flag_off", "flag_on", "cat_bed", "floating_island", "signpost"],   # old spikes: replaced by the spike trap sheet
         None,
     ),
+    "Cute Red Mushroom Sprite Pair.png": (ART / "objects", ["mushroom", "mushroom_squash"], None),
     "Cartoon Grass-Topped Wooden Platform.png": (ART / "objects", ["platform_moving"], None),
     "Cartoon Spike Trap Platforms.png": (ART / "objects", ["spikes_short", "spikes_long"], None),
     # World 1 slime (green row); the orange row is kept in the sheet for later.
@@ -50,7 +51,8 @@ RECIPES = {
 
 # Pieces cut far bigger than they ever appear in the game: shrunk to this width (px) to keep the
 # app small. Their scenes use a matching bigger scale (yarn_glow 0.5, platform_moving 0.5).
-SHRINK = {ART / "objects": {"yarn_glow": 236, "platform_moving": 604, "yarn": 200}}
+SHRINK = {ART / "objects": {"yarn_glow": 236, "platform_moving": 604, "yarn": 200,
+                            "mushroom": 360, "mushroom_squash": 385}}   # 723:773 kept
 
 # Pieces that animate together: put on one same-size canvas so they don't jump between frames.
 # "centre" = middle of the canvas (spinning coin); "feet" = bottom-centre (poses swapped on the ground);
@@ -59,7 +61,8 @@ SHRINK = {ART / "objects": {"yarn_glow": 236, "platform_moving": 604, "yarn": 20
 #           a few pixels apart; this stops the body jiggling between frames).
 # Optional 3rd value = resize factor, to bring a sheet drawn bigger to the same size as the others.
 CENTRED_GROUPS = {
-    ART / "objects": [(["coin_0", "coin_1", "coin_2", "coin_3", "coin_4"], "centre")],
+    ART / "objects": [(["coin_0", "coin_1", "coin_2", "coin_3", "coin_4"], "centre"),
+                      (["mushroom", "mushroom_squash"], "feet")],
     ART / "enemies" / "slime": [(["slime_idle", "slime_move_0", "slime_move_1", "slime_squash"], "feet")],
     ART / "characters" / "girl": [
         (["girl_wait", "girl_crouch", "girl_kneel_reach", "girl_kneel_open"], "shoe"),

@@ -52,6 +52,7 @@
 - **Failing:** spikes, pits, enemy side-hits cost 1 heart → short hurt pose (knock-back hop, 0.7 s) → respawn at last checkpoint (blink + 1.2 s safe time, so one mistake never costs two hearts). Hazards only announce `Events.player_hurt`; the level applies the rule.
 - **Water (30 Oct 2026):** pits hold water (`water.tscn`, set width/depth) about 100 px below the ground line; falling in = splash, she sinks out of sight (0.8 s), then the pit rule (lose a heart, back to the last flag). The plain fall line stays as a backup.
 - **Spikes:** spike trap resting on the ground, `long` = 5 spikes (needs a real jump) or short = 3 spikes (easy hop).
+- **Bouncy mushroom (added 31 Oct 2026, owner approved; World 1 element):** landing on the cap launches the cat — jump held = 2.2× a full jump (~660 px), not held = 1.6× (~480 px). Never hurts. Used to reach cliffs too high to jump and high coins/yarn; the yarn above a mushroom needs the held bounce (teaches it). `scenes/objects/mushroom.tscn`, art "Cute Red Mushroom Sprite Pair" (normal + squashed).
 - **Slime:** patrols around its start point; landing on top squashes it and the cat bounces (no heart lost); side contact hurts. A cat in the hurt pose can't stomp or be hit. 0 hearts → Level Failed card → "Try again" restarts the level with fresh hearts, coins and flags.
 - **Checkpoint:** paw flag; first touch raises it and moves the respawn point there. **Goal (changed 30 Oct 2026):** the girl waits at the end of **every** level (no cat bed). She waits with clasped hands and bounces when the cat comes near; reaching her, she kneels down (crouch → kneel reaching → arms wide), the cat walks in, and they hug (3-frame loop) while hearts float up, then the result card with stars. The world-end reunion (level 10) stays as a bigger story moment.
 - **Energy:** drains slowly while moving (full tank = 35 s of moving, `Player.energy_seconds`); milk refills it to full. At 0 the cat runs at 65 % speed with slower legs and yawns (sleepy idle) when standing: never a fail (a tired cat still clears the widest gaps; tested). The cat only drinks when not already full, so a bowl is not wasted. Each level sets `start_energy` (1-1 starts at 40 % to teach milk). HUD: milk icon + bar, orange below 25 %.
@@ -277,7 +278,10 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 - [ ] 3 polished World 1 levels; playtest
 
 ### M3 — Content (≈ 130 h)
-- [ ] World 1 levels 4–10 + owner reunion
+- [x] Level 1-4 "Mushroom Hill" (31 Oct 2026): mushroom intro (coin column above the first one), mushroom up a cliff, two moving planks in a row over a wide pond (150 px hops), yarn above a mushroom (needs the held bounce); 21 coins, start energy 60 %
+- [x] Level 1-5 "Up and Over": long spikes with a step above, lift up a cliff, a high path (floating steps + ledge with the yarn) over a low path (slime, spikes, milk), mushroom up to a high cliff; 25 coins, 2 milk, start energy 50 %
+- [x] Both pass the fair-play check; `dev/m1_levels_test.gd` now also checks the mushroom (cliff, small vs big bounce for the yarn), the two-plank crossing with no heart lost, and the 1-5 lift and mushroom. Fix found on the way: background layers showed a thin line at their top edge when the camera rose high (texture wrap) — edge rows made transparent in `make_background.py`.
+- [ ] World 1 levels 6–10 + owner reunion
 - [ ] World 2 tileset, parallax, enemy, hazard, levels 1–10
 - [ ] Remaining animations, music, SFX
 - [ ] All achievements + leaderboards (+ offline queue)

@@ -54,6 +54,7 @@ def main():
     print("  sky colour:", far[3, far.shape[1] // 2, :3].astype(int))
     far = crossfade_wrap(far, 150)
     far[:80, :, 3] *= np.linspace(0.0, 1.0, 80)[:, None]   # top edge fades into the plain sky colour
+    far[-2:, :, 3] = 0   # the layer repeats, so its top edge blends with this row: keep it clear (no line in the sky)
     save(far, "bg_far.png")
 
     mid = load("Whimsical Pastel Countryside Panorama.png", 1.0)[260:]
@@ -64,7 +65,9 @@ def main():
     shade = np.linspace(1.0, 0.7, 500)[:, None, None]   # darker the deeper you look
     below[..., :3] = grass * shade
     below[..., 3] = 255
-    save(np.concatenate([mid, below], axis=0), "bg_mid.png")
+    mid = np.concatenate([mid, below], axis=0)
+    mid[-2:, :, 3] = 0   # same reason as the far layer
+    save(mid, "bg_mid.png")
 
 if __name__ == "__main__":
     main()

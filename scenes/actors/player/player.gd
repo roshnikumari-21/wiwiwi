@@ -226,6 +226,13 @@ func sink() -> void:
 	velocity = Vector2(velocity.x * 0.2, minf(velocity.y, 200.0))
 	create_tween().tween_property(sprite, "modulate:a", 0.0, 0.5)
 
+## Landed on a bouncy mushroom: launched up. `height` is a share of a full jump (2.2 = 2.2x as high).
+func mushroom_bounce(height: float) -> void:
+	velocity.y = _jump_speed * sqrt(height)
+	_in_jump = true
+	_fall_peak_speed = 0.0
+	_do_squash(Vector2(0.8, 1.2))
+
 ## Out of hearts: stop and look sad.
 func give_up() -> void:
 	frozen = true
