@@ -18,7 +18,7 @@ Play Console screens change over time — if a button name differs, follow the c
 2. **Create new release**.
 3. If asked about **app signing**: choose **Let Google manage and protect your app signing key** (Play App Signing). This is the normal choice; your upload key stays the one in `C:\Godot\Keys\`.
 4. **Upload** `builds/wiwiwi-release.aab`.
-5. Release name: `0.1.0 (1)`. Release notes (English): `First test build: World 1 with 10 levels.`
+5. Release name: `0.1.0 (1)`. Release notes (English): `First test build: World 1 with 10 levels, Cat Shop and new home page.`
 6. **Save → Review release.** Fix anything it flags as an error (warnings are OK for internal testing).
 7. **Start rollout to Internal testing.**
 
