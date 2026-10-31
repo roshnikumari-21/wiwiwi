@@ -15,6 +15,8 @@ const COIN := preload("res://assets/art/objects/coin_0.png")
 @onready var logo: Sprite2D = $Stage/Logo
 @onready var play: TextureButton = $Stage/Play
 @onready var settings: TextureButton = $Stage/Settings
+@onready var achievements: TextureButton = $Stage/Achievements
+@onready var leaderboards: TextureButton = $Stage/Leaderboards
 var menu: GameMenu
 var _stars := StatPill.new(STAR)
 var _yarns := StatPill.new(YARN)
@@ -30,6 +32,9 @@ func _ready() -> void:
 	$UI.add_child(menu)
 	settings.pressed.connect(menu.show_settings)
 	menu.quit_pressed.connect(func(): get_tree().quit())
+	achievements.pressed.connect(PlayServices.show_achievements)
+	leaderboards.pressed.connect(PlayServices.show_leaderboards)
+	PlayServices.open_failed.connect(_on_play_games_failed)
 	play.grab_focus.call_deferred()
 	_add_top_bar()
 	_breathe()
@@ -87,6 +92,9 @@ func _blink_later() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and menu and not menu.go_back():
 		menu.show_quit()
+
+func _on_play_games_failed(reason: String) -> void:
+	menu.show_notice("PLAY_GAMES_TITLE", "PLAY_GAMES_UNAVAILABLE" if reason == "unavailable" else "PLAY_GAMES_SIGN_IN_FAILED")
 
 func _on_play() -> void:
 	play.disabled = true   # one tap is enough

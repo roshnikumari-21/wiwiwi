@@ -48,3 +48,7 @@ CREDITS_THANKS,"Thank you for playing! A cozy game about a little kitten finding
 CREDITS_ART_AUDIO,Art and sound
 CREDITS_ART_AUDIO_TEXT,"Art made with ChatGPT image generation, music and sound effects made with ElevenLabs, all directed and edited by DigiCraft."
 CREDITS_ENGINE_PARTS,Parts of Godot Engine
+BTN_OK,OK
+PLAY_GAMES_TITLE,Play Games
+PLAY_GAMES_UNAVAILABLE,"Leaderboards and achievements open on Android phones with Google Play Games."
+PLAY_GAMES_SIGN_IN_FAILED,"Couldn't sign in to Google Play Games. Check the internet and try again."

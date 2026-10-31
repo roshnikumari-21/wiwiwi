@@ -253,6 +253,19 @@ func show_quit() -> void:
 		_button("BTN_LEAVE", "red", "none", quit_pressed, 300)]))
 	_open(0.0)
 
+## A short message with an OK button (e.g. "Play Games isn't available").
+func show_notice(title_key: String, text_key: String) -> void:
+	current = "notice"
+	_clear()
+	_title(title_key)
+	_box.add_child(_kitten("idle"))
+	var text := _label(text_key, 640)
+	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_box.add_child(text)
+	_box.add_child(_row([_button("BTN_OK", "green", "none", settings_closed, 300, close)]))
+	_open(0.0)
+
 func close() -> void:
 	current = ""
 	hide()
@@ -266,7 +279,7 @@ func go_back() -> bool:
 				show_pause()
 			else:
 				close_settings()
-		"quit": close()
+		"quit", "notice": close()
 		"credits": show_settings(_settings_from_pause)
 		"complete", "fail": map_pressed.emit()
 		_: return false
