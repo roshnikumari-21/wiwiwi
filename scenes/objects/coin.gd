@@ -8,5 +8,6 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	_taken = true
 	Events.coin_collected.emit()
+	AudioManager.play_coin()
 	Fx.spawn(self, &"coin", global_position, 0.5)
 	queue_free()

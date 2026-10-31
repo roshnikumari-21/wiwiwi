@@ -47,6 +47,7 @@ func _check_cat() -> void:
 func _squash() -> void:
 	_squashed = true
 	Events.enemy_stomped.emit()
+	AudioManager.play_sfx("sfx_stomp")
 	collision_layer = 0
 	hitbox.set_deferred("monitoring", false)
 	sprite.play("squash")

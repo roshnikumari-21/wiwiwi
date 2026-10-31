@@ -17,6 +17,7 @@ var menu: GameMenu
 func _ready() -> void:
 	get_viewport().size_changed.connect(_fit)
 	_fit()
+	AudioManager.play_music("mus_home")
 	play.pressed.connect(_on_play)
 	menu = GameMenu.new()
 	menu.name = "Menu"

@@ -20,6 +20,7 @@ func _physics_process(_delta: float) -> void:
 func _bounce(cat: Player) -> void:
 	cat.mushroom_bounce(big_bounce if Input.is_action_pressed("jump") else small_bounce)
 	Fx.spawn(self, &"dust", global_position + Vector2(0, -150), 0.5)
+	AudioManager.play_sfx("sfx_boing")
 	if _squash:
 		_squash.kill()
 	sprite.texture = SQUASH

@@ -60,6 +60,7 @@ func _on_body_entered(body: Node2D) -> void:
 ## `big` = the world finale: a longer hug with waves of confetti and more hearts.
 func play_reunion(cat: Player, big := false) -> void:
 	cat.frozen = true   # she stops here; no more player control
+	AudioManager.stop_music(1.2)   # a quiet, tender moment: meow, purr, confetti
 	if _bounce:
 		_bounce.kill()
 	_breath.kill()
@@ -71,16 +72,21 @@ func play_reunion(cat: Player, big := false) -> void:
 	await cat.arrived
 	cat.visible = false
 	_hug_loop()
+	AudioManager.play_sfx("sfx_meow_happy")
+	AudioManager.start_purr()
 	Fx.spawn(self, &"confetti", global_position + Vector2(cat_hug_x, -330), 1.3)
+	AudioManager.play_sfx("sfx_confetti")
 	for i in 3:
 		_float_heart(Vector2(cat_hug_x + i * 55.0, -380.0), i * 0.3)
 	if big:
 		for wave in 3:   # more confetti and hearts, spread around her
 			await get_tree().create_timer(0.8).timeout
 			Fx.spawn(self, &"confetti", global_position + Vector2(cat_hug_x + randf_range(-260.0, 260.0), -420.0), 1.6)
+			AudioManager.play_sfx("sfx_confetti")
 			for i in 3:
 				_float_heart(Vector2(cat_hug_x + randf_range(-200.0, 200.0), -380.0), i * 0.25)
 	await get_tree().create_timer(hug_time).timeout
+	AudioManager.stop_purr()
 
 func _hug_loop() -> void:
 	var loop := create_tween().set_loops()

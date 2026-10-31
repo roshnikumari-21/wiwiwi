@@ -59,6 +59,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if Engine.is_editor_hint() or not body is Player or body.frozen:
 		return
 	_splash(body.global_position.x - global_position.x)
+	AudioManager.play_sfx("sfx_splash")
 	Events.player_fell_in_water.emit()
 
 ## Droplets jump up where the cat went in.

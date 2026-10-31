@@ -20,6 +20,7 @@ func _drink(cat: Player) -> void:
 	cat.refill_energy()
 	Fx.spawn(self, &"sparkle", cat.global_position + Vector2(0, -90), 0.8)
 	Events.milk_drunk.emit()
+	AudioManager.play_sfx("sfx_star", 1.3)   # bright little energy sparkle
 	$Sprite.texture = EMPTY
 	var base: Vector2 = $Sprite.scale
 	var pop := create_tween()

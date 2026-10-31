@@ -13,6 +13,7 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	_taken = true
 	Events.yarn_collected.emit()
+	AudioManager.play_sfx("sfx_yarn")
 	set_deferred("monitoring", false)
 	var t := create_tween().set_parallel()
 	t.tween_property(self, "scale", Vector2(1.6, 1.6), 0.35).set_trans(Tween.TRANS_BACK)

@@ -41,6 +41,7 @@ func _ready() -> void:
 	hud.map_pressed.connect(func(): SceneTransition.change_scene("res://ui/screens/level_map.tscn"))
 	hud.home_pressed.connect(func(): SceneTransition.change_scene("res://ui/screens/main_menu.tscn"))
 
+	AudioManager.play_music("mus_world1")
 	GameState.begin_attempt(level_id, get_tree().get_nodes_in_group("coins").size())
 	_respawn_point = spawn.global_position
 	player.energy = start_energy
@@ -53,6 +54,7 @@ func _physics_process(_delta: float) -> void:
 
 ## Fell in a pit: lose a heart. Back to the last flag if any hearts are left, otherwise the level is lost.
 func _on_fell() -> void:
+	AudioManager.play_sfx("sfx_hurt")
 	if GameState.lose_heart():
 		_respawn()
 	else:
@@ -72,6 +74,7 @@ func _on_hurt() -> void:
 	if _over or not player.can_be_hurt():
 		return
 	player.knock_back()
+	AudioManager.play_sfx("sfx_hurt")
 	Fx.spawn(player, &"heart", player.global_position + Vector2(0, -170), 0.55)
 	if GameState.lose_heart():
 		await get_tree().create_timer(HURT_PAUSE).timeout
@@ -94,6 +97,9 @@ func _on_goal_reached(goal: Node) -> void:
 	var level_data := GameState.current_level()
 	await goal.play_reunion(player, level_data != null and level_data.is_reunion)
 	Events.level_completed.emit(GameState.stars(), GameState.coins, GameState.coin_total, GameState.has_yarn)
+
+func _exit_tree() -> void:
+	AudioManager.stop_purr()
 
 func _respawn() -> void:
 	player.respawn_at(_respawn_point)

@@ -15,3 +15,4 @@ export_credentials.cfg
 
 # Java crash reports from Gradle
 hs_err_pid*.log
+/assets/raw_audio_idea/

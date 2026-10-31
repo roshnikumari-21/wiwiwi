@@ -85,6 +85,7 @@ func _handle_jump(delta: float) -> void:
 	if _buffer_left > 0.0 and _coyote_left > 0.0:
 		velocity.y = _jump_speed
 		_in_jump = true
+		AudioManager.play_sfx("sfx_jump")
 		_buffer_left = 0.0
 		_coyote_left = 0.0
 		_do_squash(Vector2(0.85, 1.15))
@@ -111,6 +112,7 @@ func _after_move() -> void:
 			_do_squash(Vector2(1.18, 0.82))
 			sprite.play("land")
 			Fx.spawn(self, &"dust", global_position + Vector2(0, -30), 0.45)
+			AudioManager.play_sfx("sfx_land")
 		_fall_peak_speed = 0.0
 	_was_on_floor = is_on_floor()
 

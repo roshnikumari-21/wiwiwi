@@ -27,6 +27,7 @@ var _buttons: Array[TextureButton] = []
 func _ready() -> void:
 	get_viewport().size_changed.connect(_fit)
 	_fit()
+	AudioManager.play_music("mus_home")   # same song as the home page: it carries on
 	var levels: Array = GameState.catalog.levels
 	var next_id: String = GameState.next_level_to_play().id
 	for i in SPOTS.size():

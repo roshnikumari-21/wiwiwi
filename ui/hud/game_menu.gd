@@ -139,6 +139,7 @@ func show_complete(stars: int, coins: int, coin_total: int, has_yarn: bool, has_
 		if i < stars:   # earned stars pop in one after another
 			var pop := create_tween()
 			pop.tween_interval(0.5 + i * 0.25)
+			pop.tween_callback(AudioManager.play_sfx.bind("sfx_star", 1.0 + i * 0.12))   # each star a little higher
 			pop.tween_property(star, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		else:
 			star.scale = Vector2.ONE

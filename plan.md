@@ -270,7 +270,9 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 - [ ] Final cat animations, World 1 tileset + parallax, core objects
 - [x] Back button on every screen (31 Oct 2026, see §4)
 - [ ] Remaining screens: loading screen (cat logo), Credits (must credit Fredoka/OFL and other licences)
-- [ ] SaveManager v1, AudioManager + core SFX, juice pass
+- [x] Music + sounds (31 Oct 2026): owner generated 18 files with ElevenLabs (raw in `assets/raw_audio_idea/`, out of Git and the build). `tools/audio_pipeline/make_audio.py` (needs ffmpeg): trims silence, matches loudness per sound (frequent sounds quieter, special moments louder), SFX mono, music loops made seamless (2 s equal-power crossfade), OGG → `assets/audio/` (2.8 MB total). `AudioManager`: one music track at a time with 0.8 s crossfades; home + map share `mus_home` and it carries on between them; levels play `mus_world1`; the hug fades the music out (happy meow + soft purr loop + confetti pops); Level complete / Try again jingles over silence; pause lowers the music 10 dB; per-sound cooldowns and copy limits (e.g. max 3 coin sounds), quick coin runs rise in pitch, small random pitch on jump/land; every button clicks (UI bus); star pops rise per star. Settings Music/Sounds switches mute the buses. `dev/m2_audio_test.gd` (11 checks).
+- **Audio still missing:** `mus_reunion` (finale music — the 1-10 hug uses meow + purr + confetti until then) and `sfx_milk` (milk uses a brighter star pop). ⚠ Confirm the ElevenLabs plan used allows commercial use (free plan doesn't).
+- [ ] Juice pass
 - **Decided 31 Oct 2026 (owner):** build World 1 up to level 10 (with the reunion finale) **before** the first Play Console upload. Consequence: Play Games sign-in / leaderboard / achievements also wait, since they need the app-signing SHA-1 from that upload; levels 4–10 move ahead of them.
 - [ ] First Internal testing upload (claims the package, enrolls Play App Signing) → copy app-signing SHA-1
 - [ ] Play Games credentials (app-signing + debug SHA-1) and testers → real sign-in on the phone

@@ -78,11 +78,13 @@ func pause() -> void:
 	for action in ["move_left", "move_right", "jump"]:
 		Input.action_release(action)   # a finger held on a button mustn't keep the cat running
 	get_tree().paused = true
+	AudioManager.set_music_lowered(true)
 	_pause_button.hide()
 	menu.show_pause()
 
 func resume() -> void:
 	menu.close()
+	AudioManager.set_music_lowered(false)
 	_pause_button.show()
 	get_tree().paused = false
 
@@ -119,7 +121,7 @@ func _on_yarn() -> void:
 	pop.tween_property(_yarn, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK)
 
 func _on_completed(stars: int, coins: int, coin_total: int, has_yarn: bool) -> void:
-	_end()
+	_end("mus_level_complete")
 	var level := GameState.current_level()
 	if level != null and level.is_reunion:   # the world's last level: the save has already counted it
 		var total := 0
@@ -131,9 +133,10 @@ func _on_completed(stars: int, coins: int, coin_total: int, has_yarn: bool) -> v
 		menu.show_complete(stars, coins, coin_total, has_yarn, GameState.catalog.next_after(GameState.current_level_id) != null)
 
 func _on_failed() -> void:
-	_end()
+	_end("mus_try_again")
 	menu.show_fail()
 
-func _end() -> void:
+func _end(jingle: String) -> void:
+	AudioManager.play_jingle(jingle)
 	_over = true
 	_pause_button.hide()
