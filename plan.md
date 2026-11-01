@@ -211,10 +211,10 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - [x] App **wiwiwi** created in Play Console (Game, Free)
 - [x] Privacy policy URL set: https://wiwiwi.digicraft.one/privacy (required even with no data collected)
 - **Decisions:** App access = **"No restricted access"** (sign-in optional, no purchases; revisit if paid content is added). Store category = **Adventure** (recommended), with tags such as Platformer, Casual, Cute, Single player, Offline.
-- [ ] Internal testing release (first upload claims the package and enrolls Play App Signing)
-- [ ] Data safety form (we collect nothing ourselves; include what the Play Games SDK does)
-- [ ] Content rating, target audience (⚠ under-13 → Families policy), ads: none
-- [ ] Store listing: texts, icon, feature graphic, screenshots
+- [x] **First release submitted 1 Nov 2026, in review:** the owners chose **Closed testing – Alpha** (not internal) with build 0.1.0 (1) = `builds/wiwiwi-release.aab` (home page v3 + Cat Shop), country **India**, testers via the Google Group **digicraft-tester@googlegroups.com** (testers join the group, then opt in with the test link). Store listing (en-US), content rating questionnaire and target audience were submitted with it. ⚠ Play Console shows target age **18 and older** (plan said 13+); 18+ is the strictest choice and fine for now — revisit before public launch if younger players are wanted. Next: when review passes, testers install from the Play Store (uninstall the debug build first); the owner sends the **app-signing SHA-1** (App integrity → App signing; available already after the upload) for Play Games credentials.
+- [~] Data safety form (check it was submitted with the first release; we collect nothing ourselves; include what the Play Games SDK does)
+- [x] Content rating, target audience (18+ for now; ⚠ under-13 → Families policy), ads: none — submitted 1 Nov 2026
+- [x] Store listing (en-US): texts, icon, feature graphic, screenshots — submitted 1 Nov 2026
 - [ ] **Closed test: ≥ 12 testers opted in for 14 continuous days** — only if the account is a *personal* account created after Nov 2023 (⚠ check account type in Settings → Developer account; organization accounts are exempt), then apply for production access
 - [ ] Staged rollout 20% → 100%; watch crashes/ANRs for 2 weeks
 
