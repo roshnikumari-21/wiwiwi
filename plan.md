@@ -183,6 +183,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - **Plugin:** `godot-play-game-services` v3.4.0 (github.com/godot-sdk-integrations, MIT). **Verified on Godot 4.7.2 on a real phone (M0).** Needs a Gradle build and a Play Games game ID in the export preset.
 - **Setup:** create the app in Play Console → upload a build to internal testing → create the Play Games project → add credentials (SHA-1 of signing keys) → create achievements/leaderboards → add testers → put the game ID in export settings → publish with the release.
 - **Status:** Play Games project created, linked to Google Cloud project **"wiwiwi"**, game ID **`254276654194`** (in both export presets). Credentials, testers and the real sign-in test happen in **M2**, after the first Internal testing upload.
+- **Signing fingerprints (SHA-1) for Play Games credentials** (received 1 Nov 2026): **app signing key** (Play re-signs every Play Store install with it) `B3:1F:21:A2:E3:54:4C:B5:7A:8F:D5:98:55:C0:25:97:94:16:F3:B9`; **upload key** (our `wiwiwi-upload.keystore`) `3A:5B:4F:6F:9C:87:32:A5:99:D1:B2:3A:B7:A0:06:88:2B:F6:E4:49`; **debug key** (test APKs) `76:EA:46:81:AC:A0:5C:A5:6A:D6:A1:7E:D3:DA:E8:64:8F:E3:12:08`. One Android OAuth credential each for app-signing and debug (upload key optional). Public values, safe to keep here.
 
 ### 7.2 Google Play Billing — future slot (not in v1)
 - **What it's for:** real-money purchases (e.g. cosmetic packs) and subscriptions. **Not used in v1.**
