@@ -23,6 +23,7 @@ func _ready() -> void:
 	load_game()
 	load_settings()
 	Events.level_completed.connect(_on_level_completed)
+	Events.enemy_stomped.connect(func(): _add_stat("slimes", 1))
 
 # --- Progress -------------------------------------------------------------------------------
 
@@ -107,6 +108,9 @@ func reset_progress() -> void:
 
 func _on_level_completed(star_count: int, coins: int, _coin_total: int, yarn: bool) -> void:
 	_data["wallet"]["coins"] = purse() + coins   # record_result below saves it
+	_data["stats"]["coins_ever"] = stat("coins_ever") + coins
+	if GameState.hearts == GameState.MAX_HEARTS:
+		_data["stats"]["flawless"] = 1   # finished a level without losing a heart
 	record_result(GameState.current_level_id, star_count, coins, yarn)
 
 ## Stars won over all levels, and how many there are to win (3 per level).
@@ -124,6 +128,18 @@ func total_yarns() -> Vector2i:
 	for level in levels:
 		got += int(has_yarn(level.id))
 	return Vector2i(got, levels.size())
+
+# --- Lifetime stats (for Play Games achievements and leaderboards) ---------------------------
+# coins_ever = every coin picked up in finished levels (never goes down, unlike the purse),
+# slimes = slimes squished, flawless = 1 once a level was finished with all hearts.
+
+func stat(key: String) -> int:
+	return int(_data["stats"].get(key, 0))
+
+func _add_stat(key: String, amount: int) -> void:
+	_data["stats"][key] = stat(key) + amount
+	save_game()
+	progress_changed.emit()
 
 # --- Coin purse -----------------------------------------------------------------------------
 # Every coin picked up in a finished level goes in the purse (replays earn more), to spend in the
@@ -150,12 +166,15 @@ func _level(level_id: String) -> Dictionary:
 	return _data["levels"].get(level_id, {})
 
 func _fresh() -> Dictionary:
-	# wallet + cosmetics are empty slots for a future shop, so it needs no save migration.
-	return {"version": VERSION, "levels": {}, "wallet": {"coins": 0}, "cosmetics": [], "cat": "ginger"}
+	# New keys added later (wallet, cosmetics, cat, stats) are filled in by _migrate for old saves.
+	return {"version": VERSION, "levels": {}, "wallet": {"coins": 0}, "cosmetics": [], "cat": "ginger",
+		"stats": {"coins_ever": 0, "slimes": 0, "flawless": 0}}
 
 ## Bring an older save up to the current version, step by step.
 func _migrate(data: Dictionary) -> Dictionary:
 	var fresh := _fresh()
+	if not data.has("stats") and data.has("wallet"):   # saves from before the stats: count the purse as earned
+		fresh["stats"]["coins_ever"] = int(data["wallet"].get("coins", 0))
 	for key in fresh:
 		if not data.has(key):
 			data[key] = fresh[key]
