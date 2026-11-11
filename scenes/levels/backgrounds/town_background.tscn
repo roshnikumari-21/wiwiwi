@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/backgrounds/parallax_background.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/town/bg_far.png" id="2_far"]
+[ext_resource type="Texture2D" path="res://assets/art/backgrounds/town/bg_mid.png" id="3_mid"]
+
+[node name="TownBackground" type="CanvasLayer"]
+layer = -10
+script = ExtResource("1_script")
+layers = {
+"Far": [0.1, 0.05, -100.0],
+"Mid": [0.3, 0.15, -100.0]
+}
+
+[node name="Sky" type="ColorRect" parent="."]
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0.749, 0.596, 0.816, 1)
+
+[node name="Far" type="TextureRect" parent="."]
+texture = ExtResource("2_far")
+
+[node name="Mid" type="TextureRect" parent="."]
+texture = ExtResource("3_mid")

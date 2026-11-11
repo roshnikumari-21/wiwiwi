@@ -8,6 +8,13 @@ extends Node2D
 @export var extra_sky: float = 700.0         ## how far the camera may look above the highest ground
 @export var fall_margin: float = 400.0       ## falling this far below the lowest ground = fell in a pit
 @export_range(0.0, 1.0) var start_energy: float = 1.0  ## the cat's energy at the start (lower = milk matters sooner)
+## The world's look and music. The ground blocks carry the same theme (they're built in the editor).
+@export_enum("meadow", "town") var theme: String = "meadow"
+
+const THEMES := {
+	"meadow": {"music": "mus_world1", "background": null},   # level_base.tscn already has the meadow
+	"town": {"music": "mus_world2", "background": preload("res://scenes/levels/backgrounds/town_background.tscn")},
+}
 
 @onready var player: Player = $Player
 @onready var camera: Camera2D = $Player/Camera
@@ -41,7 +48,15 @@ func _ready() -> void:
 	hud.map_pressed.connect(func(): SceneTransition.change_scene("res://ui/screens/level_map.tscn"))
 	hud.home_pressed.connect(func(): SceneTransition.change_scene("res://ui/screens/main_menu.tscn"))
 
-	AudioManager.play_music("mus_world1")
+	var look: Dictionary = THEMES[theme]
+	if look.background:
+		var old := $Background
+		remove_child(old)
+		old.queue_free()
+		var background: Node = look.background.instantiate()
+		background.name = "Background"
+		add_child(background)
+	AudioManager.play_music(look.music)
 	GameState.begin_attempt(level_id, get_tree().get_nodes_in_group("coins").size())
 	_respawn_point = spawn.global_position
 	player.energy = start_energy

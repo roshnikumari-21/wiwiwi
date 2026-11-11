@@ -6,9 +6,11 @@ Music loops are made seamless: the last LOOP_XFADE seconds are crossfaded into t
 track restarts with no gap or jump. Output: assets/audio/music/*.ogg, assets/audio/sfx/*.ogg.
 
 Needs ffmpeg on PATH (installed with winget: Gyan.FFmpeg).
-Run:  python tools/audio_pipeline/make_audio.py
+Run:  python tools/audio_pipeline/make_audio.py            (all sounds)
+      python tools/audio_pipeline/make_audio.py mus_world2 (only the named ones)
 """
 import shutil
+import sys
 import subprocess
 import tempfile
 from pathlib import Path
@@ -27,6 +29,7 @@ LOOP_XFADE = 2.0   # seconds
 SOUNDS = {
     "mus_home": ("Mus_Home", "loop", -20.0),
     "mus_world1": ("Mus_World_1", "loop", -20.0),
+    "mus_world2": ("Sunset_Stroll", "loop", -20.0),
     "mus_level_complete": ("Level_Complete", "jingle", -17.0),
     "mus_try_again": ("Short_soft", "jingle", -19.0),
     "sfx_coin": ("Bright_cute_coin", "sfx", -21.0),
@@ -105,7 +108,10 @@ def main():
     (OUT / "music").mkdir(parents=True, exist_ok=True)
     (OUT / "sfx").mkdir(parents=True, exist_ok=True)
     raw_files = sorted(RAW.glob("*.mp3")) + sorted(RAW.glob("*.wav"))
+    only = sys.argv[1:]
     for name, (prefix, kind, target) in SOUNDS.items():
+        if only and name not in only:
+            continue
         matches = [f for f in raw_files if f.name.startswith(prefix)]
         if not matches:
             print(f"  MISSING {name} (no file starting with '{prefix}')")
