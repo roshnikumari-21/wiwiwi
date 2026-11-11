@@ -19,6 +19,7 @@
 10. [Release on Google Play](#10-release-on-google-play)
 11. [Milestones M0–M5](#11-milestones-m0m5)
 12. [Risks and Open Questions](#12-risks-and-open-questions)
+13. [Future Updates (owner ideas)](#13-future-updates-owner-ideas)
 
 ---
 
@@ -29,7 +30,7 @@
 - **Focus rule (29 Oct 2026):** build and polish **World 1 completely first**; World 2 starts only after World 1 is done properly.
 - **Carried over from the prototype:** gentle energy + milk, owner reunion at the end of each world, stompable slimes, moving platforms.
 - **New:** 3 hearts per level, checkpoints, 3-star rating, level select, settings, Play Games.
-- **Not in v1:** coin shop, real-money purchases, ads, World 3, Hindi.
+- **Not in v1:** real-money purchases, ads, World 3, Hindi. (The coin Cat Shop was added in v1 on 1 Nov 2026.) **Long-term direction (11 Nov 2026):** 10 worlds, ads + a one-time "Remove ads" purchase — see [§13](#13-future-updates-owner-ideas).
 - **Prototype** (`cozy-cat-platformer`) is reference only. v1 is built fresh in `C:\Godot\Projects\wiwiwi`.
 - **Design references:** level select + star reveal (Angry Birds), one-thumb controls + coin loop (Hill Climb Racing), themed worlds + hidden collectibles + checkpoints (Lep's World). Structure only, nothing copied.
 
@@ -193,7 +194,7 @@ P0 = needed for the vertical slice (M2) · P1 = needed for launch · P2 = nice t
 - ⚠ **The app is live in Production** (Play Console 9 Nov: production release 1 (0.1.0) from 1 Nov 21:50, 100 % roll-out, 5 installs), not only closed testing. Until the Play Games project is published, every non-tester player sees "Couldn't sign in" on 🏆 / 📊 (the game itself works). Also pending for the account owner: **"Declare your trader status"** banner in Play Console. Google says new clients can take minutes to hours to start working.
 
 ### 7.2 Google Play Billing — future slot (not in v1)
-- **What it's for:** real-money purchases (e.g. cosmetic packs) and subscriptions. **Not used in v1.**
+- **What it's for:** real-money purchases (e.g. cosmetic packs) and subscriptions. **Not used in v1.** First planned product (11 Nov 2026): **"Premium — remove ads", one-time lifetime purchase (~₹250, ⚠ confirm price)**, see §13.
 - **Kept ready by:** the `Economy` autoload and save fields. A coin shop using only earned coins needs no Billing at all.
 - **When added:** Google Play Billing Library via a Godot plugin (⚠ choose and verify the maintained plugin at that time); purchases are verified by Google Play, still no backend of our own. Adds Play Console products and a Data safety update.
 
@@ -345,5 +346,27 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 | Level building is the biggest time cost (20 levels) | Reusable pieces only (ground, water, spikes, slime, plank, background); each level = arranging pieces + a playtest |
 | Concept art not game-ready (no transparency, not on a grid, tiles not seamless, frames drift) | Scripted cleanup pipeline; regenerate missing/unsuitable pieces in the same style |
 | Rights for AI-generated art (ChatGPT) | OpenAI terms assign output to us; re-check before launch and keep a record |
+| Ads annoy players of a cozy game (ad after every level) and hurt ratings | Watch reviews and retention after launch; be ready to add a cooldown (e.g. at most one ad every few minutes) or skip ads in the first levels; Premium removes them |
+| Ads change the Play listing and policies | Before the ads update: Play Console "Contains ads" = Yes, Data safety + privacy policy (`/privacy`) updated for AdMob, content rating re-checked; ⚠ any under-13 audience means Families policy rules for ads (certified ad SDK settings) |
 
 **Open:** hours per week · (target audience: 13+ for now, decided 1 Nov 2026) · ElevenLabs plan · who owns art vs code · Play Console account type (personal/organization).
+
+## 13. Future Updates (owner ideas)
+Recorded 11 Nov 2026 from the owners' notes. **Not in the current build**; each item is decided in detail and approved before it is built. World 1 (and the live v1 on Play) comes first.
+
+### 13.1 Ten worlds
+- **Goal:** grow from World 1 to **10 worlds** (10 levels each), released as updates.
+- **World themes (owners' list, order to decide):** **Ice**, **Sunset**, **Pink** (candy/blossom), **Moonlight** (night), **Dense forest**, **Volcano**, **Sand** (desert), … plus more to reach 10. World 1 = Meadow (done). The old "World 2 — Sunset Town" idea (§1) fits the Sunset theme.
+- **New villain/hazard idea: falling rocks** (drop from above; a shadow or shake warns first so it stays fair, per the fair-play rules in §3).
+- **Dark environment:** at least one dark world (e.g. Moonlight or a cave inside Volcano) where the screen is darker and the cat's surroundings are lit — needs a light/vision mechanic and a check that it stays readable on low-end phones like the M11.
+- Each world: new background + ground art set, one new enemy or hazard, its own music, a girl reunion at the end, and its own achievements (e.g. "Perfect Forest", "World 3 complete"). Play Games points left: **1,150 of 2,000** (§7.1). Level map gets one map per world (or a world-select screen first).
+- Size watch: every world adds art + music to the download (§12 "App size"); keep new art cut near on-screen size and consider Play Asset Delivery if the download passes ~60 MB.
+
+### 13.2 Ads and Premium (revenue), "like Duolingo"
+- **Ad network: Google AdMob** (⚠ verify the maintained Godot 4 AdMob plugin and its Android setup when this starts; it needs its own Gradle dependencies next to Play Games).
+- **Interstitial ad after every level** (owners' choice). Shown after the result card, never during play; never when the player is in Premium.
+- **Rewarded ad for an extra life:** when the cat loses her last heart, "Try again?" offers **watch an ad → continue from the checkpoint with a heart back**. Owners want a long ad (~1 minute) here. ⚠ AdMob decides the ad length (rewarded ads are often 15–30 s, some longer), so we can't force 1 minute; the reward is only given if the ad is watched to the end. Possibly once per level attempt.
+- **Premium = "Remove ads", one-time lifetime purchase, ~₹250** (⚠ confirm the price and currency; Play sets local prices per country). Uses Google Play Billing (§7.2): removes interstitials; rewarded ads stay optional (the player chooses to watch them) — or Premium gives the extra life free (to decide). Restores automatically on reinstall / new phone via Google Play.
+- **Duolingo-style feel:** friendly, never blocking — a clear "Go Premium" button (home page or after an ad), a small thank-you for Premium players (e.g. a badge or an exclusive cat colour, to decide).
+- **Needed before the ads update ships:** AdMob account + app + ad units (owners), app-ads.txt on `wiwiwi.digicraft.one`, consent message for EU/UK users (Google's UMP), Play Console "Contains ads" = Yes, Data safety and `/privacy` updated, ad test devices so we never click our own live ads.
+
