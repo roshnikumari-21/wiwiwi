@@ -121,6 +121,10 @@ func _respawn() -> void:
 	camera.reset_smoothing()
 
 func _go_next() -> void:
+	if GameState.map_walk_from == level_id:   # first time through: the map shows her walking on, then plays it
+		GameState.map_auto_play = true
+		SceneTransition.change_scene("res://ui/screens/level_map.tscn")
+		return
 	var next := GameState.catalog.next_after(level_id)
 	if next:
 		GameState.start_level(next.id)

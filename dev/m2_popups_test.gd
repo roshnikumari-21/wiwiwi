@@ -46,8 +46,13 @@ func _run() -> void:
 	_check("pause button hidden after the level ends", not hud.get_node("Pause").visible, "")
 	hud.pause()
 	_check("can't pause over the result popup", not paused, "")
+	var first_time: bool = root.get_node("GameState").map_walk_from == "w1_01"
 	hud.menu.find_child("RESULT_NEXT", true, false).pressed.emit()
 	await _frames(60)
+	if first_time:   # a first finish goes via the map: the kitten walks to 1-2, then it starts
+		_check("Next after a first finish: the map walks on", current_scene.name == "LevelMap", current_scene.name)
+		await create_timer(4.0).timeout
+		await _frames(30)
 	_check("Next opens level 1-2", current_scene.get("level_id") == "w1_02", current_scene.name)
 
 	for path in ["user://test_popups_save.json", "user://test_popups_save.json.bak"]:

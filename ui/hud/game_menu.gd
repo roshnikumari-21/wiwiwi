@@ -12,7 +12,7 @@ signal home_pressed
 signal settings_closed
 signal quit_pressed
 
-## Which popup is showing: "", "pause", "settings", "complete", "fail", "quit", "notice", "shop".
+## Which popup is showing: "", "pause", "settings", "complete", "fail", "quit", "notice", "shop", "unlocked".
 var current := ""
 var _settings_from_pause := false
 var _shop_index := 0   ## which cat the shop is showing
@@ -235,6 +235,22 @@ func show_world_complete(world: int, total_stars: int, max_stars: int) -> void:
 		_button("BTN_HOME", "green", "home", home_pressed, 320)]))
 	_open(0.6)
 
+## After a world's last level, on the map: "World 2 unlocked!", the world's name, the kitten cheering
+## and "Let's go!" (emits next_pressed; the map then moves on to the new world).
+func show_world_unlocked(world: int, name_key: String) -> void:
+	current = "unlocked"
+	_clear()
+	_title(tr("WORLD_UNLOCKED") % world)
+	var name_label := _label(name_key, 0)
+	name_label.name = "WorldName"
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_label.add_theme_font_override("font", BOLD)
+	name_label.add_theme_font_size_override("font_size", 56)
+	_box.add_child(name_label)
+	_box.add_child(_kitten("cheer"))
+	_box.add_child(_row([_button("BTN_LETS_GO", "green", "play", next_pressed, 400)]))
+	_open(0.2)
+
 func show_fail() -> void:
 	current = "fail"
 	_clear()
@@ -347,6 +363,7 @@ func go_back() -> bool:
 			else:
 				close_settings()
 		"quit", "notice", "shop": close()
+		"unlocked": next_pressed.emit()
 		"credits": show_settings(_settings_from_pause)
 		"complete", "fail": map_pressed.emit()
 		_: return false
