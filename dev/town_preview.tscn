@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/moving_platform.tscn" id="10_plank"]
 [ext_resource type="PackedScene" path="res://scenes/objects/water.tscn" id="11_water"]
 [ext_resource type="PackedScene" path="res://scenes/objects/mushroom.tscn" id="12_mushroom"]
+[ext_resource type="PackedScene" path="res://scenes/objects/crumble_tile.tscn" id="13_crumble"]
 
 [node name="TownPreview" instance=ExtResource("1_base")]
 theme = "town"
@@ -119,6 +120,7 @@ position = Vector2(2940, 1000)
 width = 350.0
 
 [node name="Plank1" parent="Objects" instance=ExtResource("10_plank")]
+theme = "town"
 position = Vector2(3115, 900)
 move_by = Vector2(0, -400)
 
@@ -182,6 +184,7 @@ position = Vector2(7550, 1000)
 width = 1105.0
 
 [node name="Plank2" parent="Objects" instance=ExtResource("10_plank")]
+theme = "town"
 position = Vector2(7690, 900)
 move_by = Vector2(330, 0)
 travel_time = 2.6
@@ -190,6 +193,7 @@ travel_time = 2.6
 position = Vector2(7855, 780)
 
 [node name="Plank3" parent="Objects" instance=ExtResource("10_plank")]
+theme = "town"
 position = Vector2(8070, 900)
 move_by = Vector2(330, 0)
 travel_time = 2.6
@@ -220,3 +224,9 @@ position = Vector2(10005, 840)
 
 [node name="GoalGirl" parent="Objects" instance=ExtResource("6_girl")]
 position = Vector2(10255, 900)
+
+[node name="Crumble1" parent="Objects" instance=ExtResource("13_crumble")]
+position = Vector2(700, 640)
+
+[node name="Crumble2" parent="Objects" instance=ExtResource("13_crumble")]
+position = Vector2(1080, 560)

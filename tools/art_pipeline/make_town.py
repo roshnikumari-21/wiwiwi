@@ -21,6 +21,7 @@ from make_ground import fade, scaled, solid_top
 from pipeline import ART, RAW, cut, find_sprites, load, remove_background, to_image
 
 TILES = ART / "tiles" / "town"
+OBJECTS = ART / "objects"
 BACK = ART / "backgrounds" / "town"
 
 GROUND_SCALE = 0.22     # top tile art -> game px (curb + cobble band ~57 px, like World 1's grass)
@@ -37,6 +38,11 @@ CAP_BRICK_KEEP = 40     # game px of cap bricks kept before fading (the fill con
 CAP_INNER_FADE = 24
 THIN_SCALE = 0.75       # ledge plank ~28 px thick, whole ledge ~85 px tall
 DECO_SCALE = 0.5        # lamp ~300 px, bench ~100 px tall next to a ~150 px cat
+PLANK_WIDTH = 290       # game px, like the meadow plank (its collision is 270 wide)
+CRUMBLE_SCALE = 0.476   # roof tile ~300 px wide, like a short ledge
+CRUMBLE_ROWS = (220, 520)            # rows holding all 3 drawings incl. dust and falling bits (raw)
+CRUMBLE_LEFT = (42, 762, 1476)       # left edge of each drawing's box: platforms start 6 px in
+CRUMBLE_WIDTH = 642
 FAR_SCALE = 1.45
 MID_SCALE = 1.3
 
@@ -103,6 +109,32 @@ def main():
         numbers[name] = {"size": save(out, TILES / f"{name}.png"), "surface": round(solid_top(part) * THIN_SCALE)}
     flower = cut(sheet, ledges[0])
     numbers["ledge_flowers"] = save(scaled(to_image(flower), THIN_SCALE), TILES / "ledge_flowers.png")
+    # The whole plain ledge = the town's moving plank (the meadow plank has a grass top).
+    plank = scaled(to_image(plain), PLANK_WIDTH / plain.shape[1])
+    numbers["plank"] = {"size": save(plank, OBJECTS / "platform_moving_town.png"),
+                        "surface": round(solid_top(plain) * PLANK_WIDTH / plain.shape[1])}
+
+    # Crumbling roof tile: the same box cut from each of the 3 drawings, so the frames line up.
+    # The breaking drawing's 4 chunks are saved one by one (exact shape, not a box, so no chunk
+    # carries a bit of its neighbour), with their place in the frame, so each can drop on its own.
+    roof = remove_background(load("Crumbling Terracotta Roof Platform Stages.png"))
+    for i, name in enumerate(["crumble_whole", "crumble_cracked", "crumble_breaking"]):
+        x0 = CRUMBLE_LEFT[i]
+        frame = roof[CRUMBLE_ROWS[0]:CRUMBLE_ROWS[1], x0:x0 + CRUMBLE_WIDTH]
+        out = scaled(to_image(frame), CRUMBLE_SCALE)
+        if i < 2:
+            numbers[name] = save(out, OBJECTS / f"{name}.png")
+        if i == 0:
+            numbers["crumble_surface"] = round(solid_top(frame) * CRUMBLE_SCALE)
+        if i == 2:
+            small = np.asarray(out).astype(np.float32)
+            chunks = sorted(find_sprites(small, min_area=1500), key=lambda b: b[0])
+            numbers["crumble_chunks"] = []
+            for n, (x_0, y_0, x_1, y_1, label, labels) in enumerate(chunks):
+                piece = small[y_0:y_1, x_0:x_1].copy()
+                piece[labels[y_0:y_1, x_0:x_1] != label, 3] = 0
+                save(piece, OBJECTS / f"crumble_chunk_{n}.png")
+                numbers["crumble_chunks"].append((int(x_0), int(y_0)))
 
     decos = remove_background(load("Whimsical Garden Street Asset Collection.png"))
     names = ["deco_lamp", "deco_planter", "deco_barrel", "deco_crates", "deco_bench", "deco_pot", "deco_bush", "deco_post"]
