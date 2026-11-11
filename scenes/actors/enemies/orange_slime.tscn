@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/slime.tscn" id="1_slime"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/slime/orange_idle.png" id="2_idle"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/slime/orange_move_0.png" id="3_m0"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/slime/orange_move_1.png" id="4_m1"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/slime/orange_squash.png" id="5_squash"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_orange"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_idle")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_m0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_m1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_m0")
+}],
+"loop": true,
+"name": &"move",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_squash")
+}],
+"loop": false,
+"name": &"squash",
+"speed": 1.0
+}]
+
+[node name="OrangeSlime" instance=ExtResource("1_slime")]
+
+[node name="Sprite" parent="." index="0"]
+sprite_frames = SubResource("SpriteFrames_orange")

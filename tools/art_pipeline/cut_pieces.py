@@ -30,10 +30,11 @@ RECIPES = {
     "Cute Red Mushroom Sprite Pair.png": (ART / "objects", ["mushroom", "mushroom_squash"], None),
     "Cartoon Grass-Topped Wooden Platform.png": (ART / "objects", ["platform_moving"], None),
     "Cartoon Spike Trap Platforms.png": (ART / "objects", ["spikes_short", "spikes_long"], None),
-    # World 1 slime (green row); the orange row is kept in the sheet for later.
+    # World 1 slime (green row) and World 2's orange slime (orange row, same poses).
     "Kawaii Slime Sprite Sheet.png": (
         ART / "enemies" / "slime",
-        ["slime_idle", "slime_move_0", "slime_move_1", "slime_squash", None, None, None, None],
+        ["slime_idle", "slime_move_0", "slime_move_1", "slime_squash",
+         "orange_idle", "orange_move_0", "orange_move_1", "orange_squash"],
         None,
     ),
     # Girl at the level goal: wait -> crouch -> kneel reaching -> kneel arms wide, then the hug loop.
@@ -63,7 +64,8 @@ SHRINK = {ART / "objects": {"yarn_glow": 236, "platform_moving": 604, "yarn": 20
 CENTRED_GROUPS = {
     ART / "objects": [(["coin_0", "coin_1", "coin_2", "coin_3", "coin_4"], "centre"),
                       (["mushroom", "mushroom_squash"], "feet")],
-    ART / "enemies" / "slime": [(["slime_idle", "slime_move_0", "slime_move_1", "slime_squash"], "feet")],
+    ART / "enemies" / "slime": [(["slime_idle", "slime_move_0", "slime_move_1", "slime_squash"], "feet"),
+                                (["orange_idle", "orange_move_0", "orange_move_1", "orange_squash"], "feet")],
     ART / "characters" / "girl": [
         (["girl_wait", "girl_crouch", "girl_kneel_reach", "girl_kneel_open"], "shoe"),
         # The hug sheet is drawn bigger: kneeling height 664 px vs 509 px in the kneel-down sheet.

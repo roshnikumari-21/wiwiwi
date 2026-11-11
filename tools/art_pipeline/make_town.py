@@ -9,7 +9,8 @@ Ground (assets/art/tiles/town, same pieces as the World 1 meadow kit, see make_g
   decos  - lamp, planter, barrel, crates, bench, pot, bush, stone post
 Background (assets/art/backgrounds/town):
   far    - sunset sky, sun, hazy hills and town (top fades into the plain sky colour)
-  mid    - the row of houses, white sky cut away, a darkening wall continued below
+  mid    - the row of houses, white sky cut away; below them a canal (the World 2 water colours)
+           reflecting the houses upside down, so looking down from a high jump shows water, not a wall
 
 Run:  python tools/art_pipeline/make_town.py   (prints the numbers ground_block.gd uses)
 """
@@ -43,6 +44,10 @@ CRUMBLE_SCALE = 0.476   # roof tile ~300 px wide, like a short ledge
 CRUMBLE_ROWS = (220, 520)            # rows holding all 3 drawings incl. dust and falling bits (raw)
 CRUMBLE_LEFT = (42, 762, 1476)       # left edge of each drawing's box: platforms start 6 px in
 CRUMBLE_WIDTH = 642
+CANAL_ROWS = 700        # canal under the houses layer (game px; a high jump looks this far down)
+WATER_LIGHT = np.array([0.56, 0.54, 0.80])   # the World 2 water colours (water.gd TINTS["town"])
+WATER_DEEP = np.array([0.30, 0.28, 0.52])
+REFLECTION = 0.45       # how strongly the houses show in the water
 FAR_SCALE = 1.45
 MID_SCALE = 1.3
 
@@ -160,12 +165,19 @@ def main():
 
     mid = remove_background(load("Charming Sunset Canal Town Row.png"))
     mid = np.asarray(scaled(to_image(mid), MID_SCALE)).astype(np.float32)
-    wall = mid[-6:, :, :3].reshape(-1, 3)
-    wall = wall[mid[-6:, :, 3].reshape(-1) > 200].mean(axis=0)
-    below = np.zeros((500, mid.shape[1], 4), np.float32)
-    below[..., :3] = wall * np.linspace(0.85, 0.6, 500)[:, None, None]   # darker the deeper you look
-    below[..., 3] = 255
-    mid = np.concatenate([mid, below], axis=0)
+    # The canal: water from light to deep (as the World 2 water), with the houses mirrored in it,
+    # fading out with depth, and a soft bright line where the water meets the houses.
+    rows = CANAL_ROWS
+    water = np.zeros((rows, mid.shape[1], 4), np.float32)
+    depth = np.linspace(0.0, 1.0, rows)[:, None, None]
+    water[..., :3] = (WATER_LIGHT * (1.0 - depth) + WATER_DEEP * depth) * 255.0
+    water[..., 3] = 255
+    mirror = mid[::-1][:rows]
+    strength = (mirror[..., 3:] / 255.0) * REFLECTION * np.clip(1.0 - depth * 1.6, 0.0, 1.0)
+    tinted = mirror[..., :3] * 0.55 + water[..., :3] * 0.45   # the reflection takes on the water's colour
+    water[..., :3] = water[..., :3] * (1.0 - strength) + tinted * strength
+    water[:6, :, :3] = water[:6, :, :3] * 0.6 + np.array([255.0, 225.0, 190.0]) * 0.4   # waterline glint
+    mid = np.concatenate([mid, water], axis=0)
     mid[-2:, :, 3] = 0
     numbers["bg_mid"] = save(mid, BACK / "bg_mid.png")
 

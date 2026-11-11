@@ -21,6 +21,7 @@ TILE_GAP = 120         # crumble bridge: water between the shore and a tile, and
 class TownLevel(Level):
     RES = {
         **RES,
+        "slime": ("PackedScene", "res://scenes/actors/enemies/orange_slime.tscn"),   # World 2's slimes are orange
         "hopper": ("PackedScene", "res://scenes/actors/enemies/hopper_slime.tscn"),
         "crumble": ("PackedScene", "res://scenes/objects/crumble_tile.tscn"),
     }
