@@ -29,7 +29,7 @@ func _run() -> void:
 	_check("map: 1-1 and 1-2 open, 1-3 locked", map.get_node("Map/Level2").texture_normal == map.OPEN and map.get_node("Map/Level3").texture_normal == map.LOCKED, "")
 	_check("map: 1-1 shows 3 stars", map.get_node("Map/Level1").get_children().filter(func(n): return n is TextureRect and n.texture == map.STAR_FULL).size() == 3, "")
 	_check("map: spots after the built levels are locked", map.get_node("Map/Level10").texture_normal == map.LOCKED, "")
-	_check("map: kitten waits on level 2", map.get_node("Map/Kitten").position.x == map.SPOTS[1].x, map.get_node("Map/Kitten").position)
+	_check("map: kitten waits on level 2", map.get_node("Map/Kitten").position.x == map.WORLDS[0].spots[1].x, map.get_node("Map/Kitten").position)
 	map.get_node("Map/Level3").pressed.emit()   # locked: nothing happens
 	for i in 30:
 		await process_frame

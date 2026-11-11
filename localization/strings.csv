@@ -62,3 +62,6 @@ CAT_COCOA,Cocoa
 CAT_MISTY,Misty
 CAT_TUXEDO,Tuxedo
 CAT_BUBBLEGUM,Bubblegum
+WORLD_N,World %d
+WORLD_1_NAME,Meadow
+WORLD_2_NAME,Sunset Town

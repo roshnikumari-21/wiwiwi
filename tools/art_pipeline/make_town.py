@@ -109,10 +109,17 @@ def main():
         numbers[name] = {"size": save(out, TILES / f"{name}.png"), "surface": round(solid_top(part) * THIN_SCALE)}
     flower = cut(sheet, ledges[0])
     numbers["ledge_flowers"] = save(scaled(to_image(flower), THIN_SCALE), TILES / "ledge_flowers.png")
-    # The whole plain ledge = the town's moving plank (the meadow plank has a grass top).
-    plank = scaled(to_image(plain), PLANK_WIDTH / plain.shape[1])
-    numbers["plank"] = {"size": save(plank, OBJECTS / "platform_moving_town.png"),
-                        "surface": round(solid_top(plain) * PLANK_WIDTH / plain.shape[1])}
+    # The town's moving plank (the owners' "Charming Wooden Lantern Garden Platform"). Its lantern and
+    # flower pot hang past the boards, so the boards are measured: their width sets the scale, and the
+    # game centres the boards (not the whole picture) on the platform's collision.
+    art = remove_background(load("Charming Wooden Lantern Garden Platform.png"))
+    plank = cut(art, max(find_sprites(art), key=lambda b: (b[2] - b[0]) * (b[3] - b[1])))
+    top = solid_top(plank)
+    boards = np.flatnonzero(plank[top + 30, :, 3] > 128)   # a row through the boards, below the top edge
+    s = PLANK_WIDTH / (boards[-1] - boards[0])
+    out = scaled(to_image(plank), s)
+    numbers["plank"] = {"size": save(out, OBJECTS / "platform_moving_town.png"), "surface": round(top * s),
+                        "boards_centre_x": round((boards[0] + boards[-1]) / 2 * s)}
 
     # Crumbling roof tile: the same box cut from each of the 3 drawings, so the frames line up.
     # The breaking drawing's 4 chunks are saved one by one (exact shape, not a box, so no chunk
