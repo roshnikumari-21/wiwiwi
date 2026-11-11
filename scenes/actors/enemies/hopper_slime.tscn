@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/slime.tscn" id="1_slime"]
+[ext_resource type="Script" path="res://scenes/actors/enemies/hopper_slime.gd" id="2_script"]
+[ext_resource type="Shader" path="res://scenes/actors/enemies/slime_recolor.gdshader" id="3_recolor"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hopper"]
+shader = ExtResource("3_recolor")
+shader_parameter/hue_shift = 0.55
+
+[node name="HopperSlime" instance=ExtResource("1_slime")]
+script = ExtResource("2_script")
+
+[node name="Sprite" parent="." index="0"]
+material = SubResource("ShaderMaterial_hopper")
+autoplay = ""

@@ -9,6 +9,12 @@ const BODY := preload("res://assets/art/tiles/meadow/water_body.png")
 const BODY_FROM := 40.0        # the underwater part starts just under the strip's waves
 const CATCH_FROM := 26.0       # the cat counts as "in" a little below the wave tips
 const DRIFT_SPEED := 28.0      # px per second the waves slide sideways
+## Per theme: the water's colours (null = the meadow's own blue). See water_tint.gdshader.
+const TINTS := {
+	"meadow": null,
+	"town": [Color(0.30, 0.28, 0.52), Color(0.56, 0.54, 0.80), Color(1.0, 0.82, 0.62)],   # dusky canal at sunset
+}
+const TINT_SHADER := preload("res://scenes/objects/water_tint.gdshader")
 
 @export var width: float = 300.0:
 	set(value):
@@ -17,6 +23,10 @@ const DRIFT_SPEED := 28.0      # px per second the waves slide sideways
 @export var depth: float = 500.0:
 	set(value):
 		depth = value
+		_rebuild()
+@export_enum("meadow", "town") var theme: String = "meadow":
+	set(value):
+		theme = value
 		_rebuild()
 
 var _surface: TextureRect
@@ -45,6 +55,14 @@ func _rebuild() -> void:
 	clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	clip.size = Vector2(width, depth)
 	add_child(clip)
+	var tint = TINTS[theme]
+	if tint != null:
+		var mat := ShaderMaterial.new()
+		mat.shader = TINT_SHADER
+		mat.set_shader_parameter("deep", tint[0])
+		mat.set_shader_parameter("light", tint[1])
+		mat.set_shader_parameter("glint", tint[2])
+		clip.material = mat
 	clip.add_child(_tile(BODY, Vector2(0, BODY_FROM), Vector2(width, depth - BODY_FROM)))
 	_surface = _tile(SURFACE, Vector2.ZERO, Vector2(width + SURFACE.get_width(), SURFACE.get_height()))
 	clip.add_child(_surface)
@@ -100,6 +118,7 @@ func _tile(texture: Texture2D, at: Vector2, area: Vector2) -> TextureRect:
 	tile.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tile.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	tile.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tile.use_parent_material = true   # picks up the theme's tint from the clip area
 	tile.position = at
 	tile.size = area
 	return tile

@@ -90,6 +90,7 @@ position = Vector2(400, 840)
 position = Vector2(520, 840)
 
 [node name="Water1" parent="Objects" instance=ExtResource("11_water")]
+theme = "town"
 position = Vector2(1300, 1000)
 width = 240.0
 
@@ -116,6 +117,7 @@ position = Vector2(2290, 640)
 position = Vector2(1690, 900)
 
 [node name="Water2" parent="Objects" instance=ExtResource("11_water")]
+theme = "town"
 position = Vector2(2940, 1000)
 width = 350.0
 
@@ -150,6 +152,7 @@ position = Vector2(5190, 840)
 position = Vector2(5310, 840)
 
 [node name="Water3" parent="Objects" instance=ExtResource("11_water")]
+theme = "town"
 position = Vector2(5790, 1000)
 width = 260.0
 
@@ -180,6 +183,7 @@ position = Vector2(7120, 670)
 position = Vector2(6200, 900)
 
 [node name="Water4" parent="Objects" instance=ExtResource("11_water")]
+theme = "town"
 position = Vector2(7550, 1000)
 width = 1105.0
 
