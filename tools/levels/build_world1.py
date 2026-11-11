@@ -33,8 +33,11 @@ RES = {
 
 
 class Level:
-    def __init__(self, number, name, energy):
+    RES = RES      # scenes a level may use (a later world adds its own, see build_world2.py)
+
+    def __init__(self, number, name, energy, world=1, theme=None):
         self.number, self.name, self.energy = number, name, energy
+        self.world, self.theme = world, theme   # theme: None = meadow, or e.g. "town"
         self.x, self.h = 0, BASE
         self.blocks, self.objects = [], []          # (props), (kind, props)
         self.counts = {}
@@ -169,18 +172,20 @@ class Level:
 
     # --- output ----------------------------------------------------------------------------
     def write(self):
-        ids = {k: f"{i + 1}_{k}" for i, k in enumerate(RES)}
+        ids = {k: f"{i + 1}_{k}" for i, k in enumerate(self.RES)}
         out = ["[gd_scene format=3]\n\n"]
-        out += [f'[ext_resource type="{t}" path="{p}" id="{ids[k]}"]\n' for k, (t, p) in RES.items()]
+        out += [f'[ext_resource type="{t}" path="{p}" id="{ids[k]}"]\n' for k, (t, p) in self.RES.items()]
         num = f"{self.number:02d}"
-        out.append(f'\n[node name="LevelW1_{num}" instance=ExtResource("{ids["base"]}")]\n'
-                   f'level_id = "w1_{num}"\nstart_energy = {self.energy}\n\n')
+        world = self.world
+        theme = f'theme = "{self.theme}"\n' if self.theme else ""   # on the level, its ground, planks and water
+        out.append(f'\n[node name="LevelW{world}_{num}" instance=ExtResource("{ids["base"]}")]\n'
+                   f'level_id = "w{world}_{num}"\nstart_energy = {self.energy}\n{theme}\n')
         walls = [(-128, -200, 128, 1500, False), (self.x, -200, 128, 1500, False)]
         names = ["LeftWall"] + [f"Ground{i + 1}" for i in range(len(self.blocks))] + ["RightWall"]
         for name, (x, top, w, hgt, one_way) in zip(names, [walls[0]] + self.blocks + [walls[1]]):
             out.append(f'[node name="{name}" parent="Terrain" instance=ExtResource("{ids["block"]}")]\n'
                        f'position = Vector2({x}, {top})\nsize = Vector2({w}, {hgt})\n'
-                       + ("one_way = true\n" if one_way else "") + "\n")
+                       + ("one_way = true\n" if one_way else "") + theme + "\n")
         counts = {}
         for kind, x, y, props in self.objects:
             counts[kind] = counts.get(kind, 0) + 1
@@ -192,12 +197,15 @@ class Level:
                 elif isinstance(v, bool):
                     v = "true" if v else "false"
                 lines.append(f"{k} = {v}")
+            if theme and kind in ("plank", "water"):
+                lines.append(theme.strip())
             out.append(f'[node name="{name}" parent="Objects" instance=ExtResource("{ids[kind]}")]\n'
                        + "\n".join(lines) + "\n\n")
-        path = OUT / f"level_w1_{num}.tscn"
+        path = OUT.parent / f"w{world}" / f"level_w{world}_{num}.tscn"
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("".join(out).rstrip("\n") + "\n", encoding="utf-8", newline="\n")
         self.counts = counts
-        print(f"  1-{self.number} {self.name:18s} {self.x:6d} px  {counts.get('coin', 0):3d} coins  "
+        print(f"  {world}-{self.number} {self.name:18s} {self.x:6d} px  {counts.get('coin', 0):3d} coins  "
               f"{counts.get('slime', 0):2d} slimes  {counts.get('spikes', 0):2d} spikes  "
               f"{counts.get('plank', 0):2d} planks  {counts.get('mushroom', 0):2d} mushrooms")
         return self

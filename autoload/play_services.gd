@@ -69,10 +69,17 @@ func sign_in() -> void:
 ## or offline is sent the next time the player is signed in.
 func achievement_targets() -> Dictionary:
 	var stars := SaveManager.total_stars()
-	var yarns := SaveManager.total_yarns()
+	var yarns := SaveManager.total_yarns()   # all worlds
 	var any_done := false
 	for level in GameState.catalog.levels:
 		any_done = any_done or SaveManager.is_done(level.id)
+	# "Perfect Meadow" and "Yarn Master" are World 1 achievements: count World 1's levels only
+	var w1_stars := 0
+	var w1_yarns := 0
+	var w1 := GameState.catalog.in_world(1)
+	for level in w1:
+		w1_stars += SaveManager.stars(level.id)
+		w1_yarns += int(SaveManager.has_yarn(level.id))
 	var cats := 0
 	for skin in CatSkins.ALL:
 		cats += int(SaveManager.owns_cat(skin.id))
@@ -81,9 +88,9 @@ func achievement_targets() -> Dictionary:
 		"halfway_home": SaveManager.is_done("w1_05"),
 		"home_again": SaveManager.is_done("w1_10"),
 		"star_gazer": stars.x >= 15,
-		"perfect_meadow": stars.x >= stars.y,
+		"perfect_meadow": w1_stars >= w1.size() * 3,
 		"shiny_find": yarns.x >= 1,
-		"yarn_master": yarns.x >= yarns.y,
+		"yarn_master": w1_yarns >= w1.size(),
 		"slime_squisher": mini(SaveManager.stat("slimes"), STEPS.slime_squisher),
 		"not_a_scratch": SaveManager.stat("flawless") > 0,
 		"piggy_bank": mini(SaveManager.stat("coins_ever"), STEPS.piggy_bank),

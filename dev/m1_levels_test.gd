@@ -1,9 +1,10 @@
 extends SceneTree
 ## Plays every level in the catalog:
 ##  - it loads, counts its coins, has a checkpoint and the girl, can be finished at her
-##    (Next level button on all but the last; the last shows "World 1 complete")
+##    (Next level button, or a "World complete" card on each world's last level)
 ##  - every crossing is actually ridden or jumped like a player would, with no heart lost:
-##    sliding-plank chains, bobbing planks over rivers, diagonal planks, lifts and mushroom cliffs.
+##    sliding-plank chains, bobbing planks over rivers, diagonal planks, lifts and mushroom cliffs,
+##    and World 2's crumbling roof tiles (bridges over the canal, staircases up to a ledge).
 ## Run: godot --headless --path . --script res://dev/m1_levels_test.gd
 
 var _fails := 0
@@ -35,8 +36,8 @@ func _run() -> void:
 			await physics_frame
 		_check("%s: finished at the girl" % data.id, _completed, "")
 		var menu = level.get_node("Hud/SafeArea/Hud").menu
-		var last: bool = data == levels[-1]
-		_check("%s: %s" % [data.id, "World 1 complete card" if last else "Next level button"],
+		var last: bool = data.is_reunion   # the world's last level
+		_check("%s: %s" % [data.id, "World %d complete card" % data.world if last else "Next level button"],
 			(menu.find_child("WorldStars", true, false) != null) if last else (menu.find_child("RESULT_NEXT", true, false) != null), "")
 		level.queue_free()
 		await _frames(2)
@@ -49,8 +50,11 @@ func _crossings(data) -> void:
 	var probe = await _load(data.scene_path)
 	var waters := []
 	var mushrooms := []
+	var tiles := []   # World 2 crumbling roof tiles (positions)
 	for o in probe.get_node("Objects").get_children():
-		if o.scene_file_path.ends_with("water.tscn"):
+		if o.scene_file_path.ends_with("crumble_tile.tscn"):
+			tiles.append(o.global_position)
+		elif o.scene_file_path.ends_with("water.tscn"):
 			waters.append(String(o.name))
 		elif o.scene_file_path.ends_with("mushroom.tscn"):
 			mushrooms.append(String(o.name))
@@ -72,6 +76,35 @@ func _crossings(data) -> void:
 		await _mushroom_crossing(level, id, level.get_node("Objects/" + m_name), level.get_node("Player"))
 		level.queue_free()
 		await _frames(2)
+	tiles.sort_custom(func(a, b): return a.x < b.x)
+	var chains := []   # tiles close together = one crossing (a bridge or a staircase)
+	for t in tiles:
+		if chains.is_empty() or t.x - chains[-1][-1].x > 450.0:
+			chains.append([])
+		chains[-1].append(t)
+	for chain in chains:
+		var level = await _load(data.scene_path)
+		await _frames(80)
+		await _crumble_crossing(id, chain, level.get_node("Player"))
+		level.queue_free()
+		await _frames(2)
+
+## Like a player: from just before the first tile, hop from tile to tile without stopping (each one
+## breaks half a second after she lands) and land on the far side: the shore, or the ledge at the
+## top of a staircase.
+func _crumble_crossing(id: String, chain: Array, player) -> void:
+	var gs = root.get_node("GameState")
+	gs.hearts = 3
+	var first: Vector2 = chain[0]
+	var last: Vector2 = chain[-1]
+	var stairs := last.y < first.y - 50.0
+	var floor_y: float = first.y + (170.0 if stairs else 0.0)   # the ground the first hop starts from
+	await _place(player, Vector2(first.x - 290.0, floor_y - 40.0))
+	await _frames(20)
+	for i in chain.size() + 1:
+		await _hop(player)
+	var ok: bool = player.is_on_floor() and player.global_position.x > last.x + 150.0 and gs.hearts == 3 		and (not stairs or player.global_position.y < last.y)
+	_check("%s: %d crumbling tiles (%s) at x %d, no heart lost" % [id, chain.size(), "steps" if stairs else "bridge", int(first.x)], ok, [player.global_position, gs.hearts])
 
 func _water_crossing(level, id: String, water, objects: Array, player, gs) -> void:
 	if true:

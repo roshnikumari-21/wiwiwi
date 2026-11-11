@@ -15,6 +15,17 @@ const LEVELS := [
 	["w1_08", 1, 8, "res://scenes/levels/w1/level_w1_08.tscn"],
 	["w1_09", 1, 9, "res://scenes/levels/w1/level_w1_09.tscn"],
 	["w1_10", 1, 10, "res://scenes/levels/w1/level_w1_10.tscn"],
+	# World 2 "Sunset Town" (tools/levels/build_world2.py)
+	["w2_01", 2, 1, "res://scenes/levels/w2/level_w2_01.tscn"],
+	["w2_02", 2, 2, "res://scenes/levels/w2/level_w2_02.tscn"],
+	["w2_03", 2, 3, "res://scenes/levels/w2/level_w2_03.tscn"],
+	["w2_04", 2, 4, "res://scenes/levels/w2/level_w2_04.tscn"],
+	["w2_05", 2, 5, "res://scenes/levels/w2/level_w2_05.tscn"],
+	["w2_06", 2, 6, "res://scenes/levels/w2/level_w2_06.tscn"],
+	["w2_07", 2, 7, "res://scenes/levels/w2/level_w2_07.tscn"],
+	["w2_08", 2, 8, "res://scenes/levels/w2/level_w2_08.tscn"],
+	["w2_09", 2, 9, "res://scenes/levels/w2/level_w2_09.tscn"],
+	["w2_10", 2, 10, "res://scenes/levels/w2/level_w2_10.tscn"],
 ]
 
 func _initialize() -> void:

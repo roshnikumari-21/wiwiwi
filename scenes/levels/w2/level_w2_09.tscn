@@ -1,0 +1,335 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/levels/level_base.tscn" id="1_base"]
+[ext_resource type="PackedScene" path="res://scenes/objects/ground_block.tscn" id="2_block"]
+[ext_resource type="PackedScene" path="res://scenes/objects/coin.tscn" id="3_coin"]
+[ext_resource type="PackedScene" path="res://scenes/objects/golden_yarn.tscn" id="4_yarn"]
+[ext_resource type="PackedScene" path="res://scenes/objects/checkpoint.tscn" id="5_flag"]
+[ext_resource type="PackedScene" path="res://scenes/objects/goal_girl.tscn" id="6_girl"]
+[ext_resource type="PackedScene" path="res://scenes/objects/milk_bowl.tscn" id="7_milk"]
+[ext_resource type="PackedScene" path="res://scenes/objects/spikes.tscn" id="8_spikes"]
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/slime.tscn" id="9_slime"]
+[ext_resource type="PackedScene" path="res://scenes/objects/moving_platform.tscn" id="10_plank"]
+[ext_resource type="PackedScene" path="res://scenes/objects/water.tscn" id="11_water"]
+[ext_resource type="PackedScene" path="res://scenes/objects/mushroom.tscn" id="12_mushroom"]
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/hopper_slime.tscn" id="13_hopper"]
+[ext_resource type="PackedScene" path="res://scenes/objects/crumble_tile.tscn" id="14_crumble"]
+
+[node name="LevelW2_09" instance=ExtResource("1_base")]
+level_id = "w2_09"
+start_energy = 0.4
+theme = "town"
+
+[node name="LeftWall" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(-128, -200)
+size = Vector2(128, 1500)
+theme = "town"
+
+[node name="Ground1" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(0, 900)
+size = Vector2(1700, 400)
+theme = "town"
+
+[node name="Ground2" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(3080, 900)
+size = Vector2(1500, 400)
+theme = "town"
+
+[node name="Ground3" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(4580, 900)
+size = Vector2(1130, 400)
+theme = "town"
+
+[node name="Ground4" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(5710, 220)
+size = Vector2(1200, 1080)
+theme = "town"
+
+[node name="Ground5" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(6910, 900)
+size = Vector2(1200, 400)
+theme = "town"
+
+[node name="Ground6" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(9595, 900)
+size = Vector2(1900, 400)
+theme = "town"
+
+[node name="Ground7" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(13295, 900)
+size = Vector2(1500, 400)
+theme = "town"
+
+[node name="Ground8" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(13845, 700)
+size = Vector2(300, 40)
+one_way = true
+theme = "town"
+
+[node name="Ground9" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(15145, 500)
+size = Vector2(1500, 800)
+theme = "town"
+
+[node name="Ground10" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(15395, 280)
+size = Vector2(400, 40)
+one_way = true
+theme = "town"
+
+[node name="Ground11" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(16645, 900)
+size = Vector2(1100, 400)
+theme = "town"
+
+[node name="Ground12" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(18005, 900)
+size = Vector2(900, 400)
+theme = "town"
+
+[node name="RightWall" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(18905, -200)
+size = Vector2(128, 1500)
+theme = "town"
+
+[node name="Hopper1" parent="Objects" instance=ExtResource("13_hopper")]
+position = Vector2(1200, 900)
+patrol_distance = 0.0
+
+[node name="Coin1" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(1200, 570)
+
+[node name="Spikes1" parent="Objects" instance=ExtResource("8_spikes")]
+position = Vector2(600, 900)
+long = false
+
+[node name="Coin2" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(600, 730)
+
+[node name="Water1" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(1700, 1000)
+width = 1380.0
+theme = "town"
+
+[node name="Crumble1" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(1970, 900)
+
+[node name="Coin3" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(1970, 790)
+
+[node name="Crumble2" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(2390, 900)
+
+[node name="Coin4" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(2390, 790)
+
+[node name="Crumble3" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(2810, 900)
+
+[node name="Coin5" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(2810, 790)
+
+[node name="Slime1" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(3580, 900)
+patrol_distance = 80.0
+
+[node name="Coin6" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(3580, 670)
+
+[node name="Slime2" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(4180, 900)
+patrol_distance = 70.0
+
+[node name="Coin7" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(4180, 670)
+
+[node name="Checkpoint1" parent="Objects" instance=ExtResource("5_flag")]
+position = Vector2(3230, 900)
+
+[node name="Crumble4" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(4780, 730)
+
+[node name="Coin8" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(4780, 640)
+
+[node name="Crumble5" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(5110, 560)
+
+[node name="Coin9" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(5110, 470)
+
+[node name="Crumble6" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(5440, 390)
+
+[node name="Coin10" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(5440, 300)
+
+[node name="Hopper2" parent="Objects" instance=ExtResource("13_hopper")]
+position = Vector2(6410, 220)
+patrol_distance = 40.0
+
+[node name="Coin11" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(6410, -110)
+
+[node name="Milk1" parent="Objects" instance=ExtResource("7_milk")]
+position = Vector2(7160, 900)
+
+[node name="Water2" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(8110, 1000)
+width = 1485.0
+theme = "town"
+
+[node name="Plank1" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(8250, 900)
+move_by = Vector2(330, 0)
+travel_time = 2.6
+theme = "town"
+
+[node name="Coin12" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(8415, 780)
+
+[node name="Plank2" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(8630, 900)
+move_by = Vector2(330, 0)
+travel_time = 2.6
+theme = "town"
+
+[node name="Coin13" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(8795, 780)
+
+[node name="Plank3" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(9010, 900)
+move_by = Vector2(330, 0)
+travel_time = 2.6
+theme = "town"
+
+[node name="Coin14" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(9175, 780)
+
+[node name="Hopper3" parent="Objects" instance=ExtResource("13_hopper")]
+position = Vector2(10195, 900)
+patrol_distance = 40.0
+
+[node name="Coin15" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(10195, 570)
+
+[node name="Hopper4" parent="Objects" instance=ExtResource("13_hopper")]
+position = Vector2(10995, 900)
+patrol_distance = 0.0
+
+[node name="Coin16" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(10995, 570)
+
+[node name="Checkpoint2" parent="Objects" instance=ExtResource("5_flag")]
+position = Vector2(9745, 900)
+
+[node name="Water3" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(11495, 1000)
+width = 1800.0
+theme = "town"
+
+[node name="Crumble7" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(11765, 900)
+
+[node name="Coin17" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(11765, 790)
+
+[node name="Crumble8" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(12185, 900)
+
+[node name="Coin18" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(12185, 790)
+
+[node name="Crumble9" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(12605, 900)
+
+[node name="Coin19" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(12605, 790)
+
+[node name="Crumble10" parent="Objects" instance=ExtResource("14_crumble")]
+position = Vector2(13025, 900)
+
+[node name="Coin20" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(13025, 790)
+
+[node name="Spikes2" parent="Objects" instance=ExtResource("8_spikes")]
+position = Vector2(13995, 900)
+long = true
+
+[node name="Coin21" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(13945, 640)
+
+[node name="Coin22" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(14045, 640)
+
+[node name="Milk2" parent="Objects" instance=ExtResource("7_milk")]
+position = Vector2(13495, 900)
+
+[node name="Water4" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(14795, 1000)
+width = 350.0
+theme = "town"
+
+[node name="Plank4" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(14970, 900)
+move_by = Vector2(0, -420)
+theme = "town"
+
+[node name="Coin23" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(14970, 700)
+
+[node name="Slime3" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(15645, 500)
+patrol_distance = 80.0
+
+[node name="Coin24" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(15645, 270)
+
+[node name="Slime4" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(16245, 500)
+patrol_distance = 80.0
+
+[node name="Coin25" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(16245, 270)
+
+[node name="GoldenYarn" parent="Objects" instance=ExtResource("4_yarn")]
+position = Vector2(15595, -60)
+
+[node name="Coin26" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(15455, 220)
+
+[node name="Coin27" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(15575, 220)
+
+[node name="Spikes3" parent="Objects" instance=ExtResource("8_spikes")]
+position = Vector2(17295, 900)
+long = false
+
+[node name="Coin28" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(17295, 730)
+
+[node name="Water5" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(17745, 1000)
+width = 260.0
+theme = "town"
+
+[node name="Coin29" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(17780, 740)
+
+[node name="Coin30" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(17875, 700)
+
+[node name="Coin31" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(17970, 740)
+
+[node name="Coin32" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(18155, 840)
+
+[node name="Coin33" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(18305, 840)
+
+[node name="Coin34" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(18455, 840)
+
+[node name="GoalGirl" parent="Objects" instance=ExtResource("6_girl")]
+position = Vector2(18705, 900)

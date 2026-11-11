@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="LevelData" format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/level_data.gd" id="1_bnavn"]
+
+[resource]
+script = ExtResource("1_bnavn")
+id = "w2_01"
+world = 2
+title_key = "LEVEL_W2_01_TITLE"
+scene_path = "res://scenes/levels/w2/level_w2_01.tscn"

@@ -54,6 +54,11 @@ func _audit(level: Node) -> Array[String]:
 			span = Vector2(shape.global_position.x - half, shape.global_position.x + half)
 			after = SPIKES_AFTER_LANDING
 			before = SPIKES_BEFORE_EDGE
+		elif obj.scene_file_path.ends_with("hopper_slime.tscn"):   # World 2: can hop hop_length past its path
+			var reach: float = obj.patrol_distance + obj.hop_length + 50.0
+			span = Vector2(obj.global_position.x - reach, obj.global_position.x + reach)
+			after = SLIME_AFTER_LANDING
+			before = SLIME_BEFORE_EDGE
 		elif obj.scene_file_path.ends_with("slime.tscn"):
 			span = Vector2(obj.global_position.x - obj.patrol_distance - 50.0, obj.global_position.x + obj.patrol_distance + 50.0)
 			after = SLIME_AFTER_LANDING
@@ -79,8 +84,8 @@ func _audit(level: Node) -> Array[String]:
 			break   # only the next hazard on the same height matters
 	return problems
 
-## Walks the ground from start to end: each gap or rise must be jumpable, or have a plank, a lift or
-## a mushroom that gets the cat across or up. (Numbers from player.gd: jump ~300 up / ~395 across;
+## Walks the ground from start to end: each gap or rise must be jumpable, or have a plank, a lift,
+## a mushroom or crumbling tiles (World 2) that get the cat across or up. (Numbers from player.gd: jump ~300 up / ~395 across;
 ## a tired cat still clears 300 px; a mushroom's small bounce lifts ~480 px above its cap.)
 func _path(level: Node) -> Array[String]:
 	var problems: Array[String] = []
@@ -91,8 +96,11 @@ func _path(level: Node) -> Array[String]:
 	ground.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
 	var planks := []
 	var mushrooms := []
+	var tiles := []   # World 2 crumbling roof tiles
 	for o in level.get_node("Objects").get_children():
-		if o.scene_file_path.ends_with("moving_platform.tscn"):
+		if o.scene_file_path.ends_with("crumble_tile.tscn"):
+			tiles.append(o)
+		elif o.scene_file_path.ends_with("moving_platform.tscn"):
 			planks.append(o)
 		elif o.scene_file_path.ends_with("mushroom.tscn"):
 			mushrooms.append(o)
@@ -112,6 +120,13 @@ func _path(level: Node) -> Array[String]:
 		for m in mushrooms:
 			var mx: float = m.global_position.x
 			if mx > edge - 450.0 and mx < edge and absf(m.global_position.y - a.global_position.y) < 2.0 and rise <= 440.0 and gap <= 120.0:
+				helped = true
+		# Crumbling tiles: a bridge over the gap, or a staircase whose top tile is a hop below the cliff.
+		for t in tiles:
+			var tx: float = t.global_position.x
+			if gap > 300.0 and tx > edge and tx < b.global_position.x and rise <= 0.0:
+				helped = true
+			if rise > 220.0 and tx > edge - 500.0 and tx < b.global_position.x and b.global_position.y > t.global_position.y - 220.0:
 				helped = true
 		if not helped:
 			problems.append("at x %d: gap %d px, rise %d px, nothing to get across" % [int(edge), int(gap), int(rise)])

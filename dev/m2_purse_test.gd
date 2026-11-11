@@ -25,7 +25,8 @@ func _run() -> void:
 	_check("spending takes the coins", save.spend_coins(30) and save.purse() == 8, save.purse())
 	save.load_game()
 	_check("the purse is still there after a reload", save.purse() == 8, save.purse())
-	_check("totals: 3 / 30 stars, 1 / 10 yarns", save.total_stars() == Vector2i(3, 30) and save.total_yarns() == Vector2i(1, 10), [save.total_stars(), save.total_yarns()])
+	var n: int = root.get_node("GameState").catalog.levels.size()   # every built level, all worlds
+	_check("totals: 3 / %d stars, 1 / %d yarns" % [n * 3, n], save.total_stars() == Vector2i(3, n * 3) and save.total_yarns() == Vector2i(1, n), [save.total_stars(), save.total_yarns()])
 
 	var home = load("res://ui/screens/main_menu.tscn").instantiate()
 	root.add_child(home)
@@ -33,7 +34,7 @@ func _run() -> void:
 	var texts := []
 	for label in home.find_child("TopBar", true, false).find_children("*", "Label", true, false):
 		texts.append(label.text)
-	_check("home top bar shows stars, yarns, coins", texts == ["3 / 30", "1 / 10", "8"], texts)
+	_check("home top bar shows stars, yarns, coins", texts == ["3 / %d" % (n * 3), "1 / %d" % n, "8"], texts)
 	save.add_coins(100)
 	await process_frame
 	_check("the coin pill updates when the purse changes", home.find_child("TopBar", true, false).find_children("*", "Label", true, false)[2].text == "108", "")
