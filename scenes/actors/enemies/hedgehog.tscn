@@ -1,0 +1,60 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/slime.tscn" id="1_slime"]
+[ext_resource type="Script" path="res://scenes/actors/enemies/hedgehog.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/hedgehog/hog_walk_0.png" id="3_w0"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/hedgehog/hog_walk_1.png" id="4_w1"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/hedgehog/hog_angry.png" id="5_angry"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hog"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_w0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_w1")
+}],
+"loop": true,
+"name": &"move",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_angry")
+}],
+"loop": false,
+"name": &"angry",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_angry")
+}],
+"loop": false,
+"name": &"squash",
+"speed": 1.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hogbody"]
+size = Vector2(90, 60)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hoghit"]
+size = Vector2(84, 64)
+
+[node name="Hedgehog" instance=ExtResource("1_slime")]
+script = ExtResource("2_script")
+speed = 70.0
+
+[node name="Sprite" parent="." index="0"]
+scale = Vector2(1, 1)
+sprite_frames = SubResource("SpriteFrames_hog")
+offset = Vector2(0, -52)
+
+[node name="Body" parent="." index="1"]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_hogbody")
+
+[node name="Shape" parent="Hitbox" index="0"]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_hoghit")

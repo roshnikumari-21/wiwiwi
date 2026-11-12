@@ -15,6 +15,9 @@
 
 [ext_resource type="PackedScene" path="res://scenes/objects/bump_crate.tscn" id="20_crate"]
 
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/hedgehog.tscn" id="21_hog"]
+[ext_resource type="PackedScene" path="res://scenes/objects/pinecone.tscn" id="22_cone"]
+
 [node name="ForestPreview" instance=ExtResource("1_base")]
 theme = "forest"
 level_id = "w1_03"
@@ -242,3 +245,11 @@ coins = 0
 [node name="Crate3" parent="Objects" instance=ExtResource("20_crate")]
 position = Vector2(1100, 900)
 coins = 0
+
+[node name="Hedgehog1" parent="Objects" instance=ExtResource("21_hog")]
+position = Vector2(1800, 900)
+patrol_distance = 80.0
+
+[node name="Pinecone1" parent="Objects" instance=ExtResource("22_cone")]
+position = Vector2(2750, 900)
+every = 2.5

@@ -133,10 +133,13 @@ def main():
     bodies = sorted([b for b in found if (b[2] - b[0]) > 300], key=lambda b: b[0])
     burst = [b for b in found if (b[2] - b[0]) <= 300]
     feet = max(b[3] for b in bodies)   # the frames share one ground line
-    for box, name in zip(bodies, ["hog_walk_0", "hog_walk_1", "hog_angry"]):
-        x0, y0, x1, _ = box[:4]
-        frame = hogs[y0:feet, x0:x1]
-        numbers[name] = save(scaled(to_image(frame), HOG_SCALE), ENEMIES / f"{name}.png")
+    frames = [scaled(to_image(hogs[box[1]:feet, box[0]:box[2]]), HOG_SCALE) for box in bodies]
+    # One canvas size for all three, feet on its bottom edge, body centred: they swap without jumping.
+    cw, ch = max(f.width for f in frames), max(f.height for f in frames)
+    for frame, name in zip(frames, ["hog_walk_0", "hog_walk_1", "hog_angry"]):
+        canvas = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
+        canvas.paste(frame, ((cw - frame.width) // 2, ch - frame.height))
+        numbers[name] = save(canvas, ENEMIES / f"{name}.png")
     if burst:   # the "!" lines are three pieces: keep them together as one picture
         x0, y0 = min(b[0] for b in burst), min(b[1] for b in burst)
         x1, y1 = max(b[2] for b in burst), max(b[3] for b in burst)
