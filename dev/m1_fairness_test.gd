@@ -17,8 +17,11 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var catalog = root.get_node("GameState").catalog
-	for data in catalog.levels:
-		var level = load(data.scene_path).instantiate()
+	var scenes: Array = catalog.levels.map(func(d): return [d.id, d.scene_path])
+	scenes.append(["forest_tools_demo", "res://dev/forest_tools_demo.tscn"])   # World 3's new pieces, before its levels exist
+	for row in scenes:
+		var data := {"id": row[0]}
+		var level = load(row[1]).instantiate()
 		root.add_child(level)
 		await physics_frame
 		var problems := _audit(level)
@@ -54,6 +57,14 @@ func _audit(level: Node) -> Array[String]:
 			span = Vector2(shape.global_position.x - half, shape.global_position.x + half)
 			after = SPIKES_AFTER_LANDING
 			before = SPIKES_BEFORE_EDGE
+		elif obj.scene_file_path.ends_with("hedgehog.tscn"):   # World 3: like a slime, but it can't be stomped
+			span = Vector2(obj.global_position.x - obj.patrol_distance - 50.0, obj.global_position.x + obj.patrol_distance + 50.0)
+			after = SLIME_AFTER_LANDING
+			before = SLIME_BEFORE_EDGE
+		elif obj.scene_file_path.ends_with("pinecone.tscn"):   # World 3: where it lands
+			span = Vector2(obj.global_position.x - 80.0, obj.global_position.x + 80.0)
+			after = SLIME_AFTER_LANDING
+			before = SLIME_BEFORE_EDGE
 		elif obj.scene_file_path.ends_with("hopper_slime.tscn"):   # World 2: can hop hop_length past its path
 			var reach: float = obj.patrol_distance + obj.hop_length + 50.0
 			span = Vector2(obj.global_position.x - reach, obj.global_position.x + reach)
@@ -65,6 +76,10 @@ func _audit(level: Node) -> Array[String]:
 			before = SLIME_BEFORE_EDGE
 		else:
 			continue
+		if obj.scene_file_path.ends_with("pinecone.tscn"):   # never under a walkway/ledge: its shadow is on the floor
+			for b in level.get_node("Terrain").get_children():
+				if b is GroundBlock and b.one_way and b.global_position.y < obj.global_position.y and b.global_position.x - 100.0 < obj.global_position.x and obj.global_position.x < b.global_position.x + b.size.x + 100.0:
+					problems.append("%s at x %d hangs over the ledge %s" % [obj.name, int(obj.global_position.x), b.name])
 		hazards.append([span, obj.global_position.y, obj.name])
 		for g in gaps:
 			if span.x < g[1] + after and span.y > g[1]:
@@ -128,6 +143,12 @@ func _path(level: Node) -> Array[String]:
 				helped = true
 			if rise > 220.0 and tx > edge - 500.0 and tx < b.global_position.x and b.global_position.y > t.global_position.y - 220.0:
 				helped = true
+		# A tree climb (World 3): ledges zigzag up in front of the cliff; the top one is a short hop below it.
+		for ledge in level.get_node("Terrain").get_children():
+			if ledge is GroundBlock and ledge.one_way and String(ledge.name).begins_with("Climb"):
+				var lx: float = ledge.global_position.x + ledge.size.x
+				if lx > b.global_position.x - 200.0 and lx <= b.global_position.x + 2.0 and ledge.global_position.y - b.global_position.y <= 160.0:
+					helped = true
 		if not helped:
 			problems.append("at x %d: gap %d px, rise %d px, nothing to get across" % [int(edge), int(gap), int(rise)])
 	return problems

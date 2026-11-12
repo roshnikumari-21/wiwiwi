@@ -200,6 +200,8 @@ func _load(path: String):
 		if o.scene_file_path.ends_with("moving_platform.tscn"):
 			o.set_meta("home", o.position)   # where each plank starts (levels sit at the origin)
 		coins += int(o.scene_file_path.ends_with("coin.tscn"))
+		if o.scene_file_path.ends_with("bump_crate.tscn"):   # World 3: coins inside crates count too
+			coins += o.coins
 	level.set_meta("coins", coins)
 	root.add_child(level)
 	await _frames(3)

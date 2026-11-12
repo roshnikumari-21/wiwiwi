@@ -40,6 +40,7 @@ class Level:
         self.world, self.theme = world, theme   # theme: None = meadow, or e.g. "town"
         self.x, self.h = 0, BASE
         self.blocks, self.objects = [], []          # (props), (kind, props)
+        self.tags = {}                              # block index -> name (tests find climbs and routes by it)
         self.counts = {}
 
     # --- helpers ---------------------------------------------------------------------------
@@ -181,7 +182,7 @@ class Level:
         out.append(f'\n[node name="LevelW{world}_{num}" instance=ExtResource("{ids["base"]}")]\n'
                    f'level_id = "w{world}_{num}"\nstart_energy = {self.energy}\n{theme}\n')
         walls = [(-128, -200, 128, 1500, False), (self.x, -200, 128, 1500, False)]
-        names = ["LeftWall"] + [f"Ground{i + 1}" for i in range(len(self.blocks))] + ["RightWall"]
+        names = ["LeftWall"] + [self.tags.get(i, f"Ground{i + 1}") for i in range(len(self.blocks))] + ["RightWall"]
         for name, (x, top, w, hgt, one_way) in zip(names, [walls[0]] + self.blocks + [walls[1]]):
             out.append(f'[node name="{name}" parent="Terrain" instance=ExtResource("{ids["block"]}")]\n'
                        f'position = Vector2({x}, {top})\nsize = Vector2({w}, {hgt})\n'
@@ -201,7 +202,7 @@ class Level:
                 lines.append(theme.strip())
             out.append(f'[node name="{name}" parent="Objects" instance=ExtResource("{ids[kind]}")]\n'
                        + "\n".join(lines) + "\n\n")
-        path = OUT.parent / f"w{world}" / f"level_w{world}_{num}.tscn"
+        path = getattr(self, "out_path", None) or OUT.parent / f"w{world}" / f"level_w{world}_{num}.tscn"   # a demo can write elsewhere
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("".join(out).rstrip("\n") + "\n", encoding="utf-8", newline="\n")
         self.counts = counts
