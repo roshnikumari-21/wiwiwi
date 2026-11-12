@@ -13,6 +13,7 @@ const DRIFT_SPEED := 28.0      # px per second the waves slide sideways
 const TINTS := {
 	"meadow": null,
 	"town": [Color(0.30, 0.28, 0.52), Color(0.56, 0.54, 0.80), Color(1.0, 0.82, 0.62)],   # dusky canal at sunset
+	"forest": [Color(0.14, 0.40, 0.40), Color(0.40, 0.74, 0.70), Color(0.92, 1.0, 0.86)],   # clear green-blue stream
 }
 const TINT_SHADER := preload("res://scenes/objects/water_tint.gdshader")
 
@@ -24,7 +25,7 @@ const TINT_SHADER := preload("res://scenes/objects/water_tint.gdshader")
 	set(value):
 		depth = value
 		_rebuild()
-@export_enum("meadow", "town") var theme: String = "meadow":
+@export_enum("meadow", "town", "forest") var theme: String = "meadow":
 	set(value):
 		theme = value
 		_rebuild()

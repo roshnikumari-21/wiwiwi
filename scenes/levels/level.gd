@@ -9,11 +9,12 @@ extends Node2D
 @export var fall_margin: float = 400.0       ## falling this far below the lowest ground = fell in a pit
 @export_range(0.0, 1.0) var start_energy: float = 1.0  ## the cat's energy at the start (lower = milk matters sooner)
 ## The world's look and music. The ground blocks carry the same theme (they're built in the editor).
-@export_enum("meadow", "town") var theme: String = "meadow"
+@export_enum("meadow", "town", "forest") var theme: String = "meadow"
 
 const THEMES := {
 	"meadow": {"music": "mus_world1", "background": null},   # level_base.tscn already has the meadow
 	"town": {"music": "mus_world2", "background": preload("res://scenes/levels/backgrounds/town_background.tscn")},
+	"forest": {"music": "mus_world3", "background": preload("res://scenes/levels/backgrounds/forest_background.tscn")},
 }
 
 @onready var player: Player = $Player
