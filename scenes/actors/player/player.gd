@@ -32,6 +32,10 @@ extends CharacterBody2D
 @onready var sprite: AnimatedSprite2D = $Sprite
 
 var _breath_time := 0.0
+var _trudge_time := 0.0
+const TRUDGE_STEPS := 3.2   ## heavy steps per second at full run speed
+const TRUDGE_DIP := 7.0     ## px the body sinks at each step
+const TRUDGE_SWAY := 2.5    ## degrees of side-to-side sway
 var energy := 1.0 : set = set_energy   ## 0..1; drains while moving, milk refills it
 var frozen := false     ## true when the level is over: no input, gravity only
 var _safe_left := 0.0   ## seconds of "can't be hurt" left
@@ -59,6 +63,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_breathe(delta)
+	_trudge(delta)
 
 func _physics_process(delta: float) -> void:
 	_safe_left = max(_safe_left - delta, 0.0)
@@ -121,7 +126,8 @@ func _after_move() -> void:
 		_in_jump = false
 		if _fall_peak_speed > 500.0:
 			_do_squash(Vector2(1.18, 0.82))
-			sprite.play("land")
+			if not is_tired():   # the landing pose has wide-awake eyes; tired, she keeps her sleepy face
+				sprite.play("land")
 			Fx.spawn(self, &"dust", global_position + Vector2(0, -30), 0.45)
 			AudioManager.play_sfx("sfx_land")
 		_fall_peak_speed = 0.0
@@ -130,17 +136,35 @@ func _after_move() -> void:
 func _update_animation() -> void:
 	if frozen and sprite.animation in ["cheer", "hurt"]:
 		return
+	# Tired (no energy): her sleepy face everywhere — standing, trudging and in the air.
+	var tired := is_tired()
 	if not is_on_floor():
 		# A jump keeps the leap pose up and down; "fall" is only for drops without a jump.
-		sprite.play("jump" if _in_jump or velocity.y < 0.0 else "fall")
+		if tired:
+			sprite.play("tired_air")
+		else:
+			sprite.play("jump" if _in_jump or velocity.y < 0.0 else "fall")
 	elif sprite.animation == "land" and sprite.is_playing() and abs(velocity.x) < 60.0:
 		return  # let the landing finish unless the player starts running
 	elif abs(velocity.x) > 20.0:
-		sprite.play("walk")
+		sprite.play("tired_walk" if tired else "walk")
 	else:
-		sprite.play("sleepy" if is_tired() else "idle")
+		sprite.play("sleepy" if tired else "idle")
 	# Tired legs move slower, matching the slower speed.
 	sprite.speed_scale = _speed_factor() if sprite.animation == "walk" else 1.0
+
+# Tired walking: the standing sleepy pose bobs down at each heavy step and sways a little, so she
+# trudges (there are no tired walking drawings).
+func _trudge(delta: float) -> void:
+	if sprite.animation == "tired_walk" and is_on_floor():
+		_trudge_time += delta * TRUDGE_STEPS * absf(velocity.x) / run_speed
+		var step := absf(sin(_trudge_time * PI))
+		sprite.position.y = step * TRUDGE_DIP
+		sprite.rotation = sin(_trudge_time * PI) * deg_to_rad(TRUDGE_SWAY)
+	elif _trudge_time != 0.0:
+		_trudge_time = 0.0
+		sprite.position.y = 0.0
+		sprite.rotation = 0.0
 
 # Gentle breathing while standing still, done by scaling (no extra frames, so nothing can wobble).
 func _breathe(delta: float) -> void:

@@ -9,7 +9,7 @@ layer = -10
 script = ExtResource("1_script")
 layers = {
 "Far": [0.1, 0.05, -100.0],
-"Mid": [0.3, 0.15, -15.0]
+"Mid": [0.3, 0.15, -120.0]
 }
 
 [node name="Sky" type="ColorRect" parent="."]

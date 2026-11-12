@@ -13,7 +13,7 @@ Objects (assets/art/objects): log raft (the forest's moving platform), bump crat
 hedgehog (walk A / B, angry + its "!" burst), pinecone (hanging, falling, landed).
 Background (assets/art/backgrounds/forest):
   far    - sunbeams, canopy and hazy trees (top fades into the plain sky colour)
-  mid    - big mossy trees, white gaps cut away, a light haze so they stay behind the play,
+  mid    - big mossy trees with full crowns, white cut away, a light haze so they stay behind the play,
            grass colour continued below, darkening
 
 Run:  python tools/art_pipeline/make_forest.py   (prints the numbers the game uses)
@@ -47,7 +47,7 @@ HOG_SCALE = 0.22        # hedgehog ~120 px wide, about a slime's size
 CONE_SCALE = 0.17       # pinecone ~55 px wide
 DECO_SCALE = 0.3
 FAR_SCALE = 1.45
-MID_SCALE = 1.0       # the trees are drawn big: at 1.3 a trunk filled half the screen
+MID_SCALE = 1.0       # 1774 x 887: trees about as tall as the screen
 MID_HAZE = (np.array([206.0, 226.0, 196.0]), 0.22)   # colour and strength mixed into the trees layer
 BELOW_ROWS = 700
 
@@ -162,12 +162,14 @@ def main():
     numbers["bg_far"] = save(far, BACK / "bg_far.png")
 
     # The gaps between the trees are closed in by the canopy, so they are cleared as enclosed holes too.
-    mid = remove_background(load("Whimsical Sunlit Forest Strip.png"), hole_min_area=3000)
+    # The owners' taller trees (12 Nov 2026): full crowns inside the picture, so climbing high never
+    # reaches a cut-off canopy. The gaps are closed in by branches: cleared as enclosed holes too.
+    mid = remove_background(load("Vibrant Seamless Cartoon Forest Foreground.png"), hole_min_area=3000)
     mid = np.asarray(scaled(to_image(mid), MID_SCALE)).astype(np.float32)
     mid = crossfade_wrap(mid, 60)
     colour, amount = MID_HAZE
     mid[..., :3] = mid[..., :3] * (1.0 - amount) + colour * amount
-    mid[:90, :, 3] *= np.linspace(0.0, 1.0, 90)[:, None]   # the cut-off canopy fades out at the top
+    mid[:12, :, 3] = 0   # the layer repeats upward too: keep its first rows clear
     grass = mid[-6:, :, :3].reshape(-1, 3)
     grass = grass[mid[-6:, :, 3].reshape(-1) > 200].mean(axis=0)
     below = np.zeros((BELOW_ROWS, mid.shape[1], 4), np.float32)

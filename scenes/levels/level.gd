@@ -32,6 +32,7 @@ const HURT_PAUSE := 0.7  ## seconds of the hurt pose before she reappears at the
 const SINK_PAUSE := 0.8  ## seconds of sinking after a splash before she reappears at the flag
 
 func _ready() -> void:
+	_hide_edge_walls()
 	bounds = _terrain_bounds()
 	camera.limit_left = int(bounds.position.x)
 	camera.limit_right = int(bounds.end.x)
@@ -137,12 +138,22 @@ func _go_next() -> void:
 func restart() -> void:
 	SceneTransition.change_scene(scene_file_path)
 
-## The rectangle covering all ground pieces, so the camera never shows past the level's edges.
+## The level's two edge walls stay solid (she can't walk off the level) but aren't drawn: the
+## camera stops at the ground's own ends instead (owners, 12 Nov 2026: the tall brown walls looked
+## odd, and past them the next background showed).
+func _hide_edge_walls() -> void:
+	for wall_name in ["LeftWall", "RightWall"]:
+		var wall := terrain.get_node_or_null(wall_name)
+		if wall:
+			wall.get_node("Art").hide()
+
+## The rectangle covering all ground pieces (not the edge walls), so the camera never shows past
+## the level's ends.
 func _terrain_bounds() -> Rect2:
 	var rect := Rect2()
 	var first := true
 	for piece in terrain.get_children():
-		if piece is GroundBlock:
+		if piece is GroundBlock and not String(piece.name) in ["LeftWall", "RightWall"]:
 			var r := Rect2(piece.global_position, piece.size)
 			rect = r if first else rect.merge(r)
 			first = false

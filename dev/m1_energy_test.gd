@@ -40,7 +40,7 @@ func _run() -> void:
 		await physics_frame
 		top = max(top, player.velocity.x)
 	_check("tired: top speed 65 %", abs(top - 520.0 * 0.65) < 5.0, top)
-	_check("tired: slower walk animation", player.sprite.animation == "walk" and is_equal_approx(player.sprite.speed_scale, 0.65), [player.sprite.animation, player.sprite.speed_scale])
+	_check("tired: she trudges with her sleepy face (tired_walk, body dipping)", player.sprite.animation == "tired_walk" and player._trudge_time > 0.0, [player.sprite.animation, player._trudge_time])
 	Input.action_release("move_right")
 	await _frames(30)
 	_check("tired: sleepy when standing", player.sprite.animation == "sleepy", player.sprite.animation)

@@ -140,4 +140,29 @@ animations = [{
 "loop": true,
 "name": &"sleepy",
 "speed": 2.5
+}, {
+"frames": [{
+"duration": 1.00,
+"texture": ExtResource("18_S0")
+}, {
+"duration": 1.00,
+"texture": ExtResource("18_S0")
+}, {
+"duration": 1.00,
+"texture": ExtResource("18_S0")
+}, {
+"duration": 1.00,
+"texture": ExtResource("19_S1")
+}],
+"loop": true,
+"name": &"tired_walk",
+"speed": 2.4
+}, {
+"frames": [{
+"duration": 1.00,
+"texture": ExtResource("18_S0")
+}],
+"loop": false,
+"name": &"tired_air",
+"speed": 1.0
 }]
