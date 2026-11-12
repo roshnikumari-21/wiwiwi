@@ -58,7 +58,10 @@ func _ready() -> void:
 		background.name = "Background"
 		add_child(background)
 	AudioManager.play_music(look.music)
-	GameState.begin_attempt(level_id, get_tree().get_nodes_in_group("coins").size())
+	var coin_total := get_tree().get_nodes_in_group("coins").size()
+	for crate in get_tree().get_nodes_in_group("coin_crates"):   # coins hidden in bump crates count too
+		coin_total += crate.coins
+	GameState.begin_attempt(level_id, coin_total)
 	_respawn_point = spawn.global_position
 	player.energy = start_energy
 	Events.energy_changed.emit(player.energy)

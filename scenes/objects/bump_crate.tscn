@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/objects/bump_crate.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/art/objects/crate_full.png" id="2_full"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_box"]
+size = Vector2(104, 104)
+
+[node name="BumpCrate" type="StaticBody2D"]
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("1_script")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_full")
+offset = Vector2(0, -56)
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -52)
+shape = SubResource("RectangleShape2D_box")

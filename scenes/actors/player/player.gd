@@ -68,10 +68,20 @@ func _physics_process(delta: float) -> void:
 	else:
 		_handle_jump(delta)
 		_handle_run(delta)
+	var rising := velocity.y < 0.0
 	move_and_slide()
+	if rising and is_on_ceiling():
+		_bump_head()
 	_after_move()
 	_use_energy(delta)
 	_update_animation()
+
+## Jumped into something from below: tell it (bump crates pop out a coin).
+func _bump_head() -> void:
+	for i in get_slide_collision_count():
+		var hit := get_slide_collision(i)
+		if hit.get_normal().y > 0.5 and hit.get_collider().has_method("bumped_from_below"):
+			hit.get_collider().bumped_from_below()
 
 func _apply_gravity(delta: float) -> void:
 	if is_on_floor():

@@ -13,6 +13,8 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/water.tscn" id="11_water"]
 [ext_resource type="PackedScene" path="res://scenes/objects/mushroom.tscn" id="12_mushroom"]
 
+[ext_resource type="PackedScene" path="res://scenes/objects/bump_crate.tscn" id="20_crate"]
+
 [node name="ForestPreview" instance=ExtResource("1_base")]
 theme = "forest"
 level_id = "w1_03"
@@ -227,3 +229,16 @@ position = Vector2(10005, 840)
 
 [node name="GoalGirl" parent="Objects" instance=ExtResource("6_girl")]
 position = Vector2(10255, 900)
+
+[node name="Crate1" parent="Objects" instance=ExtResource("20_crate")]
+position = Vector2(560, 700)
+coins = 3
+
+[node name="Crate2" parent="Objects" instance=ExtResource("20_crate")]
+position = Vector2(666, 700)
+milk = true
+coins = 0
+
+[node name="Crate3" parent="Objects" instance=ExtResource("20_crate")]
+position = Vector2(1100, 900)
+coins = 0
