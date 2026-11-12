@@ -26,6 +26,17 @@ const LEVELS := [
 	["w2_08", 2, 8, "res://scenes/levels/w2/level_w2_08.tscn"],
 	["w2_09", 2, 9, "res://scenes/levels/w2/level_w2_09.tscn"],
 	["w2_10", 2, 10, "res://scenes/levels/w2/level_w2_10.tscn"],
+	# World 3 "Whispering Forest" (tools/levels/build_world3.py)
+	["w3_01", 3, 1, "res://scenes/levels/w3/level_w3_01.tscn"],
+	["w3_02", 3, 2, "res://scenes/levels/w3/level_w3_02.tscn"],
+	["w3_03", 3, 3, "res://scenes/levels/w3/level_w3_03.tscn"],
+	["w3_04", 3, 4, "res://scenes/levels/w3/level_w3_04.tscn"],
+	["w3_05", 3, 5, "res://scenes/levels/w3/level_w3_05.tscn"],
+	["w3_06", 3, 6, "res://scenes/levels/w3/level_w3_06.tscn"],
+	["w3_07", 3, 7, "res://scenes/levels/w3/level_w3_07.tscn"],
+	["w3_08", 3, 8, "res://scenes/levels/w3/level_w3_08.tscn"],
+	["w3_09", 3, 9, "res://scenes/levels/w3/level_w3_09.tscn"],
+	["w3_10", 3, 10, "res://scenes/levels/w3/level_w3_10.tscn"],
 ]
 
 func _initialize() -> void:

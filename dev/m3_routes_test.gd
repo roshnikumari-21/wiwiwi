@@ -65,7 +65,8 @@ func _canopy(path: String, id: String, tag: String) -> void:
 	var walks := _blocks(level, tag + "_Walk")
 	walks.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
 	var floor_y: float = step.global_position.y + 180.0
-	var has_yarn := level.get_node("Objects").find_child("GoldenYarn", false, false) != null and absf(level.get_node("Objects/GoldenYarn").global_position.y - (walks[0].global_position.y - 120.0)) < 5.0
+	var yarn_node = level.get_node("Objects").find_child("GoldenYarn", false, false)
+	var has_yarn: bool = yarn_node != null and absf(yarn_node.global_position.y - (walks[0].global_position.y - 120.0)) < 5.0 		and yarn_node.global_position.x > walks[0].global_position.x and yarn_node.global_position.x < walks[-1].global_position.x + walks[-1].size.x   # on THIS route
 	await _place(cat, Vector2(step.global_position.x - 80.0, floor_y - 5.0))
 	var ok: bool = await _hop_to(cat, step.global_position.x + 150.0, step.global_position.y)
 	for w in walks:

@@ -101,34 +101,28 @@ size = Vector2(860, 400)
 theme = "forest"
 
 [node name="Climb1_Ledge1" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(8260, 720)
+position = Vector2(7880, 720)
 size = Vector2(220, 40)
 one_way = true
 theme = "forest"
 
 [node name="Climb1_Ledge2" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(7880, 540)
+position = Vector2(8260, 540)
 size = Vector2(220, 40)
 one_way = true
 theme = "forest"
 
-[node name="Climb1_Ledge3" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(8260, 360)
-size = Vector2(220, 40)
-one_way = true
-theme = "forest"
-
-[node name="Ground18" parent="Terrain" instance=ExtResource("2_block")]
+[node name="Ground17" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(8620, 360)
 size = Vector2(1000, 940)
 theme = "forest"
 
-[node name="Ground19" parent="Terrain" instance=ExtResource("2_block")]
+[node name="Ground18" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(9620, 900)
 size = Vector2(900, 400)
 theme = "forest"
 
-[node name="Ground20" parent="Terrain" instance=ExtResource("2_block")]
+[node name="Ground19" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(10520, 900)
 size = Vector2(900, 400)
 theme = "forest"
@@ -197,27 +191,24 @@ every = 2.2
 first_delay = 0.6
 
 [node name="Coin9" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(8370, 650)
+position = Vector2(7990, 650)
 
 [node name="Coin10" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(7990, 470)
+position = Vector2(8370, 470)
 
 [node name="Coin11" parent="Objects" instance=ExtResource("3_coin")]
-position = Vector2(8370, 290)
-
-[node name="Coin12" parent="Objects" instance=ExtResource("3_coin")]
 position = Vector2(9020, 300)
 
-[node name="Coin13" parent="Objects" instance=ExtResource("3_coin")]
+[node name="Coin12" parent="Objects" instance=ExtResource("3_coin")]
 position = Vector2(9140, 300)
 
-[node name="Coin14" parent="Objects" instance=ExtResource("3_coin")]
+[node name="Coin13" parent="Objects" instance=ExtResource("3_coin")]
 position = Vector2(10670, 840)
 
-[node name="Coin15" parent="Objects" instance=ExtResource("3_coin")]
+[node name="Coin14" parent="Objects" instance=ExtResource("3_coin")]
 position = Vector2(10820, 840)
 
-[node name="Coin16" parent="Objects" instance=ExtResource("3_coin")]
+[node name="Coin15" parent="Objects" instance=ExtResource("3_coin")]
 position = Vector2(10970, 840)
 
 [node name="GoalGirl" parent="Objects" instance=ExtResource("6_girl")]

@@ -29,7 +29,15 @@ func _run() -> void:
 	next.pressed.emit()
 	await process_frame
 	await process_frame
-	_check("▶ shows World 2: Sunset Town, ◀ shown, ▶ hidden", map.world == 2 and _name(map) == "World 2  ·  Sunset Town" and prev.visible and not next.visible, [map.world, _name(map)])
+	var last_world: int = map.WORLDS.size()
+	_check("▶ shows World 2: Sunset Town, ◀ shown (▶ only if a world follows)", map.world == 2 and _name(map) == "World 2  ·  Sunset Town" and prev.visible and next.visible == (last_world > 2), [map.world, _name(map)])
+	for w in range(3, last_world + 1):
+		next.pressed.emit()
+		await process_frame
+	_check("the last world (%d) hides ▶" % last_world, map.world == last_world and not next.visible and _spots(map).size() == 10, [map.world, next.visible])
+	for w in range(3, last_world + 1):
+		prev.pressed.emit()
+		await process_frame
 	_check("World 2 shows 10 spots, all locked for now", _spots(map).size() == 10 and _open(map) == 0, [_spots(map).size(), _open(map)])
 	_check("World 2 has its own girl and no kitten (her next level is in World 1)", map.find_children("Girl", "", true, false).size() == 1 and map.find_child("Kitten", true, false) == null, "")
 	_check("World 2 shows its own map picture", map.get_node("Map/Picture").texture.resource_path.ends_with("map_w2.png"), map.get_node("Map/Picture").texture.resource_path)

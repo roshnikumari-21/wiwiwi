@@ -25,6 +25,14 @@ const WORLDS: Array[Dictionary] = [
 		],
 		"girl": Vector2(1615, 410), "name": "WORLD_2_NAME",   # by the red-door house at the path's end
 	},
+	{
+		"picture": preload("res://assets/art/backgrounds/map/map_w3.png"),
+		"spots": [   # measured from the pads (+6 px for their thickness)
+			Vector2(113, 506), Vector2(279, 572), Vector2(442, 506), Vector2(593, 448), Vector2(738, 519),
+			Vector2(892, 600), Vector2(1064, 546), Vector2(1210, 481), Vector2(1374, 527), Vector2(1536, 458),
+		],
+		"girl": Vector2(1625, 445), "name": "WORLD_3_NAME",   # past the last pad, by the cottage
+	},
 ]
 const OPEN := preload("res://assets/art/ui/menu/level_open.png")
 const LOCKED := preload("res://assets/art/ui/menu/level_locked.png")

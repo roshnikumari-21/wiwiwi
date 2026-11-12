@@ -147,7 +147,7 @@ func _path(level: Node) -> Array[String]:
 		for ledge in level.get_node("Terrain").get_children():
 			if ledge is GroundBlock and ledge.one_way and String(ledge.name).begins_with("Climb"):
 				var lx: float = ledge.global_position.x + ledge.size.x
-				if lx > b.global_position.x - 200.0 and lx <= b.global_position.x + 2.0 and ledge.global_position.y - b.global_position.y <= 160.0:
+				if lx > b.global_position.x - 200.0 and lx <= b.global_position.x + 2.0 and ledge.global_position.y - b.global_position.y <= 200.0 and ledge.global_position.y > b.global_position.y:
 					helped = true
 		if not helped:
 			problems.append("at x %d: gap %d px, rise %d px, nothing to get across" % [int(edge), int(gap), int(rise)])
