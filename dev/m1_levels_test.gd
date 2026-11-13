@@ -98,13 +98,50 @@ func _crossings(data) -> void:
 	var probe2 = load(data.scene_path).instantiate()
 	var ices: Array = probe2.get_node("Terrain").get_children().filter(func(b): return b is GroundBlock and b.theme == "ice" and not b.one_way)
 	var ice_names: Array = ices.map(func(b): return String(b.name))
+	var penguins: Array = probe2.get_node("Objects").get_children().filter(func(o): return o.scene_file_path.ends_with("penguin.tscn")).map(func(o): return String(o.name))
 	probe2.free()
+	for p_name in penguins:
+		await _penguin_pass(id, data.scene_path, p_name)
 	for ice_name in ice_names:
 		var level = await _load(data.scene_path)
 		await _frames(80)
 		await _ice_crossing(id, level.get_node("Terrain/" + ice_name), level.get_node("Player"))
 		level.queue_free()
 		await _frames(2)
+
+## World 4: run at a penguin like a player, from before its path, and jump it when it's 150-260 px
+## ahead (whether it waddles, warns or slides at her). Tried at 3 moments of its rhythm; she must get
+## past its path with no heart lost (stomping it on the way is fine).
+func _penguin_pass(id: String, path: String, name: String) -> void:
+	var fails := []
+	for wait in [10, 70, 130]:
+		var level = await _load(path)
+		await _frames(80 + wait)
+		var player = level.get_node("Player")
+		var pg = level.get_node("Objects/" + name)
+		var gs = root.get_node("GameState")
+		gs.hearts = 3
+		var home: float = pg._home_x
+		var reach: float = pg.patrol_distance + 100.0
+		await _place(player, Vector2(home - reach - 350.0, pg.global_position.y - 5.0))
+		Input.action_press("move_right")
+		for i in 600:
+			await physics_frame
+			if player.global_position.x > home + reach + 150.0:
+				break
+			if is_instance_valid(pg) and not pg._squashed and player.is_on_floor():
+				var ahead: float = pg.global_position.x - player.global_position.x
+				if ahead > 150.0 and ahead < 260.0:
+					Input.action_press("jump")
+					await _frames(22)
+					Input.action_release("jump")
+		Input.action_release("move_right")
+		await _frames(10)
+		if gs.hearts < 3:
+			fails.append(wait)
+		level.queue_free()
+		await _frames(2)
+	_check("%s: past %s (3 timings), no heart lost" % [id, name], fails.is_empty(), fails)
 
 ## World 4: start at the beginning of an ice stretch, run across it at full speed like a player
 ## (jumping a slime or penguin when it's 160-240 px ahead), let go at the ice's end and slide to a stop.

@@ -65,7 +65,26 @@ def level_1():
     return L
 
 
-LEVELS = [level_1]
+def level_2():
+    L = SnowLevel(2, "Penguin Parade", 0.7)   # meet the sliding penguins: one at a time, then pairs
+    L.flat(1500, crates=[(700, 200, 2, False)], coins=(300, 420))
+    L.flat(1600, penguins=[(900, 200)])                    # the first penguin: watch it waddle, warn, slide
+    L.gap(220)
+    L.flat(1500, slimes=[(700, 80)], flag=150)
+    L.ice(1400, coins=(300, 600, 900, 1200))
+    L.flat(1800, penguins=[(480, 150), (1300, 150)])       # two penguins, sliding at different times
+    L.planks(2)                                          # ice floes over the frozen lake
+    L.flat(1500, milk=300, flag=1000, crates=[(600, 200, 0, True)])
+    L.hill(2, 150, 1100, penguins=[(550, 150)])            # a penguin up on the hilltop
+    L.ice(1300, slimes=[(700, 60)])
+    L.flat(2000, penguins=[(1000, 320)], flag=150)         # the long slide: a whole stretch to time
+    L.gap(240)
+    L.flat(1300, crates=[(500, 200, 3, False)], bridge=(700, 400), yarn=(900, 560))
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2]
 
 if __name__ == "__main__":
     for make in LEVELS:
