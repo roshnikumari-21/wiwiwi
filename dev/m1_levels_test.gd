@@ -5,7 +5,7 @@ extends SceneTree
 ##  - every crossing is actually ridden or jumped like a player would, with no heart lost:
 ##    sliding-plank chains, bobbing planks over rivers, diagonal planks, lifts and mushroom cliffs,
 ##    and World 2's crumbling roof tiles (bridges over the canal, staircases up to a ledge).
-## Run: godot --headless --path . --script res://dev/m1_levels_test.gd
+## Run: godot --headless --path . --script res://dev/m1_levels_test.gd   [-- w4_01 ...  to check only some]
 
 var _fails := 0
 var _completed := false
@@ -17,7 +17,10 @@ func _run() -> void:
 	var gs = root.get_node("GameState")
 	root.get_node("Events").level_completed.connect(func(_s, _c, _t, _y): _completed = true)
 	var levels: Array = gs.catalog.levels
+	var only: Array = Array(OS.get_cmdline_user_args())   # e.g. `-- w4_01`: check just those levels (by id prefix)
 	for data in levels:
+		if not only.is_empty() and not only.any(func(p): return data.id.begins_with(p)):
+			continue
 		var level = await _load(data.scene_path)
 		var coins: int = level.get_meta("coins")
 		_check("%s: loads, %d coins counted" % [data.id, coins], gs.coin_total == coins and coins > 0 and gs.current_level_id == data.id, gs.coin_total)
@@ -37,8 +40,12 @@ func _run() -> void:
 		_check("%s: finished at the girl" % data.id, _completed, "")
 		var menu = level.get_node("Hud/SafeArea/Hud").menu
 		var last: bool = data.is_reunion   # the world's last level
-		_check("%s: %s" % [data.id, "World %d complete card" % data.world if last else "Next level button"],
-			(menu.find_child("WorldStars", true, false) != null) if last else (menu.find_child("RESULT_NEXT", true, false) != null), "")
+		if last:
+			_check("%s: World %d complete card" % [data.id, data.world], menu.find_child("WorldStars", true, false) != null, "")
+		elif gs.catalog.next_after(data.id) != null:
+			_check("%s: Next level button" % data.id, menu.find_child("RESULT_NEXT", true, false) != null, "")
+		else:   # the newest level built so far (its world is still being made): no Next yet
+			_check("%s: no Next button yet (newest level)" % data.id, menu.find_child("RESULT_NEXT", true, false) == null, "")
 		level.queue_free()
 		await _frames(2)
 	print("RESULT: %s" % ("ALL PASS" if _fails == 0 else "%d FAILED" % _fails))
@@ -88,6 +95,46 @@ func _crossings(data) -> void:
 		await _crumble_crossing(id, chain, level.get_node("Player"))
 		level.queue_free()
 		await _frames(2)
+	var probe2 = load(data.scene_path).instantiate()
+	var ices: Array = probe2.get_node("Terrain").get_children().filter(func(b): return b is GroundBlock and b.theme == "ice" and not b.one_way)
+	var ice_names: Array = ices.map(func(b): return String(b.name))
+	probe2.free()
+	for ice_name in ice_names:
+		var level = await _load(data.scene_path)
+		await _frames(80)
+		await _ice_crossing(id, level.get_node("Terrain/" + ice_name), level.get_node("Player"))
+		level.queue_free()
+		await _frames(2)
+
+## World 4: start at the beginning of an ice stretch, run across it at full speed like a player
+## (jumping a slime or penguin when it's 160-240 px ahead), let go at the ice's end and slide to a stop.
+## She must stay up on the snow after it (not slide into a gap) with no heart lost.
+func _ice_crossing(id: String, ice, player) -> void:
+	var gs = root.get_node("GameState")
+	gs.hearts = 3
+	var start: float = ice.global_position.x
+	var end: float = ice.global_position.x + ice.size.x
+	await _place(player, Vector2(start + 30.0, ice.global_position.y - 5.0))   # (a pond may come right before it)
+	Input.action_press("move_right")
+	for i in 600:
+		await physics_frame
+		if player.global_position.x > end:
+			break
+		if player.is_on_floor():
+			for e in root.get_tree().get_nodes_in_group("enemies"):
+				var ahead: float = e.global_position.x - player.global_position.x
+				if is_instance_valid(e) and ahead > 160.0 and ahead < 240.0 and absf(e.global_position.y - player.global_position.y) < 40.0:
+					Input.action_press("jump")
+					await _frames(22)
+					Input.action_release("jump")
+					break
+	Input.action_release("move_right")
+	for i in 240:
+		await physics_frame
+		if player.is_on_floor() and absf(player.velocity.x) < 1.0:
+			break
+	var ok: bool = player.is_on_floor() and absf(player.global_position.y - ice.global_position.y) < 6.0 and gs.hearts == 3
+	_check("%s: across the ice at x %d at full speed, slid to a stop on the snow, no heart lost" % [id, int(start)], ok, [player.global_position, gs.hearts])
 
 ## Like a player: from just before the first tile, hop from tile to tile without stopping (each one
 ## breaks half a second after she lands) and land on the far side: the shore, or the ledge at the

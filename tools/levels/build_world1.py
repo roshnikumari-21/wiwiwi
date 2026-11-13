@@ -41,6 +41,7 @@ class Level:
         self.x, self.h = 0, BASE
         self.blocks, self.objects = [], []          # (props), (kind, props)
         self.tags = {}                              # block index -> name (tests find climbs and routes by it)
+        self.block_themes = {}                      # block index -> a theme other than the level's (e.g. "ice")
         self.counts = {}
 
     # --- helpers ---------------------------------------------------------------------------
@@ -183,10 +184,11 @@ class Level:
                    f'level_id = "w{world}_{num}"\nstart_energy = {self.energy}\n{theme}\n')
         walls = [(-128, -200, 128, 1500, False), (self.x, -200, 128, 1500, False)]
         names = ["LeftWall"] + [self.tags.get(i, f"Ground{i + 1}") for i in range(len(self.blocks))] + ["RightWall"]
-        for name, (x, top, w, hgt, one_way) in zip(names, [walls[0]] + self.blocks + [walls[1]]):
+        for n, (name, (x, top, w, hgt, one_way)) in enumerate(zip(names, [walls[0]] + self.blocks + [walls[1]])):
+            own = self.block_themes.get(n - 1)   # n - 1: the left wall comes first
             out.append(f'[node name="{name}" parent="Terrain" instance=ExtResource("{ids["block"]}")]\n'
                        f'position = Vector2({x}, {top})\nsize = Vector2({w}, {hgt})\n'
-                       + ("one_way = true\n" if one_way else "") + theme + "\n")
+                       + ("one_way = true\n" if one_way else "") + (f'theme = "{own}"\n' if own else theme) + "\n")
         counts = {}
         for kind, x, y, props in self.objects:
             counts[kind] = counts.get(kind, 0) + 1
@@ -197,6 +199,8 @@ class Level:
                     v = f"Vector2({v[0]}, {v[1]})"
                 elif isinstance(v, bool):
                     v = "true" if v else "false"
+                elif isinstance(v, str):
+                    v = f'"{v}"'
                 lines.append(f"{k} = {v}")
             if theme and kind in ("plank", "water"):
                 lines.append(theme.strip())
