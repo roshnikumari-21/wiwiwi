@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="LevelData" format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/level_data.gd" id="1_fsfv5"]
+
+[resource]
+script = ExtResource("1_fsfv5")
+id = "w4_09"
+world = 4
+index = 9
+title_key = "LEVEL_W4_09_TITLE"
+scene_path = "res://scenes/levels/w4/level_w4_09.tscn"

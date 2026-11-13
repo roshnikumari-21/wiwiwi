@@ -10,6 +10,8 @@ extends Node2D
 @export_range(0.0, 1.0) var start_energy: float = 1.0  ## the cat's energy at the start (lower = milk matters sooner)
 ## The world's look and music. The ground blocks carry the same theme (they're built in the editor).
 @export_enum("meadow", "town", "forest", "snow") var theme: String = "meadow"
+## A special sky for one level: "aurora" = World 4's night with the northern lights and heavy snowfall.
+@export_enum("day", "aurora") var sky: String = "day"
 
 const THEMES := {
 	"meadow": {"music": "mus_world1", "background": null},   # level_base.tscn already has the meadow
@@ -58,6 +60,8 @@ func _ready() -> void:
 		old.queue_free()
 		var background: Node = look.background.instantiate()
 		background.name = "Background"
+		if sky == "aurora":
+			_aurora_night(background)
 		add_child(background)
 	AudioManager.play_music(look.music)
 	var coin_total := get_tree().get_nodes_in_group("coins").size()
@@ -159,3 +163,26 @@ func _terrain_bounds() -> Rect2:
 			rect = r if first else rect.merge(r)
 			first = false
 	return rect
+
+## The aurora night (set up before the background enters the tree): the far layer darkened with the
+## northern lights waving in its sky, the trees and the sky colour in moonlit blue, heavy snowfall,
+## and the level itself a little bluer so it sits in the night (the cat and HUD stay easy to read).
+func _aurora_night(background: Node) -> void:
+	var far := background.get_node_or_null("Far")
+	if far:
+		var mat := ShaderMaterial.new()
+		mat.shader = preload("res://scenes/levels/backgrounds/aurora_night.gdshader")
+		far.material = mat
+	var mid := background.get_node_or_null("Mid")
+	if mid:
+		mid.modulate = Color(0.48, 0.53, 0.8)
+	var sky_rect := background.get_node_or_null("Sky")
+	if sky_rect:
+		sky_rect.color = Color(0.1, 0.12, 0.26)
+	var flakes := background.get_node_or_null("Snowfall/Flakes")
+	if flakes:
+		flakes.heavy = true
+	var tint := CanvasModulate.new()
+	tint.name = "NightTint"
+	tint.color = Color(0.8, 0.84, 1.0)
+	add_child(tint)

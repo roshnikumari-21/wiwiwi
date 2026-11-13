@@ -332,7 +332,36 @@ def level_8():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7, level_8]
+def level_9():
+    L = SnowLevel(9, "Aurora Pass", 0.65)   # the hardest: at night under the aurora, heavy snow, fewer rests
+    L.level_props["sky"] = "aurora"
+    L.flat(1200, crates=[(650, 200, 2, False)], coins=(330, 450))
+    L.ledge_hop(4)
+    L.flat(450, milk=200)                                # one small island...
+    L.thin_ice(3)                                        # ...then straight onto thin ice
+    L.flat(1750, penguins=[(550, 120), (1300, 120)], flag=150)   # two penguins on one stretch
+    L.icicle_arch(3000, icicles=[(0, 1.8, 0), (1, 1.8, 0.9), (2, 1.8, 0.3), (3, 1.8, 1.2)],
+                  coins=8, yarn=True)                    # four icicles on a fast rhythm; the yarn up top
+    L.gap(240)
+    L.flat(1100, flag=150, milk=700)
+    L.planks(3)
+    L.flat(1000, slimes=[(600, 80)])
+    L.tree_climb(720, 800, flag=300)                     # the tallest glacier
+    L.ice(1000, coins=(250, 500, 750))
+    L.flat(900, penguins=[(450, 120)], milk=800)         # a penguin on the glacier top
+    L.ice_descent(4, 180, 400, slimes={1: [(330, 40)], 3: [(330, 40)]})   # down, slimes on two terraces
+    L.flat(1200, flag=150, crates=[(600, 200, 3, False)])
+    L.bobbers(3)
+    L.flat(450, coins=(225,))
+    L.thin_ice(4)                                        # the long thin-ice run once more
+    L.flat(1200, penguins=[(700, 150)])
+    L.gap(240)
+    L.flat(1100, crates=[(400, 200, 2, False), (504, 200, 0, True)])
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7, level_8, level_9]
 
 if __name__ == "__main__":
     for make in LEVELS:

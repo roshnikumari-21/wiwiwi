@@ -43,6 +43,7 @@ class Level:
         self.tags = {}                              # block index -> name (tests find climbs and routes by it)
         self.block_themes = {}                      # block index -> a theme other than the level's (e.g. "ice")
         self.plain = set()                          # block indexes drawn without decorations (decorate = false)
+        self.level_props = {}                       # extra properties on the level node (e.g. sky = "aurora")
         self.counts = {}
 
     # --- helpers ---------------------------------------------------------------------------
@@ -182,7 +183,8 @@ class Level:
         world = self.world
         theme = f'theme = "{self.theme}"\n' if self.theme else ""   # on the level, its ground, planks and water
         out.append(f'\n[node name="LevelW{world}_{num}" instance=ExtResource("{ids["base"]}")]\n'
-                   f'level_id = "w{world}_{num}"\nstart_energy = {self.energy}\n{theme}\n')
+                   f'level_id = "w{world}_{num}"\nstart_energy = {self.energy}\n{theme}'
+                   + "".join(f'{k} = "{v}"\n' for k, v in self.level_props.items()) + "\n")
         walls = [(-128, -200, 128, 1500, False), (self.x, -200, 128, 1500, False)]
         names = ["LeftWall"] + [self.tags.get(i, f"Ground{i + 1}") for i in range(len(self.blocks))] + ["RightWall"]
         for n, (name, (x, top, w, hgt, one_way)) in enumerate(zip(names, [walls[0]] + self.blocks + [walls[1]])):

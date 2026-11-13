@@ -1,0 +1,593 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/levels/level_base.tscn" id="1_base"]
+[ext_resource type="PackedScene" path="res://scenes/objects/ground_block.tscn" id="2_block"]
+[ext_resource type="PackedScene" path="res://scenes/objects/coin.tscn" id="3_coin"]
+[ext_resource type="PackedScene" path="res://scenes/objects/golden_yarn.tscn" id="4_yarn"]
+[ext_resource type="PackedScene" path="res://scenes/objects/checkpoint.tscn" id="5_flag"]
+[ext_resource type="PackedScene" path="res://scenes/objects/goal_girl.tscn" id="6_girl"]
+[ext_resource type="PackedScene" path="res://scenes/objects/milk_bowl.tscn" id="7_milk"]
+[ext_resource type="PackedScene" path="res://scenes/objects/spikes.tscn" id="8_spikes"]
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/blue_slime.tscn" id="9_slime"]
+[ext_resource type="PackedScene" path="res://scenes/objects/moving_platform.tscn" id="10_plank"]
+[ext_resource type="PackedScene" path="res://scenes/objects/water.tscn" id="11_water"]
+[ext_resource type="PackedScene" path="res://scenes/objects/mushroom.tscn" id="12_mushroom"]
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/hedgehog.tscn" id="13_hedgehog"]
+[ext_resource type="PackedScene" path="res://scenes/objects/pinecone.tscn" id="14_cone"]
+[ext_resource type="PackedScene" path="res://scenes/objects/bump_crate.tscn" id="15_crate"]
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/penguin.tscn" id="16_penguin"]
+[ext_resource type="PackedScene" path="res://scenes/objects/crumble_tile.tscn" id="17_crumble"]
+
+[node name="LevelW4_09" instance=ExtResource("1_base")]
+level_id = "w4_09"
+start_energy = 0.65
+theme = "snow"
+sky = "aurora"
+
+[node name="LeftWall" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(-128, -200)
+size = Vector2(128, 1500)
+theme = "snow"
+
+[node name="Ground1" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(0, 900)
+size = Vector2(1200, 400)
+theme = "snow"
+
+[node name="Hop1_Ledge1" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(1330, 820)
+size = Vector2(260, 40)
+one_way = true
+theme = "snow"
+
+[node name="Hop1_Ledge2" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(1720, 900)
+size = Vector2(260, 40)
+one_way = true
+theme = "snow"
+
+[node name="Hop1_Ledge3" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(2110, 820)
+size = Vector2(260, 40)
+one_way = true
+theme = "snow"
+
+[node name="Hop1_Ledge4" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(2500, 900)
+size = Vector2(260, 40)
+one_way = true
+theme = "snow"
+
+[node name="Ground6" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(2890, 900)
+size = Vector2(450, 400)
+theme = "snow"
+
+[node name="Ground7" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(4720, 900)
+size = Vector2(1750, 400)
+theme = "snow"
+
+[node name="Canopy1_Step" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(6620, 720)
+size = Vector2(220, 40)
+one_way = true
+theme = "snow"
+
+[node name="Canopy1_Walk1" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(6940, 540)
+size = Vector2(460, 40)
+one_way = true
+theme = "snow"
+decorate = false
+
+[node name="Canopy1_Walk2" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(7540, 540)
+size = Vector2(460, 40)
+one_way = true
+theme = "snow"
+decorate = false
+
+[node name="Canopy1_Walk3" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(8140, 540)
+size = Vector2(460, 40)
+one_way = true
+theme = "snow"
+decorate = false
+
+[node name="Canopy1_Walk4" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(8740, 540)
+size = Vector2(380, 40)
+one_way = true
+theme = "snow"
+decorate = false
+
+[node name="Ground13" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(6470, 900)
+size = Vector2(3000, 400)
+theme = "snow"
+
+[node name="Ground14" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(9710, 900)
+size = Vector2(1100, 400)
+theme = "snow"
+
+[node name="Ground15" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(12295, 900)
+size = Vector2(1000, 400)
+theme = "snow"
+
+[node name="Ground16" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(13295, 900)
+size = Vector2(860, 400)
+theme = "snow"
+
+[node name="Climb1_Ledge1" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(13795, 720)
+size = Vector2(220, 40)
+one_way = true
+theme = "snow"
+
+[node name="Climb1_Ledge2" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(13415, 540)
+size = Vector2(220, 40)
+one_way = true
+theme = "snow"
+
+[node name="Climb1_Ledge3" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(13795, 360)
+size = Vector2(220, 40)
+one_way = true
+theme = "snow"
+
+[node name="Ground20" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(14155, 180)
+size = Vector2(800, 1120)
+theme = "snow"
+
+[node name="Ground21" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(14955, 180)
+size = Vector2(1000, 1120)
+theme = "ice"
+
+[node name="Ground22" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(15955, 180)
+size = Vector2(400, 1120)
+theme = "snow"
+
+[node name="Ground23" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(16355, 180)
+size = Vector2(900, 1120)
+theme = "snow"
+
+[node name="Ground24" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(17255, 360)
+size = Vector2(400, 940)
+theme = "ice"
+
+[node name="Ground25" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(17655, 360)
+size = Vector2(400, 940)
+theme = "snow"
+
+[node name="Ground26" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(18055, 540)
+size = Vector2(400, 760)
+theme = "ice"
+
+[node name="Ground27" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(18455, 540)
+size = Vector2(400, 760)
+theme = "snow"
+
+[node name="Ground28" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(18855, 720)
+size = Vector2(400, 580)
+theme = "ice"
+
+[node name="Ground29" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(19255, 720)
+size = Vector2(400, 580)
+theme = "snow"
+
+[node name="Ground30" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(19655, 900)
+size = Vector2(400, 400)
+theme = "ice"
+
+[node name="Ground31" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(20055, 900)
+size = Vector2(400, 400)
+theme = "snow"
+
+[node name="Ground32" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(20455, 900)
+size = Vector2(1200, 400)
+theme = "snow"
+
+[node name="Ground33" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(22920, 900)
+size = Vector2(450, 400)
+theme = "snow"
+
+[node name="Ground34" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(25170, 900)
+size = Vector2(1200, 400)
+theme = "snow"
+
+[node name="Ground35" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(26610, 900)
+size = Vector2(1100, 400)
+theme = "snow"
+
+[node name="Ground36" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(27710, 900)
+size = Vector2(1100, 400)
+theme = "snow"
+
+[node name="RightWall" parent="Terrain" instance=ExtResource("2_block")]
+position = Vector2(28810, -200)
+size = Vector2(128, 1500)
+theme = "snow"
+
+[node name="Crate1" parent="Objects" instance=ExtResource("15_crate")]
+position = Vector2(650, 700)
+coins = 2
+milk = false
+look = "gift"
+
+[node name="Coin1" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(330, 840)
+
+[node name="Coin2" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(450, 840)
+
+[node name="Water1" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(1200, 1000)
+width = 1690.0
+theme = "snow"
+
+[node name="Coin3" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(1460, 730)
+
+[node name="Coin4" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(1850, 810)
+
+[node name="Coin5" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(2240, 730)
+
+[node name="Coin6" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(2630, 810)
+
+[node name="Milk1" parent="Objects" instance=ExtResource("7_milk")]
+position = Vector2(3090, 900)
+
+[node name="Water2" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(3340, 1000)
+width = 1380.0
+theme = "snow"
+
+[node name="Crumble1" parent="Objects" instance=ExtResource("17_crumble")]
+position = Vector2(3610, 900)
+look = "ice"
+
+[node name="Coin7" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(3610, 790)
+
+[node name="Crumble2" parent="Objects" instance=ExtResource("17_crumble")]
+position = Vector2(4030, 900)
+look = "ice"
+
+[node name="Coin8" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(4030, 790)
+
+[node name="Crumble3" parent="Objects" instance=ExtResource("17_crumble")]
+position = Vector2(4450, 900)
+look = "ice"
+
+[node name="Coin9" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(4450, 790)
+
+[node name="Penguin1" parent="Objects" instance=ExtResource("16_penguin")]
+position = Vector2(5270, 900)
+patrol_distance = 120.0
+
+[node name="Coin10" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(5270, 570)
+
+[node name="Penguin2" parent="Objects" instance=ExtResource("16_penguin")]
+position = Vector2(6020, 900)
+patrol_distance = 120.0
+
+[node name="Coin11" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(6020, 570)
+
+[node name="Checkpoint1" parent="Objects" instance=ExtResource("5_flag")]
+position = Vector2(4870, 900)
+
+[node name="Coin12" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(7060, 460)
+
+[node name="Coin13" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(7332, 460)
+
+[node name="Coin14" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(7605, 460)
+
+[node name="Coin15" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(7878, 460)
+
+[node name="Coin16" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(8150, 460)
+
+[node name="Coin17" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(8422, 460)
+
+[node name="Coin18" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(8695, 460)
+
+[node name="Coin19" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(8968, 460)
+
+[node name="GoldenYarn" parent="Objects" instance=ExtResource("4_yarn")]
+position = Vector2(9000, 420)
+
+[node name="Cone1" parent="Objects" instance=ExtResource("14_cone")]
+position = Vector2(7170, 900)
+look = "icicle"
+height = 281.0
+every = 1.8
+first_delay = 0.0
+
+[node name="Cone2" parent="Objects" instance=ExtResource("14_cone")]
+position = Vector2(7770, 900)
+look = "icicle"
+height = 281.0
+every = 1.8
+first_delay = 0.9
+
+[node name="Cone3" parent="Objects" instance=ExtResource("14_cone")]
+position = Vector2(8370, 900)
+look = "icicle"
+height = 281.0
+every = 1.8
+first_delay = 0.3
+
+[node name="Cone4" parent="Objects" instance=ExtResource("14_cone")]
+position = Vector2(8930, 900)
+look = "icicle"
+height = 281.0
+every = 1.8
+first_delay = 1.2
+
+[node name="Water3" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(9470, 1000)
+width = 240.0
+theme = "snow"
+
+[node name="Coin20" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(9500, 740)
+
+[node name="Coin21" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(9590, 700)
+
+[node name="Coin22" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(9680, 740)
+
+[node name="Milk2" parent="Objects" instance=ExtResource("7_milk")]
+position = Vector2(10410, 900)
+
+[node name="Checkpoint2" parent="Objects" instance=ExtResource("5_flag")]
+position = Vector2(9860, 900)
+
+[node name="Water4" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(10810, 1000)
+width = 1485.0
+theme = "snow"
+
+[node name="Plank1" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(10950, 900)
+move_by = Vector2(330, 0)
+travel_time = 2.6
+theme = "snow"
+
+[node name="Coin23" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(11115, 780)
+
+[node name="Plank2" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(11330, 900)
+move_by = Vector2(330, 0)
+travel_time = 2.6
+theme = "snow"
+
+[node name="Coin24" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(11495, 780)
+
+[node name="Plank3" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(11710, 900)
+move_by = Vector2(330, 0)
+travel_time = 2.6
+theme = "snow"
+
+[node name="Coin25" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(11875, 780)
+
+[node name="Slime1" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(12895, 900)
+patrol_distance = 80.0
+
+[node name="Coin26" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(12895, 670)
+
+[node name="Coin27" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(13905, 650)
+
+[node name="Coin28" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(13525, 470)
+
+[node name="Coin29" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(13905, 290)
+
+[node name="Checkpoint3" parent="Objects" instance=ExtResource("5_flag")]
+position = Vector2(14455, 180)
+
+[node name="Coin30" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(15205, 120)
+
+[node name="Coin31" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(15455, 120)
+
+[node name="Coin32" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(15705, 120)
+
+[node name="Penguin3" parent="Objects" instance=ExtResource("16_penguin")]
+position = Vector2(16805, 180)
+patrol_distance = 120.0
+
+[node name="Coin33" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(16805, -150)
+
+[node name="Milk3" parent="Objects" instance=ExtResource("7_milk")]
+position = Vector2(17155, 180)
+
+[node name="Coin34" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(17455, 300)
+
+[node name="Slime2" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(18385, 540)
+patrol_distance = 40.0
+
+[node name="Coin35" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(18385, 310)
+
+[node name="Coin36" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(19055, 660)
+
+[node name="Slime3" parent="Objects" instance=ExtResource("9_slime")]
+position = Vector2(19985, 900)
+patrol_distance = 40.0
+
+[node name="Coin37" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(19985, 670)
+
+[node name="Crate2" parent="Objects" instance=ExtResource("15_crate")]
+position = Vector2(21055, 700)
+coins = 3
+milk = false
+look = "gift"
+
+[node name="Checkpoint4" parent="Objects" instance=ExtResource("5_flag")]
+position = Vector2(20605, 900)
+
+[node name="Water5" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(21655, 1000)
+width = 1265.0
+theme = "snow"
+
+[node name="Plank4" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(21795, 900)
+move_by = Vector2(0, -220)
+travel_time = 1.6
+theme = "snow"
+
+[node name="Coin38" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(21795, 600)
+
+[node name="Plank5" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(22215, 900)
+move_by = Vector2(0, -220)
+travel_time = 1.6
+theme = "snow"
+
+[node name="Coin39" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(22215, 600)
+
+[node name="Plank6" parent="Objects" instance=ExtResource("10_plank")]
+position = Vector2(22635, 900)
+move_by = Vector2(0, -220)
+travel_time = 1.6
+theme = "snow"
+
+[node name="Coin40" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(22635, 600)
+
+[node name="Coin41" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(23145, 840)
+
+[node name="Water6" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(23370, 1000)
+width = 1800.0
+theme = "snow"
+
+[node name="Crumble4" parent="Objects" instance=ExtResource("17_crumble")]
+position = Vector2(23640, 900)
+look = "ice"
+
+[node name="Coin42" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(23640, 790)
+
+[node name="Crumble5" parent="Objects" instance=ExtResource("17_crumble")]
+position = Vector2(24060, 900)
+look = "ice"
+
+[node name="Coin43" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(24060, 790)
+
+[node name="Crumble6" parent="Objects" instance=ExtResource("17_crumble")]
+position = Vector2(24480, 900)
+look = "ice"
+
+[node name="Coin44" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(24480, 790)
+
+[node name="Crumble7" parent="Objects" instance=ExtResource("17_crumble")]
+position = Vector2(24900, 900)
+look = "ice"
+
+[node name="Coin45" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(24900, 790)
+
+[node name="Penguin4" parent="Objects" instance=ExtResource("16_penguin")]
+position = Vector2(25870, 900)
+patrol_distance = 150.0
+
+[node name="Coin46" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(25870, 570)
+
+[node name="Water7" parent="Objects" instance=ExtResource("11_water")]
+position = Vector2(26370, 1000)
+width = 240.0
+theme = "snow"
+
+[node name="Coin47" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(26400, 740)
+
+[node name="Coin48" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(26490, 700)
+
+[node name="Coin49" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(26580, 740)
+
+[node name="Crate3" parent="Objects" instance=ExtResource("15_crate")]
+position = Vector2(27010, 700)
+coins = 2
+milk = false
+look = "gift"
+
+[node name="Crate4" parent="Objects" instance=ExtResource("15_crate")]
+position = Vector2(27114, 700)
+coins = 0
+milk = true
+look = "gift"
+
+[node name="Coin50" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(27860, 840)
+
+[node name="Coin51" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(28010, 840)
+
+[node name="Coin52" parent="Objects" instance=ExtResource("3_coin")]
+position = Vector2(28160, 840)
+
+[node name="GoalGirl" parent="Objects" instance=ExtResource("6_girl")]
+position = Vector2(28610, 900)
