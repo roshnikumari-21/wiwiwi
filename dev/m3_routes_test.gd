@@ -3,6 +3,8 @@ extends SceneTree
 ##  - tree climb: from the floor, hop up each zigzag ledge in turn, then onto the cliff top
 ##  - two routes: hop onto the entry step, up to the walkways, run along hopping the gaps to the end
 ##    (collecting the Golden Yarn if it's up there), never dropping to the floor, no heart lost
+##  - World 4's sky route: the same, but up the snowy step, then two floating gift boxes, then the
+##    walkways high above
 ## Run: godot --headless --path . --script res://dev/m3_routes_test.gd
 
 var _fails := 0
@@ -14,8 +16,9 @@ func _initialize() -> void:
 func _run() -> void:
 	root.get_node("Events").yarn_collected.connect(func(): _yarn = true)
 	var scenes := ["res://dev/forest_tools_demo.tscn"]
-	for data in root.get_node("GameState").catalog.in_world(3):
-		scenes.append(data.scene_path)
+	for world in [3, 4]:
+		for data in root.get_node("GameState").catalog.in_world(world):
+			scenes.append(data.scene_path)
 	for path in scenes:
 		var probe = load(path).instantiate()
 		var climbs := {}
@@ -24,7 +27,7 @@ func _run() -> void:
 			var n := String(b.name)
 			if n.begins_with("Climb"):
 				climbs[n.get_slice("_", 0)] = true
-			elif n.begins_with("Canopy"):
+			elif n.begins_with("Canopy") or n.begins_with("Sky"):
 				canopies[n.get_slice("_", 0)] = true
 		probe.free()
 		var id: String = path.get_file().get_basename()
@@ -64,16 +67,20 @@ func _canopy(path: String, id: String, tag: String) -> void:
 	var step = _blocks(level, tag + "_Step")[0]
 	var walks := _blocks(level, tag + "_Walk")
 	walks.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+	var gifts: Array = level.get_node("Objects").get_children().filter(func(o): return o.scene_file_path.ends_with("bump_crate.tscn") and o.global_position.x > step.global_position.x and o.global_position.x < walks[0].global_position.x)
+	gifts.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
 	var floor_y: float = step.global_position.y + 180.0
 	var yarn_node = level.get_node("Objects").find_child("GoldenYarn", false, false)
 	var has_yarn: bool = yarn_node != null and absf(yarn_node.global_position.y - (walks[0].global_position.y - 120.0)) < 5.0 		and yarn_node.global_position.x > walks[0].global_position.x and yarn_node.global_position.x < walks[-1].global_position.x + walks[-1].size.x   # on THIS route
 	await _place(cat, Vector2(step.global_position.x - 80.0, floor_y - 5.0))
 	var ok: bool = await _hop_to(cat, step.global_position.x + 150.0, step.global_position.y)
+	for g in gifts:   # sky route: the gift-box stairs (a box's origin is its bottom centre, 104 px tall)
+		ok = ok and await _hop_to(cat, g.global_position.x, g.global_position.y - 104.0)
 	for w in walks:
 		ok = ok and await _hop_to(cat, w.global_position.x + 120.0, w.global_position.y)
 		ok = ok and await _run_to(cat, w.global_position.x + w.size.x - 50.0, w.global_position.y)
 	var high: bool = absf(cat.global_position.y - walks[-1].global_position.y) < 6.0
-	_check("%s: %s — up to the walkways and along all %d, no heart lost%s" % [id, tag, walks.size(), ", yarn found" if has_yarn else ""],
+	_check("%s: %s — up%s to the walkways and along all %d, no heart lost%s" % [id, tag, " %d gift boxes" % gifts.size() if gifts else "", walks.size(), ", yarn found" if has_yarn else ""],
 		ok and high and gs.hearts == 3 and (_yarn or not has_yarn), [cat.global_position, gs.hearts, _yarn])
 	level.queue_free()
 	await _frames(2)

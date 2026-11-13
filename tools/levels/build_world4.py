@@ -13,6 +13,10 @@ tree climbs → icy cliff climbs, crates → gift boxes) in the snow look, plus 
   slope(n, step, length, slimes={terrace: [...]})
                  the mountainside: n snowy steps up, then n + 1 icy terraces sliding back down
                  (each ends on its stop-snow, then a drop to the next)
+  sky_route(length, low=..., coins=..., yarn=...)
+                 a HIDDEN HIGH ROUTE: a snowy step, then two floating gift boxes as stairs up to
+                 walkways far above the ground (SKY px), out of the usual view; the floor below is the
+                 normal route (hazards from `low`). Bump the gift boxes from below for a coin each.
   slimes         → blue snow slimes;  crates → gift boxes;  planks → ice floes
 
 Levels are ~1.5x World 3's length (owners, 13 Nov 2026), with a checkpoint about every 5k px and milk
@@ -24,6 +28,7 @@ Run:  python tools/levels/build_world4.py
 from build_world3 import ForestLevel
 
 STOP = 400   # snow after every ice stretch (> the 300 px fair-play rule)
+SKY = 720        # sky route: the walkways are this far above the floor (step 180, gifts 360 / 540)
 TILE_GAP = 120   # thin ice: water between the shore and a slab, and between slabs (a short hop)
 
 
@@ -71,6 +76,28 @@ class SnowLevel(ForestLevel):
             # coins along the terrace (none near a slime)
             spots = [p for p in range(200, length - 100, 250) if all(abs(p - sx) > 150 for sx, _ in slimes.get(i, ()))]
             self.ice(length, slimes=slimes.get(i, ()), coins=tuple(spots))
+
+    def sky_route(self, length, low=None, coins=5, yarn=False):
+        x, h = self.x, self.h
+        self.skies = getattr(self, "skies", 0) + 1
+        tag = f"Sky{self.skies}"
+        self.tags[len(self.blocks)] = f"{tag}_Step"
+        self._block(x + 150, h - 180, 220, 40, True)               # a snowy step (one-way)
+        for gx, top in ((520, 360), (720, 540)):                   # gift-box stairs (tops 180 px apart)
+            self._obj("crate", x + gx, h - top + 104, coins=1, milk=False, look="gift")
+        start, end = x + 900, x + length - 350
+        pos, n = start, 0
+        while pos < end:                                          # walkways with small gaps to hop
+            w = min(460, end - pos)
+            n += 1
+            self.tags[len(self.blocks)] = f"{tag}_Walk{n}"
+            self._block(pos, h - SKY, w, 40, True)
+            pos += w + 140
+        step = (end - start) / max(coins, 1)
+        self.coins(*[(round(start + 120 + i * step), h - SKY - 80) for i in range(coins)])
+        if yarn:
+            self._obj("yarn", end - 120, h - SKY - 120)
+        self.flat(length, **(low or {}))
 
     def thin_ice(self, n):
         """A lake crossed on n slabs of thin ice, level with the shore, a short hop apart."""
@@ -165,7 +192,29 @@ def level_4():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4]
+def level_5():
+    L = SnowLevel(5, "Gift Box Grove", 0.75)   # a calm, generous level: gift boxes everywhere, two secret sky routes
+    L.flat(1500, crates=[(500, 200, 1, False), (604, 200, 3, False), (708, 200, 1, False)], coins=(330,))
+    L.flat(1300, slimes=[(700, 80)], flag=150)
+    L.sky_route(2600, low={"penguins": [(1300, 200)]}, coins=6)   # the first secret way up
+    L.gap(220)
+    L.flat(1400, milk=300, flag=1000, crates=[(700, 200, 0, True)])
+    L.ice(1200, coins=(300, 600, 900))
+    L.flat(1500, crates=[(400, 200, 2, False), (900, 200, 1, False), (1004, 200, 2, False)])
+    L.planks(2)
+    L.flat(1300, flag=150, penguins=[(800, 150)])
+    L.hill(2, 150, 1000, crates=[(500, 200, 3, False)])   # a gift on the hilltop
+    L.thin_ice(2)
+    L.flat(1300, slimes=[(800, 70)], crates=[(400, 200, 0, True)])
+    L.sky_route(3000, low={"slimes": [(1200, 70)], "penguins": [(2100, 150)]}, coins=8, yarn=True)   # the yarn is hidden up here
+    L.flat(1200, flag=150, milk=900)
+    L.gap(240)
+    L.flat(1200, crates=[(400, 200, 2, False), (504, 200, 2, False), (608, 200, 2, False)])
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5]
 
 if __name__ == "__main__":
     for make in LEVELS:
