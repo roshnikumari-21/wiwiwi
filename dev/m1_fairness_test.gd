@@ -86,6 +86,26 @@ func _audit(level: Node) -> Array[String]:
 				problems.append("%s at x %d is %d px after the landing at %d (needs %d)" % [obj.name, int(obj.global_position.x), int(span.x - g[1]), int(g[1]), int(after)])
 			if span.x < g[0] and span.y > g[0] - before:
 				problems.append("%s at x %d is %d px before the take-off edge at %d (needs %d)" % [obj.name, int(obj.global_position.x), int(g[0] - span.y), int(g[0]), int(before)])
+	# Slippery ice (World 4): she slides ~200 px to a stop, so ice must end on at least 300 px of snow
+	# before the next gap, and spikes never sit on ice.
+	for i in ground.size():
+		var b = ground[i]
+		if b.theme != "ice":
+			continue
+		var stop := 0.0
+		for j in range(i + 1, ground.size()):
+			var n = ground[j]
+			if n.global_position.x > ground[j - 1].global_position.x + ground[j - 1].size.x + 2.0:
+				break   # a gap
+			if n.theme == "ice":
+				continue
+			stop += n.size.x
+			break
+		if stop < 300.0 and i < ground.size() - 1:
+			problems.append("ice %s ends with only %d px of snow before a gap (needs 300)" % [b.name, int(stop)])
+		for obj in level.get_node("Objects").get_children():
+			if obj.scene_file_path.ends_with("spikes.tscn") and obj.global_position.x > b.global_position.x - 40.0 					and obj.global_position.x < b.global_position.x + b.size.x + 40.0 and absf(obj.global_position.y - b.global_position.y) < 5.0:
+				problems.append("spikes %s sit on ice %s" % [obj.name, b.name])
 	hazards.sort_custom(func(a, b): return a[0].x < b[0].x)
 	for i in hazards.size() - 1:
 		for j in range(i + 1, hazards.size()):

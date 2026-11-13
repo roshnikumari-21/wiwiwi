@@ -24,6 +24,9 @@ extends CharacterBody2D
 @export_group("Energy")
 @export var energy_seconds: float = 35.0   ## seconds of moving on a full tank
 @export var tired_speed: float = 0.65      ## share of run speed left when energy is empty (never a fail)
+@export var ice_grip: float = 0.25         ## on ice: share of the usual acceleration (slow to get going and to turn)
+@export var ice_slide: float = 0.08        ## on ice: share of the usual braking (she slides ~200 px to a stop)
+var on_ice := false                        ## standing on slippery ice (World 4)
 
 @export_group("Idle")
 @export var breath_amount: float = 0.012   ## how much she rises when breathing (1.2 %)
@@ -113,13 +116,30 @@ func _handle_jump(delta: float) -> void:
 func _handle_run(delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
 	var grip := 1.0 if is_on_floor() else air_control
+	var speed_up := acceleration * grip
+	var slow_down := deceleration * grip
+	if on_ice and is_on_floor():   # World 4: slippery — slow to get going, slower to stop or turn
+		speed_up = acceleration * ice_grip
+		slow_down = deceleration * ice_slide
 	if direction != 0.0:
-		velocity.x = move_toward(velocity.x, direction * run_speed * _speed_factor(), acceleration * grip * delta)
+		velocity.x = move_toward(velocity.x, direction * run_speed * _speed_factor(), speed_up * delta)
 		sprite.flip_h = direction < 0.0
 	else:
-		velocity.x = move_toward(velocity.x, 0.0, deceleration * grip * delta)
+		velocity.x = move_toward(velocity.x, 0.0, slow_down * delta)
+
+## Standing on slippery ice? (a GroundBlock with the "ice" theme under her feet)
+func _check_ice() -> void:
+	if not is_on_floor():
+		return   # keeps the last value in the air: she lands with the same grip she left with
+	on_ice = false
+	for i in get_slide_collision_count():
+		var hit := get_slide_collision(i)
+		var block := hit.get_collider() as GroundBlock
+		if hit.get_normal().y < -0.5 and block and block.theme == "ice":
+			on_ice = true
 
 func _after_move() -> void:
+	_check_ice()
 	if not is_on_floor():
 		_fall_peak_speed = max(_fall_peak_speed, velocity.y)
 	elif not _was_on_floor:
@@ -146,6 +166,8 @@ func _update_animation() -> void:
 			sprite.play("jump" if _in_jump or velocity.y < 0.0 else "fall")
 	elif sprite.animation == "land" and sprite.is_playing() and abs(velocity.x) < 60.0:
 		return  # let the landing finish unless the player starts running
+	elif abs(velocity.x) > 20.0 and on_ice and Input.get_axis("move_left", "move_right") == 0.0:
+		sprite.play("sleepy" if tired else "idle")   # gliding on ice: legs still, she just slides
 	elif abs(velocity.x) > 20.0:
 		sprite.play("tired_walk" if tired else "walk")
 	else:
