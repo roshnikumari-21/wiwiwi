@@ -22,7 +22,7 @@ func _run() -> void:
 	var next: Control = map.find_child("NextWorld", true, false)
 	_check("a new player's map opens on World 1", map.world == 1, map.world)
 	_check("World 1: ▶ shown, ◀ hidden", next.visible and not prev.visible, [prev.visible, next.visible])
-	_check("the sign names it", _name(map) == "World 1  ·  Meadow", _name(map))
+	_check("the sign names it", _name(map) == "WORLD_1_NAME", _name(map))
 	_check("World 1 shows its 10 spots, 2 open (1-1 done, 1-2 next)", _spots(map).size() == 10 and _open(map) == 2, [_spots(map).size(), _open(map)])
 	_check("the kitten waits on 1-2", map.find_child("Kitten", true, false) != null, "")
 
@@ -30,7 +30,7 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	var last_world: int = map.WORLDS.size()
-	_check("▶ shows World 2: Sunset Town, ◀ shown (▶ only if a world follows)", map.world == 2 and _name(map) == "World 2  ·  Sunset Town" and prev.visible and next.visible == (last_world > 2), [map.world, _name(map)])
+	_check("▶ shows World 2: Sunset Town, ◀ shown (▶ only if a world follows)", map.world == 2 and _name(map) == "WORLD_2_NAME" and prev.visible and next.visible == (last_world > 2), [map.world, _name(map)])
 	for w in range(3, last_world + 1):
 		next.pressed.emit()
 		await process_frame

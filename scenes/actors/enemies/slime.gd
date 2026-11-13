@@ -29,11 +29,18 @@ func _physics_process(delta: float) -> void:
 	if _squashed:
 		return
 	velocity.y += GRAVITY * delta
-	var dx := global_position.x - _home_x
-	if (dx > patrol_distance and _dir > 0.0) or (dx < -patrol_distance and _dir < 0.0) or is_on_wall():
-		_dir = -_dir
-	velocity.x = _dir * speed
-	sprite.flip_h = _dir < 0.0   # the art faces right
+	if patrol_distance < 1.0:
+		# No path to walk: stand still, facing the cat (turning every frame looked like a shiver).
+		velocity.x = 0.0
+		var cat := get_tree().get_first_node_in_group("player") as Node2D
+		if cat:
+			sprite.flip_h = cat.global_position.x < global_position.x   # the art faces right
+	else:
+		var dx := global_position.x - _home_x
+		if (dx > patrol_distance and _dir > 0.0) or (dx < -patrol_distance and _dir < 0.0) or is_on_wall():
+			_dir = -_dir
+		velocity.x = _dir * speed
+		sprite.flip_h = _dir < 0.0   # the art faces right
 	move_and_slide()
 	_check_cat()
 

@@ -44,6 +44,7 @@ const SIGN := preload("res://assets/art/ui/menu/sign_wood.png")
 const ROUND := preload("res://assets/art/ui/menu/round_brown_plain.png")
 const ARROW := preload("res://assets/art/ui/menu/icon_next.png")
 const BOLD := preload("res://assets/fonts/Fredoka-Bold.ttf")
+const SIGN_SIZE := Vector2(660, 172)   ## the wooden name board at the top (art is 749 x 196)
 const HEART := preload("res://assets/art/objects/heart_full.png")
 const KITTEN_SCALE := Vector2(0.42, 0.42)
 const KITTEN_LIFT := Vector2(0, -48)        ## the kitten stands this far above a pad's centre
@@ -61,7 +62,7 @@ var world := 1   ## the world shown (1-based)
 var menu: GameMenu
 var last_played := ""   ## the level a spot or the walk started (tests read it)
 var _buttons: Array[TextureButton] = []
-var _world_label: Label
+var _world_label: ArchedLabel
 var _prev: TextureButton
 var _next: TextureButton
 var _busy := false   ## an animation is playing: level spots and arrows don't react
@@ -106,7 +107,7 @@ func show_world(number: int, hold := "") -> void:
 		var held := level != null and level.id == hold
 		_add_spot(i, level, level != null and level.id == next_id and not held, held)
 	_place_girl(info.girl)
-	_world_label.text = tr("WORLD_N") % world + "  ·  " + tr(info.name)
+	_world_label.text = info.name   # just the map's name (owners: no "World 1 ·")
 	_prev.visible = world > 1 and not _busy
 	_next.visible = world < WORLDS.size() and not _busy
 
@@ -201,22 +202,18 @@ func _add_world_switch() -> void:
 	sign.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	sign.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	sign.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	sign.custom_minimum_size = Vector2(560, 120)
+	sign.custom_minimum_size = SIGN_SIZE   # owners: bigger, so the name reads well
 	sign.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	sign.offset_left = -280
-	sign.offset_right = 280
-	sign.offset_bottom = 120
+	sign.offset_left = -SIGN_SIZE.x * 0.5
+	sign.offset_right = SIGN_SIZE.x * 0.5
+	sign.offset_bottom = SIGN_SIZE.y
 	holder.add_child(sign)
-	_world_label = Label.new()
+	_world_label = ArchedLabel.new()   # the name bends with the board's curved top
 	_world_label.name = "WorldName"
-	_world_label.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_world_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_world_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_world_label.add_theme_font_override("font", BOLD)
-	_world_label.add_theme_font_size_override("font_size", 40)
-	_world_label.add_theme_color_override("font_color", Color(1, 0.95, 0.78))
-	_world_label.add_theme_color_override("font_outline_color", Color(0.36, 0.2, 0.1))
-	_world_label.add_theme_constant_override("outline_size", 14)
+	_world_label.font = BOLD
+	_world_label.font_size = 52
+	_world_label.arch = 12.0
+	_world_label.lift = 4.0
 	sign.add_child(_world_label)
 
 func _arrow(holder: Control, step: int) -> TextureButton:
@@ -227,9 +224,9 @@ func _arrow(holder: Control, step: int) -> TextureButton:
 	b.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	b.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 	b.custom_minimum_size = Vector2(110, 110)
-	b.offset_top = 5
-	b.offset_bottom = 115
-	b.offset_left = 300 if step > 0 else -410   # just right / left of the 560 px sign
+	b.offset_top = 20
+	b.offset_bottom = 130
+	b.offset_left = SIGN_SIZE.x * 0.5 + 10.0 if step > 0 else -SIGN_SIZE.x * 0.5 - 120.0   # just right / left of the sign
 	b.offset_right = b.offset_left + 110
 	var icon := TextureRect.new()
 	icon.texture = ARROW
