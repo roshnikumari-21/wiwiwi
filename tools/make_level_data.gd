@@ -40,6 +40,7 @@ const LEVELS := [
 	# World 4 "Frosty Peaks" (tools/levels/build_world4.py) — added one level at a time
 	["w4_01", 4, 1, "res://scenes/levels/w4/level_w4_01.tscn"],
 	["w4_02", 4, 2, "res://scenes/levels/w4/level_w4_02.tscn"],
+	["w4_03", 4, 3, "res://scenes/levels/w4/level_w4_03.tscn"],
 ]
 
 func _initialize() -> void:

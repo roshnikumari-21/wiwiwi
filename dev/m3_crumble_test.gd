@@ -1,5 +1,5 @@
 extends SceneTree
-## World 2 crumbling roof tile, played like a player: she lands on it → it cracks but holds for
+## World 2 crumbling roof tile (and World 4's thin ice look), played like a player: she lands on it → it cracks but holds for
 ## shake_time → it breaks and she drops → it comes back return_time later, but never while she's
 ## standing in its spot. It can be jumped up through from below (one-way).
 ## Run: godot --headless --path . --script res://dev/m3_crumble_test.gd
@@ -30,7 +30,7 @@ func _run() -> void:
 			break
 	_check("she lands on the tile", cat.is_on_floor() and absf(cat.global_position.y - TILE_AT.y) < 6.0, cat.global_position)
 	await _frames(2)
-	_check("landing cracks it", tile.state == C.State.SHAKING and tile.sprite.texture == C.CRACKED, tile.state)
+	_check("landing cracks it", tile.state == C.State.SHAKING and tile.sprite.texture == C.LOOKS["roof"]["cracked"], tile.state)
 	await create_timer(tile.shake_time * 0.6).timeout
 	_check("it still holds her while shaking", cat.is_on_floor() and absf(cat.global_position.y - TILE_AT.y) < 6.0, cat.global_position)
 	await create_timer(tile.shake_time * 0.6).timeout
@@ -73,6 +73,20 @@ func _run() -> void:
 			landed = true
 			break
 	_check("rising from below passes through and lands on top", landed, cat.global_position)
+
+	# World 4's thin ice: the same tile with the ice look — it shows the ice pictures and cracks the same way
+	var ice = load("res://scenes/objects/crumble_tile.tscn").instantiate()
+	ice.look = "ice"
+	ice.position = TILE_AT + Vector2(700, 0)
+	level.get_node("Objects").add_child(ice)
+	await _frames(3)
+	_check("thin ice shows the ice picture, its top where she walks", ice.sprite.texture == C.LOOKS["ice"]["whole"] and ice.sprite.position.y == -14.0, ice.sprite.position)
+	await _place(cat, ice.position + Vector2(0, -60))
+	for i in 60:
+		await physics_frame
+		if ice.state != C.State.WHOLE_TILE:
+			break
+	_check("landing on thin ice cracks it (the cracked ice picture)", ice.state == C.State.SHAKING and ice.sprite.texture == C.LOOKS["ice"]["cracked"], ice.state)
 
 	level.queue_free()
 	print("RESULT: %s" % ("ALL PASS" if _fails == 0 else "%d FAILED" % _fails))

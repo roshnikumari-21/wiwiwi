@@ -6,6 +6,8 @@ tree climbs → icy cliff climbs, crates → gift boxes) in the snow look, plus 
                  she slides ~200 px, so never straight into a gap), and spikes are never put on it.
   flat(..., penguins=[(x, patrol)])
                  sliding penguins: waddle, warn, belly-slide along their whole path
+  thin_ice(n)    a lake crossed on n slabs of THIN ICE (crumbling tiles, "ice" look): each cracks
+                 the moment she lands and breaks half a second later, so she has to keep hopping
   slimes         → blue snow slimes;  crates → gift boxes;  planks → ice floes
 
 Levels are ~1.5x World 3's length (owners, 13 Nov 2026), with a checkpoint about every 5k px and milk
@@ -17,6 +19,7 @@ Run:  python tools/levels/build_world4.py
 from build_world3 import ForestLevel
 
 STOP = 400   # snow after every ice stretch (> the 300 px fair-play rule)
+TILE_GAP = 120   # thin ice: water between the shore and a slab, and between slabs (a short hop)
 
 
 class SnowLevel(ForestLevel):
@@ -24,6 +27,7 @@ class SnowLevel(ForestLevel):
         **ForestLevel.RES,
         "slime": ("PackedScene", "res://scenes/actors/enemies/blue_slime.tscn"),
         "penguin": ("PackedScene", "res://scenes/actors/enemies/penguin.tscn"),
+        "crumble": ("PackedScene", "res://scenes/objects/crumble_tile.tscn"),
     }
 
     def __init__(self, number, name, energy):
@@ -44,6 +48,17 @@ class SnowLevel(ForestLevel):
         self.block_themes[len(self.blocks)] = "ice"
         self.flat(length, **kw)
         self.flat(STOP)
+
+    def thin_ice(self, n):
+        """A lake crossed on n slabs of thin ice, level with the shore, a short hop apart."""
+        assert self.h == 900
+        width = TILE_GAP + n * 300 + (n - 1) * TILE_GAP + TILE_GAP
+        self._obj("water", self.x, self.h + 100, width=float(width))
+        for i in range(n):
+            cx = self.x + TILE_GAP + 150 + i * (300 + TILE_GAP)
+            self._obj("crumble", cx, self.h, look="ice")
+            self.coins((cx, self.h - 110))
+        self.x += width
 
 
 def level_1():
@@ -84,7 +99,31 @@ def level_2():
     return L
 
 
-LEVELS = [level_1, level_2]
+def level_3():
+    L = SnowLevel(3, "Frozen Lake", 0.7)   # out across the lake: floes, bobbing floes and thin ice, island to island
+    L.flat(1300, crates=[(700, 200, 2, False)], coins=(300, 420, 540))
+    L.thin_ice(2)                                        # meet thin ice: it cracks when she lands, so keep going
+    L.flat(1200, slimes=[(700, 80)], flag=150)
+    L.planks(2)                                          # drifting floes
+    L.flat(450, coins=(225,))                            # a little snowy island in the lake
+    L.thin_ice(3)
+    L.flat(1400, milk=300, flag=1000, crates=[(650, 200, 3, False)])
+    L.ice(1000, coins=(250, 500, 750))
+    L.bobbers(2)                                         # floes bobbing in the swell
+    L.flat(1500, penguins=[(800, 200)], flag=150)
+    L.planks(3)
+    L.flat(450, coins=(225,))
+    L.thin_ice(4)                                        # the long thin-ice run: no stopping
+    L.flat(1300, flag=150, milk=900, crates=[(550, 200, 0, True)])
+    L.ice(1200, slimes=[(600, 60)])
+    L.flat(1200, penguins=[(600, 150)])
+    L.gap(240)
+    L.flat(1200, crates=[(450, 200, 3, False)], bridge=(650, 400), yarn=(850, 560))
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3]
 
 if __name__ == "__main__":
     for make in LEVELS:

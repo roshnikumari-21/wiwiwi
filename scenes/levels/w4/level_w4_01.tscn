@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" path="res://scenes/objects/pinecone.tscn" id="14_cone"]
 [ext_resource type="PackedScene" path="res://scenes/objects/bump_crate.tscn" id="15_crate"]
 [ext_resource type="PackedScene" path="res://scenes/actors/enemies/penguin.tscn" id="16_penguin"]
+[ext_resource type="PackedScene" path="res://scenes/objects/crumble_tile.tscn" id="17_crumble"]
 
 [node name="LevelW4_01" instance=ExtResource("1_base")]
 level_id = "w4_01"

@@ -1,21 +1,31 @@
 class_name CrumbleTile
 extends StaticBody2D
-## World 2 hazard: a short floating piece of roof. When the cat lands on it, it cracks and shakes
+## World 2 hazard (roof tile), and World 4's thin ice: a short floating piece. When the cat lands on it, it cracks and shakes
 ## for shake_time, then breaks into 4 chunks that fall away; it comes back return_time later.
 ## One-way like a ledge (she can jump up through it). Origin = middle of its walkable top.
 
-const WHOLE := preload("res://assets/art/objects/crumble_whole.png")
-const CRACKED := preload("res://assets/art/objects/crumble_cracked.png")
-const CHUNKS: Array[Texture2D] = [
-	preload("res://assets/art/objects/crumble_chunk_0.png"), preload("res://assets/art/objects/crumble_chunk_1.png"),
-	preload("res://assets/art/objects/crumble_chunk_2.png"), preload("res://assets/art/objects/crumble_chunk_3.png"),
-]
-# Numbers printed by tools/art_pipeline/make_town.py: where each chunk sits in the frame, and the
-# frame row the cat walks on.
-const CHUNK_AT: Array[Vector2] = [Vector2(3, 33), Vector2(89, 33), Vector2(175, 37), Vector2(228, 34)]
-const SURFACE := 35.0
+## Two looks: World 2's roof tile, and World 4's thin ice (tools/art_pipeline/make_thin_ice.py).
+## Each: whole, cracked, 4 chunks, where each chunk sits in the frame, the frame row the cat walks on.
+const ART := "res://assets/art/objects/"
+const LOOKS := {
+	"roof": {
+		"whole": preload(ART + "crumble_whole.png"), "cracked": preload(ART + "crumble_cracked.png"),
+		"chunks": [preload(ART + "crumble_chunk_0.png"), preload(ART + "crumble_chunk_1.png"),
+			preload(ART + "crumble_chunk_2.png"), preload(ART + "crumble_chunk_3.png")],
+		"chunk_at": [Vector2(3, 33), Vector2(89, 33), Vector2(175, 37), Vector2(228, 34)],   # make_town.py
+		"surface": 35.0,
+	},
+	"ice": {
+		"whole": preload(ART + "thin_ice_whole.png"), "cracked": preload(ART + "thin_ice_cracked.png"),
+		"chunks": [preload(ART + "thin_ice_chunk_0.png"), preload(ART + "thin_ice_chunk_1.png"),
+			preload(ART + "thin_ice_chunk_2.png"), preload(ART + "thin_ice_chunk_3.png")],
+		"chunk_at": [Vector2(0, 11), Vector2(78, 11), Vector2(160, 11), Vector2(232, 11)],   # make_thin_ice.py
+		"surface": 14.0,
+	},
+}
 const WIDTH := 306.0
 
+@export_enum("roof", "ice") var look: String = "roof"
 @export var shake_time: float = 0.5    ## seconds from landing to breaking
 @export var return_time: float = 3.0   ## seconds until it's back after breaking
 
@@ -27,9 +37,9 @@ var state := State.WHOLE_TILE
 @onready var feet: Area2D = $Feet
 
 func _ready() -> void:
-	sprite.texture = WHOLE
+	sprite.texture = LOOKS[look]["whole"]
 	sprite.centered = false
-	sprite.position = Vector2(-WIDTH * 0.5, -SURFACE)
+	sprite.position = Vector2(-WIDTH * 0.5, -LOOKS[look]["surface"])
 
 func _physics_process(_delta: float) -> void:
 	if state != State.WHOLE_TILE:
@@ -41,7 +51,7 @@ func _physics_process(_delta: float) -> void:
 
 func _crack() -> void:
 	state = State.SHAKING
-	sprite.texture = CRACKED
+	sprite.texture = LOOKS[look]["cracked"]
 	AudioManager.play_sfx("sfx_land", 0.6)
 	var x := sprite.position.x
 	var t := create_tween()
@@ -55,11 +65,12 @@ func _break() -> void:
 	shape.set_deferred("disabled", true)
 	sprite.visible = false
 	AudioManager.play_sfx("sfx_stomp", 0.7)
-	for i in CHUNKS.size():
+	var chunks: Array = LOOKS[look]["chunks"]
+	for i in chunks.size():
 		var chunk := Sprite2D.new()
-		chunk.texture = CHUNKS[i]
+		chunk.texture = chunks[i]
 		chunk.centered = false
-		chunk.position = sprite.position + CHUNK_AT[i]
+		chunk.position = sprite.position + LOOKS[look]["chunk_at"][i]
 		add_child(chunk)
 		var t := create_tween().set_parallel()
 		t.tween_property(chunk, "position:y", chunk.position.y + 420.0, 0.7).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD).set_delay(i * 0.05)
@@ -76,7 +87,7 @@ func _come_back() -> void:
 		await get_tree().create_timer(0.3).timeout
 		if not is_inside_tree():
 			return
-	sprite.texture = WHOLE
+	sprite.texture = LOOKS[look]["whole"]
 	sprite.visible = true
 	sprite.modulate.a = 0.0
 	create_tween().tween_property(sprite, "modulate:a", 1.0, 0.3)
