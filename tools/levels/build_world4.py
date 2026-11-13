@@ -306,7 +306,33 @@ def level_7():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7]
+def level_8():
+    L = SnowLevel(8, "Snowman Hill", 0.7)   # the grand tour: every World 4 idea, one after another, at full strength
+    L.flat(1200, crates=[(650, 200, 2, False)], coins=(330, 450))
+    L.hill(2, 150, 1000, penguins=[(550, 150)])           # a penguin on the hilltop
+    L.ledge_hop(3)
+    L.flat(1100, slimes=[(600, 80)], flag=150)
+    L.slope(2, 150, 600)                                 # up, then three icy terraces down
+    L.flat(1200, milk=300, crates=[(800, 200, 3, False)])
+    L.icicle_arch(2400, icicles=[(0, 2.5, 0), (2, 2.5, 1.0)], low={"penguins": [(1280, 80)]},
+                  coins=6, yarn=True)                    # icicles and a penguin below, the yarn up top
+    L.gap(220)
+    L.flat(1100, flag=150)
+    L.thin_ice(3)
+    L.flat(1200, penguins=[(650, 150)])
+    L.tree_climb(360, 900, flag=300)                     # a small glacier...
+    L.ice(900, coins=(250, 500, 750))
+    L.ice_descent(2, 180, 500, slimes={1: [(380, 50)]})  # ...and down its icy terraces
+    L.flat(1200, flag=150, milk=700, crates=[(450, 200, 0, True)])
+    L.bobbers(2)
+    L.flat(1100, crates=[(400, 200, 2, False), (504, 200, 2, False)], flag=800)
+    L.gap(240)
+    L.flat(1000, coins=(300, 500, 700))
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7, level_8]
 
 if __name__ == "__main__":
     for make in LEVELS:
