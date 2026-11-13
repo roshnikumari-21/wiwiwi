@@ -13,6 +13,10 @@ tree climbs → icy cliff climbs, crates → gift boxes) in the snow look, plus 
   slope(n, step, length, slimes={terrace: [...]})
                  the mountainside: n snowy steps up, then n + 1 icy terraces sliding back down
                  (each ends on its stop-snow, then a drop to the next)
+  tree_climb(rise, length)  (from World 3) → a glacier cliff climbed on zigzag ledges
+  ice_descent(n, step, length, slimes={terrace: [...]})
+                 coming back down a glacier: n drops of `step` px, each onto an icy terrace
+                 (ending on its stop-snow)
   sky_route(length, low=..., coins=..., yarn=...)
                  a HIDDEN HIGH ROUTE: a snowy step, then two floating gift boxes as stairs up to
                  walkways far above the ground (SKY px), out of the usual view; the floor below is the
@@ -74,6 +78,14 @@ class SnowLevel(ForestLevel):
             if i:
                 self.h += step   # drop to the next terrace
             # coins along the terrace (none near a slime)
+            spots = [p for p in range(200, length - 100, 250) if all(abs(p - sx) > 150 for sx, _ in slimes.get(i, ()))]
+            self.ice(length, slimes=slimes.get(i, ()), coins=tuple(spots))
+
+    def ice_descent(self, n, step=180, length=600, slimes=None):
+        slimes = slimes or {}
+        for i in range(n):
+            self.h += step
+            assert self.h <= 900, "a descent can't go below the ground"
             spots = [p for p in range(200, length - 100, 250) if all(abs(p - sx) > 150 for sx, _ in slimes.get(i, ()))]
             self.ice(length, slimes=slimes.get(i, ()), coins=tuple(spots))
 
@@ -214,7 +226,31 @@ def level_5():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4, level_5]
+def level_6():
+    L = SnowLevel(6, "Glacier Climb", 0.7)   # up three glaciers (each taller), across their icy tops, slide down
+    L.flat(1300, crates=[(650, 200, 2, False)], coins=(330, 450))
+    L.tree_climb(360, 900, coins=(300, 450, 600))        # the first glacier: a short climb
+    L.ice_descent(2, 180, 500)                           # ...and down its icy terraces
+    L.flat(1300, penguins=[(700, 150)], flag=150)
+    L.gap(220)
+    L.flat(1000, milk=300, crates=[(650, 200, 3, False)])
+    L.tree_climb(540, 800, flag=300)                     # the second glacier: taller
+    L.ice(900, coins=(250, 500, 750))                    # an icy glacier top
+    L.flat(1000, penguins=[(500, 150)])                  # a penguin up on the glacier
+    L.ice_descent(3, 180, 500, slimes={1: [(380, 50)]})
+    L.flat(1000, flag=150, milk=700, crates=[(450, 200, 0, True)])
+    L.tree_climb(720, 800, flag=300)                     # the great glacier: as tall as a climb gets
+    L.ice(1000, coins=(250, 500, 750))
+    L.flat(900, yarn=(450, 260), coins=(200, 700))      # the top of the world: the yarn, a jump up
+    L.ice_descent(4, 180, 400)                           # four icy terraces all the way down
+    L.flat(1000, milk=500)
+    L.gap(240)
+    L.flat(1100, crates=[(400, 200, 2, False), (504, 200, 2, False)], flag=800)
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6]
 
 if __name__ == "__main__":
     for make in LEVELS:
