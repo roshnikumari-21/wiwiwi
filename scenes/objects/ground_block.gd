@@ -7,11 +7,12 @@ extends StaticBody2D
 ## that side (the ground continues); a lower neighbour gets an end cap and a side outline that
 ## stops where the lower ground begins. One-way blocks use the thin floating-platform art.
 ## Theme picks the art kit: "meadow" (World 1), "town" (World 2, cobbles + bricks) or "forest"
-## (World 3, moss + earth).
+## (World 3, moss + earth), "snow" (World 4) or "ice" (World 4's slippery ground).
 
 const MEADOW := "res://assets/art/tiles/meadow/"
 const TOWN := "res://assets/art/tiles/town/"
 const FOREST := "res://assets/art/tiles/forest/"
+const SNOW := "res://assets/art/tiles/snow/"
 # Each kit's pieces and where the walkable line sits in them (printed by make_ground.py / make_town.py).
 const KITS := {
 	"meadow": {
@@ -63,6 +64,34 @@ const KITS := {
 		"fill_from": 45,
 		"deco_gap": Vector2(300, 600), "deco_sink": 6,
 	},
+	"snow": {
+		"top": preload(SNOW + "ground_top.png"), "fill": preload(SNOW + "ground_fill.png"),
+		"cap_left": preload(SNOW + "ground_cap_left.png"), "cap_right": preload(SNOW + "ground_cap_right.png"),
+		"thin_left": preload(SNOW + "thin_left.png"), "thin_mid": preload(SNOW + "thin_mid.png"),
+		"thin_right": preload(SNOW + "thin_right.png"),
+		# Icicles hang under ledges and the signpost points the way (both placed by the level builder).
+		"decos": [
+			preload(SNOW + "deco_snowman.png"), preload(SNOW + "deco_sapling.png"), preload(SNOW + "deco_rock.png"),
+			preload(SNOW + "deco_lantern.png"), preload(SNOW + "deco_berries.png"), preload(SNOW + "deco_snowballs.png"),
+		],
+		"top_surface": 62, "cap_surface": 9,
+		"cap_inset_left": 17, "cap_inset_right": 26,
+		"thin_side_surface": 5, "thin_mid_surface": 5,
+		"fill_from": 44,
+		"deco_gap": Vector2(380, 760), "deco_sink": 6,
+	},
+	"ice": {   # World 4's slippery ground: glossy ice, snow caps at its ends, no decorations
+		"top": preload(SNOW + "ice_top.png"), "fill": preload(SNOW + "ice_fill.png"),
+		"cap_left": preload(SNOW + "ground_cap_left.png"), "cap_right": preload(SNOW + "ground_cap_right.png"),
+		"thin_left": preload(SNOW + "thin_left.png"), "thin_mid": preload(SNOW + "thin_mid.png"),
+		"thin_right": preload(SNOW + "thin_right.png"),
+		"decos": [],
+		"top_surface": 84, "cap_surface": 9,
+		"cap_inset_left": 17, "cap_inset_right": 26,
+		"thin_side_surface": 5, "thin_mid_surface": 5,
+		"fill_from": 22,
+		"deco_gap": Vector2(300, 600), "deco_sink": 0,
+	},
 }
 const OUTLINE_FROM := 40
 const OUTLINE_WIDTH := 6.0
@@ -80,7 +109,7 @@ const OUTLINE_COLOR := Color(0.33, 0.2, 0.12)
 	set(value):
 		decorate = value
 		_rebuild()
-@export_enum("meadow", "town", "forest") var theme: String = "meadow":
+@export_enum("meadow", "town", "forest", "snow", "ice") var theme: String = "meadow":
 	set(value):
 		theme = value
 		_rebuild()
@@ -190,7 +219,7 @@ func _open_depth(side: int) -> float:
 
 ## Decorations along the top; the same block always gets the same pattern.
 func _scatter_decorations(art: Node2D) -> void:
-	if size.x < 320.0:
+	if size.x < 320.0 or (_kit.decos as Array).is_empty():
 		return
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(Vector2i(global_position))
