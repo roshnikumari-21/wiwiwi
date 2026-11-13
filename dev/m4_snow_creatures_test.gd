@@ -5,6 +5,8 @@ extends SceneTree
 ## slides toward her clears it.
 ## Blue slime: blue (recoloured), behaves like a slime (stomp = squash).
 ## Gift box: bumping it from below pops a coin and it turns into the used gift box.
+## Falling icicle (the pinecone hazard, icicle look): shows the icicle pictures, warns, falls straight
+## down without spinning and hurts if she stays under it; running on during the warning is safe.
 ## Run: godot --headless --path . --script res://dev/m4_snow_creatures_test.gd
 
 const GROUND := 900.0   # level 1-1's first ground (x 0-1400; its spikes at x 950 are removed)
@@ -155,6 +157,43 @@ func _run() -> void:
 	_check("bumping it pops a coin and it becomes the used gift box", _coins == 1 and gift.sprite.texture.resource_path.ends_with("gift_used.png"), [_coins, gift.sprite.texture.resource_path])
 	level.queue_free()
 
+	# Falling icicle
+	var IC = load("res://scenes/objects/pinecone.gd")
+	level = await _level()
+	cat = level.get_node("Player")
+	var icicle = _icicle(level, Vector2(500, GROUND))
+	await _frames(3)
+	_check("an icicle shows the hanging icicle picture", icicle._cone.texture.resource_path.ends_with("icicle_hanging.png"), icicle._cone.texture.resource_path)
+	_hurt = 0
+	cat.global_position = Vector2(500, GROUND - 5)
+	cat.velocity = Vector2.ZERO
+	var spun := false
+	var seen_falling := false
+	for i in 60 * 3:
+		await physics_frame
+		if icicle.state == IC.State.FALLING:
+			seen_falling = true
+			spun = spun or absf(icicle._cone.rotation) > 0.01
+			if not icicle._cone.texture.resource_path.ends_with("icicle_falling.png"):
+				spun = true
+	_check("it falls straight down (no spin) and hurts her if she stays under it", seen_falling and not spun and _hurt == 1, [seen_falling, spun, _hurt])
+	level.queue_free()
+	await _frames(2)
+
+	level = await _level()
+	cat = level.get_node("Player")
+	icicle = _icicle(level, Vector2(500, GROUND))
+	_hurt = 0
+	cat.global_position = Vector2(500, GROUND - 5)
+	cat.velocity = Vector2.ZERO
+	await create_timer(icicle.warn_time * 0.4).timeout
+	Input.action_press("move_right")   # sees the shadow, runs on
+	await create_timer(0.5).timeout
+	Input.action_release("move_right")
+	await create_timer(icicle.warn_time + 1.0).timeout
+	_check("running on during its warning keeps her safe", _hurt == 0 and icicle.state == IC.State.DONE, [_hurt, icicle.state])
+	level.queue_free()
+
 	print("RESULT: %s" % ("ALL PASS" if _fails == 0 else "%d FAILED" % _fails))
 	quit(_fails)
 
@@ -164,6 +203,14 @@ func _add(level, kind: String, at: Vector2, patrol: float):
 	n.patrol_distance = patrol
 	level.get_node("Objects").add_child(n)
 	return n
+
+func _icicle(level, at: Vector2):
+	var c = load("res://scenes/objects/pinecone.tscn").instantiate()
+	c.look = "icicle"
+	c.height = 281.0
+	c.position = at
+	level.get_node("Objects").add_child(c)
+	return c
 
 func _level():
 	var level = load("res://scenes/levels/w1/level_w1_01.tscn").instantiate()

@@ -42,6 +42,7 @@ class Level:
         self.blocks, self.objects = [], []          # (props), (kind, props)
         self.tags = {}                              # block index -> name (tests find climbs and routes by it)
         self.block_themes = {}                      # block index -> a theme other than the level's (e.g. "ice")
+        self.plain = set()                          # block indexes drawn without decorations (decorate = false)
         self.counts = {}
 
     # --- helpers ---------------------------------------------------------------------------
@@ -188,7 +189,8 @@ class Level:
             own = self.block_themes.get(n - 1)   # n - 1: the left wall comes first
             out.append(f'[node name="{name}" parent="Terrain" instance=ExtResource("{ids["block"]}")]\n'
                        f'position = Vector2({x}, {top})\nsize = Vector2({w}, {hgt})\n'
-                       + ("one_way = true\n" if one_way else "") + (f'theme = "{own}"\n' if own else theme) + "\n")
+                       + ("one_way = true\n" if one_way else "") + (f'theme = "{own}"\n' if own else theme)
+                       + ("decorate = false\n" if n - 1 in self.plain else "") + "\n")
         counts = {}
         for kind, x, y, props in self.objects:
             counts[kind] = counts.get(kind, 0) + 1

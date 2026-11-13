@@ -80,9 +80,10 @@ func _audit(level: Node) -> Array[String]:
 			before = SLIME_BEFORE_EDGE
 		else:
 			continue
-		if obj.scene_file_path.ends_with("pinecone.tscn"):   # never under a walkway/ledge: its shadow is on the floor
+		if obj.scene_file_path.ends_with("pinecone.tscn"):   # never above a walkway/ledge: its shadow is on the floor
+			# (World 4's icicles hang UNDER a walkway: the walkway is above where it hangs, so that's fine)
 			for b in level.get_node("Terrain").get_children():
-				if b is GroundBlock and b.one_way and b.global_position.y < obj.global_position.y and b.global_position.x - 100.0 < obj.global_position.x and obj.global_position.x < b.global_position.x + b.size.x + 100.0:
+				if b is GroundBlock and b.one_way and b.global_position.y < obj.global_position.y and b.global_position.y > obj.global_position.y - obj.height and b.global_position.x - 100.0 < obj.global_position.x and obj.global_position.x < b.global_position.x + b.size.x + 100.0:
 					problems.append("%s at x %d hangs over the ledge %s" % [obj.name, int(obj.global_position.x), b.name])
 		hazards.append([span, obj.global_position.y, obj.name])
 		for g in gaps:
@@ -166,6 +167,11 @@ func _path(level: Node) -> Array[String]:
 			if gap > 300.0 and tx > edge and tx < b.global_position.x and rise <= 0.0:
 				helped = true
 			if rise > 220.0 and tx > edge - 500.0 and tx < b.global_position.x and b.global_position.y > t.global_position.y - 220.0:
+				helped = true
+		# Ledge hops (World 4): narrow ledges across a wide river.
+		for ledge in level.get_node("Terrain").get_children():
+			if ledge is GroundBlock and ledge.one_way and String(ledge.name).begins_with("Hop") and rise <= 0.0 \
+					and ledge.global_position.x > edge and ledge.global_position.x < b.global_position.x:
 				helped = true
 		# A tree climb (World 3): ledges zigzag up in front of the cliff; the top one is a short hop below it.
 		for ledge in level.get_node("Terrain").get_children():

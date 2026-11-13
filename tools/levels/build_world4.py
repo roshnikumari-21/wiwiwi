@@ -17,6 +17,10 @@ tree climbs → icy cliff climbs, crates → gift boxes) in the snow look, plus 
   ice_descent(n, step, length, slimes={terrace: [...]})
                  coming back down a glacier: n drops of `step` px, each onto an icy terrace
                  (ending on its stop-snow)
+  icicle_arch(length, icicles=[(walkway, every, delay)], low=..., coins=..., yarn=...)
+                 World 3's two routes (canopy) with icicles hanging under the high walkways: they
+                 warn (shadow), then drop onto the floor route below. Up on the arch they can't reach her.
+  ledge_hop(n)   a wide icy river crossed on n narrow snowy ledges (a hop apart, alternately higher)
   sky_route(length, low=..., coins=..., yarn=...)
                  a HIDDEN HIGH ROUTE: a snowy step, then two floating gift boxes as stairs up to
                  walkways far above the ground (SKY px), out of the usual view; the floor below is the
@@ -33,6 +37,8 @@ from build_world3 import ForestLevel
 
 STOP = 400   # snow after every ice stretch (> the 300 px fair-play rule)
 SKY = 720        # sky route: the walkways are this far above the floor (step 180, gifts 360 / 540)
+ICICLE_HEIGHT = 281   # a falling icicle hangs this far above the floor, tucked under a 360 px walkway
+HOP_LEDGE, HOP_GAP, HOP_RISE = 260, 130, 80   # ledge hop: ledge width, water between, every other one higher
 TILE_GAP = 120   # thin ice: water between the shore and a slab, and between slabs (a short hop)
 
 
@@ -88,6 +94,31 @@ class SnowLevel(ForestLevel):
             assert self.h <= 900, "a descent can't go below the ground"
             spots = [p for p in range(200, length - 100, 250) if all(abs(p - sx) > 150 for sx, _ in slimes.get(i, ()))]
             self.ice(length, slimes=slimes.get(i, ()), coins=tuple(spots))
+
+    def icicle_arch(self, length, icicles=(), low=None, coins=5, yarn=False):
+        first = len(self.blocks)
+        self.canopy(length, low=low, coins=coins, yarn=yarn)
+        tag = f"Canopy{self.canopies}_Walk"
+        idx = [i for i in sorted(self.tags) if i >= first and self.tags[i].startswith(tag)]
+        self.plain.update(idx)   # no decorative icicles here: every icicle under an arch is one that falls
+        walks = [self.blocks[i] for i in idx]
+        for walk, every, delay in icicles:
+            bx, top, w, _, _ = walks[walk]
+            self._obj("cone", bx + w // 2, self.h, look="icicle", height=float(ICICLE_HEIGHT),
+                      every=float(every), first_delay=float(delay))
+
+    def ledge_hop(self, n):
+        assert self.h == 900
+        width = HOP_GAP + n * HOP_LEDGE + (n - 1) * HOP_GAP + HOP_GAP
+        self._obj("water", self.x, self.h + 100, width=float(width))
+        self.hops = getattr(self, "hops", 0) + 1
+        for i in range(n):
+            lx = self.x + HOP_GAP + i * (HOP_LEDGE + HOP_GAP)
+            top = self.h - (HOP_RISE if i % 2 == 0 else 0)
+            self.tags[len(self.blocks)] = f"Hop{self.hops}_Ledge{i + 1}"
+            self._block(lx, top, HOP_LEDGE, 40, True)
+            self.coins((lx + HOP_LEDGE // 2, top - 90))
+        self.x += width
 
     def sky_route(self, length, low=None, coins=5, yarn=False):
         x, h = self.x, self.h
@@ -250,7 +281,32 @@ def level_6():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6]
+def level_7():
+    L = SnowLevel(7, "Icicle Bridge", 0.7)   # falling icicles under icy arches, narrow ledges over icy rivers
+    L.flat(1300, crates=[(650, 200, 2, False)], coins=(330, 450))
+    L.icicle_arch(2200, icicles=[(1, 0, 0), (2, 0, 0.6)], coins=5)        # meet the icicles: each drops once
+    L.flat(1200, slimes=[(700, 80)], flag=150)
+    L.ledge_hop(3)                                                        # the first icy river: 3 ledges
+    L.flat(1300, milk=300, penguins=[(850, 150)])
+    L.icicle_arch(2600, icicles=[(0, 2.5, 0), (2, 2.5, 1.2)], low={"slimes": [(1300, 60)]}, coins=6)   # a slime between two icicles
+    L.gap(220)
+    L.flat(1300, flag=150, crates=[(700, 200, 0, True)])
+    L.ledge_hop(4)
+    L.flat(1300, penguins=[(650, 150)])
+    L.thin_ice(3)
+    L.flat(1200, flag=150, milk=900)
+    L.icicle_arch(3000, icicles=[(0, 2.0, 0), (1, 2.0, 1.0), (2, 2.0, 0.5), (3, 2.0, 1.5)],
+                  coins=8, yarn=True)                     # the long arch: four icicles in a rhythm
+    L.flat(600, coins=(300,))
+    L.ledge_hop(5)                                                        # the widest river
+    L.flat(1200, flag=150, milk=700)
+    L.gap(240)
+    L.flat(1100, crates=[(400, 200, 2, False), (504, 200, 2, False)])
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7]
 
 if __name__ == "__main__":
     for make in LEVELS:

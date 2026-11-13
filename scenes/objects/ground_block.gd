@@ -69,7 +69,7 @@ const KITS := {
 		"cap_left": preload(SNOW + "ground_cap_left.png"), "cap_right": preload(SNOW + "ground_cap_right.png"),
 		"thin_left": preload(SNOW + "thin_left.png"), "thin_mid": preload(SNOW + "thin_mid.png"),
 		"thin_right": preload(SNOW + "thin_right.png"),
-		# Icicles hang under ledges and the signpost points the way (both placed by the level builder).
+		"under": preload(SNOW + "icicles.png"),   # icicles hang under every snowy ledge
 		"decos": [
 			preload(SNOW + "deco_snowman.png"), preload(SNOW + "deco_sapling.png"), preload(SNOW + "deco_rock.png"),
 			preload(SNOW + "deco_lantern.png"), preload(SNOW + "deco_berries.png"), preload(SNOW + "deco_snowballs.png"),
@@ -105,7 +105,7 @@ const OUTLINE_COLOR := Color(0.33, 0.2, 0.12)
 	set(value):
 		one_way = value
 		_rebuild()
-@export var decorate: bool = true:   ## scatter decorations on top (flowers / street props)
+@export var decorate: bool = true:   ## scatter decorations on top (flowers / street props); on a ledge, icicles under it
 	set(value):
 		decorate = value
 		_rebuild()
@@ -195,6 +195,17 @@ func _build_thin(art: Node2D) -> void:
 		piece.region_rect = Rect2(0 if side < 0 else tw - half, 0, half, piece.texture.get_height())
 		piece.position = Vector2(0 if side < 0 else size.x - half, -_kit.thin_side_surface)
 		art.add_child(piece)
+	if decorate and _kit.has("under"):   # (snow) a few clusters of icicles hanging under the ledge, behind it
+		var under: Texture2D = _kit.under
+		var n := maxi(1, int(size.x / 230.0))
+		for i in n:
+			var ice := Sprite2D.new()
+			ice.texture = under
+			ice.centered = false
+			ice.flip_h = i % 2 == 1
+			ice.position = Vector2(size.x * (i + 0.5) / n - under.get_width() * 0.5, 14.0)
+			ice.z_index = -1
+			art.add_child(ice)
 
 ## How far down this side is exposed: full height with no neighbour, down to a lower neighbour's
 ## surface (plus a little, so the outline tucks behind its grass), or 0 if a neighbour covers it.

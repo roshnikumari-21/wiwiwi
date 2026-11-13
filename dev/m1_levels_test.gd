@@ -95,6 +95,46 @@ func _crossings(data) -> void:
 		await _crumble_crossing(id, chain, level.get_node("Player"))
 		level.queue_free()
 		await _frames(2)
+	# World 4 ledge hops: narrow ledges across a wide river
+	var hop_probe = load(data.scene_path).instantiate()
+	var hops := {}
+	for b in hop_probe.get_node("Terrain").get_children():
+		if String(b.name).begins_with("Hop"):
+			var tag := String(b.name).get_slice("_", 0)
+			if not hops.has(tag):
+				hops[tag] = []
+			hops[tag].append(Rect2(b.global_position, b.size))
+	hop_probe.free()
+	for tag in hops:
+		var level = await _load(data.scene_path)
+		await _frames(80)
+		await _hop_crossing(id, hops[tag], level.get_node("Player"))
+		level.queue_free()
+		await _frames(2)
+	# World 4 icicle arches: run the floor route below like a player who watches the shadows
+	var arch_probe = load(data.scene_path).instantiate()
+	var arches := []   # [from x, to x, floor y]
+	for b in arch_probe.get_node("Terrain").get_children():
+		var bn := String(b.name)
+		if bn.begins_with("Canopy") and bn.ends_with("_Step"):
+			var tag := bn.get_slice("_", 0)
+			var last_end := 0.0
+			for w in arch_probe.get_node("Terrain").get_children():
+				if String(w.name).begins_with(tag + "_Walk"):
+					last_end = maxf(last_end, w.global_position.x + w.size.x)
+			var has_icicles := false
+			for o in arch_probe.get_node("Objects").get_children():
+				if o.scene_file_path.ends_with("pinecone.tscn") and o.look == "icicle" and o.global_position.x > b.global_position.x and o.global_position.x < last_end:
+					has_icicles = true
+			if has_icicles:
+				arches.append([b.global_position.x - 150.0, last_end + 250.0, b.global_position.y + 180.0])
+	arch_probe.free()
+	for arch in arches:
+		var level = await _load(data.scene_path)
+		await _frames(80)
+		await _icicle_run(id, arch, level)
+		level.queue_free()
+		await _frames(2)
 	var probe2 = load(data.scene_path).instantiate()
 	var ices: Array = probe2.get_node("Terrain").get_children().filter(func(b): return b is GroundBlock and b.theme == "ice" and not b.one_way)
 	var ice_names: Array = ices.map(func(b): return String(b.name))
@@ -172,6 +212,62 @@ func _ice_crossing(id: String, ice, player) -> void:
 			break
 	var ok: bool = player.is_on_floor() and absf(player.global_position.y - ice.global_position.y) < 6.0 and gs.hearts == 3
 	_check("%s: across the ice at x %d at full speed, slid to a stop on the snow, no heart lost" % [id, int(start)], ok, [player.global_position, gs.hearts])
+
+## Like a player under the icicles: run along the floor; when a shadow grows (or an icicle falls) just
+## ahead, stop and wait until it has landed; if one starts right above her, keep running (she gets
+## clear in time). Jump slimes and penguins like on the ice.
+func _icicle_run(id: String, arch: Array, level) -> void:
+	var gs = root.get_node("GameState")
+	gs.hearts = 3
+	var player = level.get_node("Player")
+	var IC = load("res://scenes/objects/pinecone.gd")
+	var icicles: Array = level.get_node("Objects").get_children().filter(func(o): return o.scene_file_path.ends_with("pinecone.tscn"))
+	await _place(player, Vector2(arch[0], arch[2] - 5.0))
+	var waits := 0
+	for i in 60 * 30:
+		await physics_frame
+		if player.global_position.x > arch[1]:
+			break
+		var hold := false
+		for c in icicles:
+			var ahead: float = c.global_position.x - player.global_position.x
+			if ahead > 90.0 and ahead < 300.0 and (c.state == IC.State.WARNING or c.state == IC.State.FALLING):
+				hold = true
+		if hold:
+			if Input.is_action_pressed("move_right"):
+				waits += 1
+			Input.action_release("move_right")
+			continue
+		Input.action_press("move_right")
+		if player.is_on_floor():
+			for e in root.get_tree().get_nodes_in_group("enemies"):
+				var ahead: float = e.global_position.x - player.global_position.x
+				if is_instance_valid(e) and ahead > 160.0 and ahead < 240.0 and absf(e.global_position.y - player.global_position.y) < 40.0:
+					Input.action_press("jump")
+					await _frames(22)
+					Input.action_release("jump")
+					break
+	Input.action_release("move_right")
+	var ok: bool = player.global_position.x > arch[1] and gs.hearts == 3
+	_check("%s: under the icicles at x %d, watching the shadows (waited %d times), no heart lost" % [id, int(arch[0]), waits], ok, [player.global_position, gs.hearts])
+
+## Like a player: from the shore, a jump onto each narrow ledge in turn (steering to its middle), then onto the far shore.
+func _hop_crossing(id: String, ledges: Array, player) -> void:
+	var gs = root.get_node("GameState")
+	gs.hearts = 3
+	ledges.sort_custom(func(a, b): return a.position.x < b.position.x)
+	var shore_y: float = ledges[1].position.y if ledges.size() > 1 else ledges[0].position.y + 80.0
+	await _place(player, Vector2(ledges[0].position.x - 200.0, shore_y - 40.0))
+	await _frames(20)
+	var ok := true
+	for l in ledges:
+		await _hop_onto(player, l.position.x + l.size.x * 0.5)
+		ok = ok and player.is_on_floor() and absf(player.global_position.y - l.position.y) < 6.0 \
+			and player.global_position.x > l.position.x and player.global_position.x < l.position.x + l.size.x
+	await _hop(player)
+	var last: Rect2 = ledges[-1]
+	ok = ok and player.is_on_floor() and player.global_position.x > last.position.x + last.size.x + 60.0 and gs.hearts == 3
+	_check("%s: %d narrow ledges across the river at x %d, no heart lost" % [id, ledges.size(), int(ledges[0].position.x)], ok, [player.global_position, gs.hearts])
 
 ## Like a player: from just before the first tile, hop from tile to tile without stopping (each one
 ## breaks half a second after she lands) and land on the far side: the shore, or the ledge at the
@@ -263,6 +359,22 @@ func _ride(player, plank, start: Vector2, end: Vector2) -> void:
 			break
 		await physics_frame
 	await _frames(3)
+
+## A full jump to the right, steering like a player: let go of the arrow once she's above x.
+func _hop_onto(player, x: float) -> void:
+	Input.action_press("move_right")
+	Input.action_press("jump")
+	for i in 120:
+		await physics_frame
+		if i == 25:
+			Input.action_release("jump")
+		if player.global_position.x >= x - 20.0:
+			Input.action_release("move_right")
+		if i > 6 and player.is_on_floor():
+			break
+	Input.action_release("move_right")
+	Input.action_release("jump")
+	await _frames(4)
 
 ## A full jump to the right; stop running as soon as she lands, like a player.
 func _hop(player) -> void:

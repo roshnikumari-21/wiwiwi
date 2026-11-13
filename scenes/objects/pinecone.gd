@@ -5,10 +5,15 @@ extends Node2D
 ## falls hurts; when it lands it bounces, rolls a little and fades (harmless). If `every` > 0 a new
 ## one grows back and drops again on that rhythm while the cat is near.
 ## Origin = the spot on the ground where it lands (place it on the ground); it hangs `height` above.
+## World 4 uses the same hazard as a falling ICICLE (look = "icicle", tools/art_pipeline/make_icicle.py):
+## it hangs under a snowy ledge, falls straight (no spin) and shatters where it lands (no roll).
 
-const HANGING := preload("res://assets/art/objects/cone_hanging.png")
-const FALLING := preload("res://assets/art/objects/cone_falling.png")
-const LANDED := preload("res://assets/art/objects/cone_landed.png")
+const ART := "res://assets/art/objects/"
+## look: hanging, falling, landed pictures; how far down the falling picture starts; spins while falling
+const LOOKS := {
+	"cone": [preload(ART + "cone_hanging.png"), preload(ART + "cone_falling.png"), preload(ART + "cone_landed.png"), 30.0, true],
+	"icicle": [preload(ART + "icicle_hanging.png"), preload(ART + "icicle_falling.png"), preload(ART + "icicle_landed.png"), 10.0, false],
+}
 const GRAVITY := 2600.0
 const HURT_RADIUS := 34.0     ## around the falling cone's middle
 const WAKE_DISTANCE := 700.0  ## starts its rhythm when the cat is this close (on screen)
@@ -17,6 +22,7 @@ const WAKE_DISTANCE := 700.0  ## starts its rhythm when the cat is this close (o
 @export var warn_time: float = 1.0   ## shaking + growing shadow before it drops
 @export var every: float = 0.0       ## seconds between drops (0 = drops once)
 @export var first_delay: float = 0.0 ## extra wait before the first drop (to put cones out of step)
+@export_enum("cone", "icicle") var look: String = "cone"
 
 enum State { WAITING, WARNING, FALLING, DONE }
 var state := State.WAITING
@@ -34,7 +40,7 @@ func _ready() -> void:
 
 func _grow_new() -> void:
 	_cone = Sprite2D.new()
-	_cone.texture = HANGING
+	_cone.texture = LOOKS[look][0]
 	_cone.position = Vector2(0, -height)
 	add_child(_cone)
 	state = State.WAITING
@@ -52,9 +58,10 @@ func _physics_process(delta: float) -> void:
 		State.FALLING:
 			_speed += GRAVITY * delta
 			_cone.position.y += _speed * delta
-			_cone.rotation += 3.0 * delta
+			if LOOKS[look][4]:
+				_cone.rotation += 3.0 * delta
 			_hurt_check()
-			if _cone.position.y >= -LANDED.get_height() * 0.5:
+			if _cone.position.y >= -LOOKS[look][2].get_height() * 0.5:
 				_land()
 
 func _cat_near() -> bool:
@@ -76,9 +83,9 @@ func _warn() -> void:
 func _drop() -> void:
 	state = State.FALLING
 	_speed = 0.0
-	_cone.texture = FALLING
+	_cone.texture = LOOKS[look][1]
 	_cone.rotation = 0.0
-	_cone.position.y += 30.0   # the falling picture has no twig: start where the cone was
+	_cone.position.y += LOOKS[look][3]   # the falling picture has no twig / snow: start where it was
 	AudioManager.play_sfx("sfx_jump", 0.7)
 
 func _hurt_check() -> void:
@@ -94,10 +101,11 @@ func _land() -> void:
 	AudioManager.play_sfx("sfx_land", 0.8)
 	Fx.spawn(self, &"dust", global_position, 0.6)
 	var cone := _cone
-	cone.texture = LANDED
+	var landed: Texture2D = LOOKS[look][2]
+	cone.texture = landed
 	cone.rotation = 0.0
-	cone.position.y = -LANDED.get_height() * 0.5
-	var roll := 1.0 if randf() < 0.5 else -1.0
+	cone.position.y = -landed.get_height() * 0.5
+	var roll := (1.0 if randf() < 0.5 else -1.0) if LOOKS[look][4] else 0.0   # an icicle shatters, no roll
 	var t := cone.create_tween().set_parallel()
 	t.tween_property(cone, "position:x", roll * 70.0, 0.7).set_ease(Tween.EASE_OUT)
 	t.tween_property(cone, "rotation", roll * 1.2, 0.7)
