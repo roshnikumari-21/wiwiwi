@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/actors/enemies/slime.tscn" id="1_slime"]
+[ext_resource type="Script" path="res://scenes/actors/enemies/penguin.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/penguin/peng_walk_0.png" id="3_w0"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/penguin/peng_walk_1.png" id="4_w1"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/penguin/peng_slide.png" id="5_slide"]
+[ext_resource type="Texture2D" path="res://assets/art/enemies/penguin/peng_squash.png" id="6_squash"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_peng"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_w0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_w1")
+}],
+"loop": true,
+"name": &"move",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_slide")
+}],
+"loop": false,
+"name": &"slide",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_squash")
+}],
+"loop": false,
+"name": &"squash",
+"speed": 1.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pengbody"]
+size = Vector2(80, 70)
+
+[node name="Penguin" instance=ExtResource("1_slime")]
+script = ExtResource("2_script")
+
+[node name="Sprite" parent="." index="0"]
+scale = Vector2(1, 1)
+sprite_frames = SubResource("SpriteFrames_peng")
+offset = Vector2(0, -57)
+
+[node name="Body" parent="." index="1"]
+position = Vector2(0, -35)
+shape = SubResource("RectangleShape2D_pengbody")

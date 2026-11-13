@@ -1,18 +1,25 @@
 class_name BumpCrate
 extends StaticBody2D
-## A wooden crate with a golden paw: jump into it from below and it gives what it holds, like a "?"
+## A wooden crate (or a gift box) with a golden paw: jump into it from below and it gives what it holds, like a "?"
 ## block. `coins` coins pop out one per bump (they count as picked up, and in the level's coin total);
 ## `milk` puts a bowl of milk on top instead. When it's empty it turns into the plain crate.
 ## The cat can stand on it either way. Origin = bottom centre (it sits on the ground or floats).
 
-const FULL := preload("res://assets/art/objects/crate_full.png")
-const USED := preload("res://assets/art/objects/crate_used.png")
+## Looks: the wooden paw crate (World 3) or the gift box (World 4). Full and used pictures.
+const LOOKS := {
+	"crate": [preload("res://assets/art/objects/crate_full.png"), preload("res://assets/art/objects/crate_used.png")],
+	"gift": [preload("res://assets/art/objects/gift_full.png"), preload("res://assets/art/objects/gift_used.png")],
+}
 const COIN := preload("res://scenes/objects/coin.tscn")   ## only its spinning sprite is borrowed
 const MILK := preload("res://scenes/objects/milk_bowl.tscn")
 const SIZE := Vector2(104, 104)   ## the solid part (the art is ~110 with its moss)
 
 @export_range(0, 10) var coins: int = 1   ## coins it holds (0 with milk = just milk)
 @export var milk: bool = false             ## gives a bowl of milk (after its coins, if any)
+@export_enum("crate", "gift") var look: String = "crate"
+
+var FULL: Texture2D
+var USED: Texture2D
 
 @onready var sprite: Sprite2D = $Sprite
 
@@ -21,9 +28,15 @@ var _milk_given := false
 
 func _ready() -> void:
 	add_to_group("coin_crates")
+	FULL = LOOKS[look][0]
+	USED = LOOKS[look][1]
 	_left = coins
-	sprite.texture = FULL if (coins > 0 or milk) else USED
-	sprite.offset = Vector2(0, -sprite.texture.get_height() * 0.5)
+	_show(FULL if (coins > 0 or milk) else USED)
+
+## Show a picture with its bottom on the crate's bottom (the gift's full and used pictures differ in height).
+func _show(tex: Texture2D) -> void:
+	sprite.texture = tex
+	sprite.offset = Vector2(0, -tex.get_height() * 0.5)
 
 func is_empty() -> bool:
 	return _left == 0 and (not milk or _milk_given)
@@ -44,7 +57,7 @@ func bumped_from_below() -> void:
 		add_child(bowl)
 		AudioManager.play_sfx("sfx_boing", 1.2)
 	if is_empty():
-		sprite.texture = USED
+		_show(USED)
 
 func _wobble() -> void:
 	var t := create_tween()
