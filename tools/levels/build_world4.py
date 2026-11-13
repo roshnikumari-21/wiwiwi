@@ -8,6 +8,11 @@ tree climbs → icy cliff climbs, crates → gift boxes) in the snow look, plus 
                  sliding penguins: waddle, warn, belly-slide along their whole path
   thin_ice(n)    a lake crossed on n slabs of THIN ICE (crumbling tiles, "ice" look): each cracks
                  the moment she lands and breaks half a second later, so she has to keep hopping
+  ice_hill(steps, step, top, **kw)
+                 snowy steps up to an ICY hilltop (then its stop-snow), and back down
+  slope(n, step, length, slimes={terrace: [...]})
+                 the mountainside: n snowy steps up, then n + 1 icy terraces sliding back down
+                 (each ends on its stop-snow, then a drop to the next)
   slimes         → blue snow slimes;  crates → gift boxes;  planks → ice floes
 
 Levels are ~1.5x World 3's length (owners, 13 Nov 2026), with a checkpoint about every 5k px and milk
@@ -48,6 +53,24 @@ class SnowLevel(ForestLevel):
         self.block_themes[len(self.blocks)] = "ice"
         self.flat(length, **kw)
         self.flat(STOP)
+
+    def ice_hill(self, steps=2, step=150, top=900, **kw):
+        for _ in range(steps):
+            self.up(step, 320)
+        self.ice(top, **kw)
+        for i in range(steps):
+            self.down(step, 320 if i < steps - 1 else 400)
+
+    def slope(self, n, step=150, length=900, slimes=None):
+        slimes = slimes or {}
+        for _ in range(n):
+            self.up(step, 320)
+        for i in range(n + 1):
+            if i:
+                self.h += step   # drop to the next terrace
+            # coins along the terrace (none near a slime)
+            spots = [p for p in range(200, length - 100, 250) if all(abs(p - sx) > 150 for sx, _ in slimes.get(i, ()))]
+            self.ice(length, slimes=slimes.get(i, ()), coins=tuple(spots))
 
     def thin_ice(self, n):
         """A lake crossed on n slabs of thin ice, level with the shore, a short hop apart."""
@@ -123,7 +146,26 @@ def level_3():
     return L
 
 
-LEVELS = [level_1, level_2, level_3]
+def level_4():
+    L = SnowLevel(4, "Slippery Slopes", 0.7)   # up the mountain on snowy steps, slide down icy terraces
+    L.flat(1200, crates=[(650, 200, 2, False)], coins=(300, 420))
+    L.ice_hill(2, 150, 900, coins=(250, 450, 650))       # a small icy hilltop
+    L.flat(1200, slimes=[(600, 80)], flag=150, milk=1000)
+    L.slope(2, 150, 900)                                 # the first slope: three icy terraces down
+    L.flat(1200, penguins=[(600, 150)])
+    L.gap(220)
+    L.flat(1300, milk=300, flag=1000, crates=[(600, 200, 3, False)])
+    L.planks(2)                                          # floes over a mountain tarn
+    L.flat(1300, flag=150, penguins=[(800, 150)])
+    L.slope(3, 150, 700, slimes={2: [(400, 50)]})        # the big slope: four terraces, a slime on the third
+    L.flat(1200, flag=150, milk=900, crates=[(500, 200, 0, True)])
+    L.gap(240)
+    L.flat(1200, crates=[(450, 200, 3, False)], bridge=(650, 400), yarn=(850, 560))
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4]
 
 if __name__ == "__main__":
     for make in LEVELS:
