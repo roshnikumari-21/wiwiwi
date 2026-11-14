@@ -231,11 +231,11 @@ theme = "snow"
 
 [node name="Ground39" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(26345, 900)
-size = Vector2(1100, 400)
+size = Vector2(2100, 400)
 theme = "snow"
 
 [node name="RightWall" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(27445, -200)
+position = Vector2(28445, -200)
 size = Vector2(128, 1500)
 theme = "snow"
 

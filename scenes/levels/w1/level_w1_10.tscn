@@ -65,10 +65,10 @@ size = Vector2(1000, 400)
 
 [node name="Ground11" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(14735, 900)
-size = Vector2(1600, 400)
+size = Vector2(2600, 400)
 
 [node name="RightWall" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(16335, -200)
+position = Vector2(17335, -200)
 size = Vector2(128, 1500)
 
 [node name="Mushroom1" parent="Objects" instance=ExtResource("12_mushroom")]

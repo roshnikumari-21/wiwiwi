@@ -84,11 +84,11 @@ theme = "forest"
 
 [node name="Ground12" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(10825, 900)
-size = Vector2(900, 400)
+size = Vector2(1900, 400)
 theme = "forest"
 
 [node name="RightWall" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(11725, -200)
+position = Vector2(12725, -200)
 size = Vector2(128, 1500)
 theme = "forest"
 

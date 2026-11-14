@@ -73,11 +73,11 @@ theme = "town"
 
 [node name="Ground10" parent="Terrain" instance=ExtResource("2_block")]
 position = Vector2(12565, 900)
-size = Vector2(900, 400)
+size = Vector2(1900, 400)
 theme = "town"
 
 [node name="RightWall" parent="Terrain" instance=ExtResource("2_block")]
-position = Vector2(13465, -200)
+position = Vector2(14465, -200)
 size = Vector2(128, 1500)
 theme = "town"
 

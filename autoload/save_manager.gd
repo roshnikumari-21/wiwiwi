@@ -43,7 +43,14 @@ func has_yarn(level_id: String) -> bool:
 	return _level(level_id).get("yarn", false)
 
 ## The first level is always open; every other level opens when the one before it is done.
+## Play-testing (owners, 14 Nov 2026): in a TEST build on a phone (the debug APK) every level is open,
+## so the co-founder can jump straight into World 4. Play Store builds are release builds: never open.
+## Turn off by setting TEST_OPEN_ALL to false.
+const TEST_OPEN_ALL := true
+
 func is_unlocked(level_id: String) -> bool:
+	if TEST_OPEN_ALL and OS.is_debug_build() and OS.has_feature("mobile"):
+		return true
 	var levels: Array = GameState.catalog.levels
 	for i in levels.size():
 		if levels[i].id == level_id:

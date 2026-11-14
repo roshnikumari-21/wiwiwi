@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "scenes" / "levels" / "w1"
 BOTTOM = 1300          # ground blocks reach down to here
 BASE = 900             # normal ground height (water only next to this height)
+RUNOFF = 1000          # road past the girl at the end of every level (the hug stays mid-screen)
 
 RES = {
     "base": ("PackedScene", "res://scenes/levels/level_base.tscn"),
@@ -170,9 +171,11 @@ class Level:
         self.flat(length, **kw)
 
     def finish(self, length=900, coins=(150, 300, 450)):
-        """Last stretch with the girl near the end (no hazards here)."""
-        self.flat(length, coins=coins)
-        self._obj("girl", self.x - 200, self.h)
+        """Last stretch with the girl near its end (no hazards here), and RUNOFF px of road past her,
+        so during the hug the camera keeps her near the middle of the screen instead of the world
+        ending right behind her (owners, 14 Nov 2026)."""
+        self.flat(length + RUNOFF, coins=coins)
+        self._obj("girl", self.x - 200 - RUNOFF, self.h)
 
     # --- output ----------------------------------------------------------------------------
     def write(self):
