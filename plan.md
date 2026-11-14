@@ -402,7 +402,7 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 - [ ] `Economy` future slot (hidden)
 - [ ] Level checks for all 20 levels
 
-- [ ] **World 5 — Sunny Dunes** (DRAFT, 14 Nov 2026, waiting for the owners' approval). A warm desert world: golden dunes, sandstone ruins, palm-tree oases, cacti, clay pots, flying carpets. The last world before the big public release (Worlds 1–5). Light changes across the world: bright noon (5-1) → golden afternoon → **sunset** (5-5, 5-6) → **sandstorm** (5-9) → calm sunset at the oasis (5-10).
+- [ ] **World 5 — Sunny Dunes** (plan approved by the owners 14 Nov 2026). A warm desert world: golden dunes, sandstone ruins, palm-tree oases, cacti, clay pots, flying carpets. The last world before the big public release (Worlds 1–5). Light changes across the world: bright noon (5-1) → golden afternoon → **sunset** (5-5, 5-6) → **sandstorm** (5-9) → calm sunset at the oasis (5-10).
   - **Length:** like World 4, a little longer: ~19k px (5-1) → ~30k (5-9), calm finale ~20k; a flag every ~5k px, milk every ~6k px.
   - **Budget rule kept: one new hazard + one new enemy.**
     - **New hazard: quicksand.** Patches of darker, rippling sand. Standing on it she slowly sinks (about 2 s to go under); walking on it she's slowed; jumping gets her out. Sinking all the way = like falling in water (a heart, back to the flag). Fair-play: always a firm sand patch to jump from before it; never quicksand under a landing from a high jump in the early levels.
