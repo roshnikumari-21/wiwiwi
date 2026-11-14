@@ -3,7 +3,7 @@ tree climbs → icy cliff climbs, crates → gift boxes) in the snow look, plus 
 
   ice(length, **flat options)
                  a stretch of slippery ice. It always ends on STOP px of snow (the fair-play rule:
-                 she slides ~200 px, so never straight into a gap), and spikes are never put on it.
+                 she slides ~420 px on ice, stops quickly on snow, so never straight into a gap), and spikes are never put on it.
   flat(..., penguins=[(x, patrol)])
                  sliding penguins: waddle, warn, belly-slide along their whole path
   thin_ice(n)    a lake crossed on n slabs of THIN ICE (crumbling tiles, "ice" look): each cracks
@@ -35,7 +35,7 @@ Run:  python tools/levels/build_world4.py
 """
 from build_world3 import ForestLevel
 
-STOP = 400   # snow after every ice stretch (> the 300 px fair-play rule)
+STOP = 400   # snow after every ice stretch (> the 300 px fair-play rule; snow stops her within ~40 px)
 SKY = 720        # sky route: the walkways are this far above the floor (step 180, gifts 360 / 540)
 ICICLE_HEIGHT = 281   # a falling icicle hangs this far above the floor, tucked under a 360 px walkway
 HOP_LEDGE, HOP_GAP, HOP_RISE = 260, 130, 80   # ledge hop: ledge width, water between, every other one higher

@@ -20,6 +20,12 @@
 [ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S0.png" id="18_S0"]
 [ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S1.png" id="19_S1"]
 [ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_S2.png" id="20_S2"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_T3.png" id="21_T3"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_T4.png" id="22_T4"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_T5.png" id="23_T5"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_T6.png" id="24_T6"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_T7.png" id="25_T7"]
+[ext_resource type="Texture2D" path="res://assets/art/characters/cat/cat_T8.png" id="26_T8"]
 
 [resource]
 animations = [{
@@ -143,20 +149,26 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.00,
-"texture": ExtResource("18_S0")
+"texture": ExtResource("21_T3")
 }, {
 "duration": 1.00,
-"texture": ExtResource("18_S0")
+"texture": ExtResource("22_T4")
 }, {
 "duration": 1.00,
-"texture": ExtResource("18_S0")
+"texture": ExtResource("23_T5")
 }, {
 "duration": 1.00,
-"texture": ExtResource("19_S1")
+"texture": ExtResource("24_T6")
+}, {
+"duration": 1.00,
+"texture": ExtResource("25_T7")
+}, {
+"duration": 1.00,
+"texture": ExtResource("26_T8")
 }],
 "loop": true,
 "name": &"tired_walk",
-"speed": 2.4
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.00,

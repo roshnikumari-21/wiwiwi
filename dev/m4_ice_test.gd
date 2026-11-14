@@ -1,7 +1,7 @@
 extends SceneTree
 ## World 4 slippery ice, played like a player, on the snow preview level (one big block of ice):
 ##  - on ice she knows it (on_ice), on snow she doesn't
-##  - letting go at full speed: on snow she stops in a few px, on ice she slides ~150-300 px
+##  - letting go at full speed: on snow she stops in a few px, on ice she slides ~350-500 px
 ##  - starting from standing on ice she gets going slower than on snow
 ##  - turning around on ice takes longer than on snow
 ##  - she can still jump normally from ice (full height)
@@ -18,6 +18,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	level = load("res://dev/snow_preview.tscn").instantiate()
+	level.get_node("Objects/Slime1").free()   # the preview's slime sits on the ice: out of the way of the long slides
 	root.add_child(level)
 	await _frames(80)
 	cat = level.get_node("Player")
@@ -32,7 +33,7 @@ func _run() -> void:
 	var stop_snow: float = await _run_and_let_go(snow, 150.0)
 	var stop_ice: float = await _run_and_let_go(ice, 150.0)
 	_check("let go at full speed: stops within 40 px on snow (%d px)" % int(stop_snow), stop_snow < 40.0, stop_snow)
-	_check("on ice she slides on 150-300 px (%d px)" % int(stop_ice), stop_ice > 150.0 and stop_ice < 300.0, stop_ice)
+	_check("on ice she slides on 350-500 px (%d px)" % int(stop_ice), stop_ice > 350.0 and stop_ice < 500.0, stop_ice)
 
 	var t_snow: int = await _frames_to_full_speed(snow, 150.0)
 	var t_ice: int = await _frames_to_full_speed(ice, 150.0)

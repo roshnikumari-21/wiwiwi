@@ -24,8 +24,8 @@ extends CharacterBody2D
 @export_group("Energy")
 @export var energy_seconds: float = 35.0   ## seconds of moving on a full tank
 @export var tired_speed: float = 0.65      ## share of run speed left when energy is empty (never a fail)
-@export var ice_grip: float = 0.25         ## on ice: share of the usual acceleration (slow to get going and to turn)
-@export var ice_slide: float = 0.08        ## on ice: share of the usual braking (she slides ~200 px to a stop)
+@export var ice_grip: float = 0.2          ## on ice: share of the usual acceleration (slow to get going and to turn)
+@export var ice_slide: float = 0.04        ## on ice: share of the usual braking (she slides ~420 px to a stop; owners 14 Nov 2026: "more slippery")
 var on_ice := false                        ## standing on slippery ice (World 4)
 
 @export_group("Idle")
@@ -37,8 +37,7 @@ var on_ice := false                        ## standing on slippery ice (World 4)
 var _breath_time := 0.0
 var _trudge_time := 0.0
 const TRUDGE_STEPS := 3.2   ## heavy steps per second at full run speed
-const TRUDGE_DIP := 7.0     ## px the body sinks at each step
-const TRUDGE_SWAY := 2.5    ## degrees of side-to-side sway
+const TRUDGE_DIP := 3.0     ## px the body sinks at each step (a small extra heaviness on the walk)
 var energy := 1.0 : set = set_energy   ## 0..1; drains while moving, milk refills it
 var frozen := false     ## true when the level is over: no input, gravity only
 var _safe_left := 0.0   ## seconds of "can't be hurt" left
@@ -173,16 +172,16 @@ func _update_animation() -> void:
 	else:
 		sprite.play("sleepy" if tired else "idle")
 	# Tired legs move slower, matching the slower speed.
-	sprite.speed_scale = _speed_factor() if sprite.animation == "walk" else 1.0
+	sprite.speed_scale = _speed_factor() if sprite.animation in ["walk", "tired_walk"] else 1.0
 
-# Tired walking: the standing sleepy pose bobs down at each heavy step and sways a little, so she
-# trudges (there are no tired walking drawings).
+# Tired walking: she walks with the six walking drawings wearing her sleepy face (cat_T3..T8, made by
+# tools/art_pipeline/make_tired_walk.py), legs slowed to her tired speed, and her body sinks a little
+# at each heavy step.
 func _trudge(delta: float) -> void:
 	if sprite.animation == "tired_walk" and is_on_floor():
 		_trudge_time += delta * TRUDGE_STEPS * absf(velocity.x) / run_speed
 		var step := absf(sin(_trudge_time * PI))
 		sprite.position.y = step * TRUDGE_DIP
-		sprite.rotation = sin(_trudge_time * PI) * deg_to_rad(TRUDGE_SWAY)
 	elif _trudge_time != 0.0:
 		_trudge_time = 0.0
 		sprite.position.y = 0.0
