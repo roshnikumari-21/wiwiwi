@@ -164,12 +164,14 @@ func _terrain_bounds() -> Rect2:
 			first = false
 	return rect
 
-## The aurora night (set up before the background enters the tree): the far layer darkened with the
-## northern lights waving in its sky, the trees and the sky colour in moonlit blue, heavy snowfall,
-## and the level itself a little bluer so it sits in the night (the cat and HUD stay easy to read).
+## The aurora night (set up before the background enters the tree): the far layer becomes the painted
+## night picture (moon, northern lights behind the peaks; tools/art_pipeline/make_aurora_night.py) with
+## its aurora gently rippling, the trees and the sky colour in moonlit blue, heavy snowfall, and the
+## level itself a little bluer so it sits in the night (the cat and HUD stay easy to read).
 func _aurora_night(background: Node) -> void:
 	var far := background.get_node_or_null("Far")
 	if far:
+		far.texture = preload("res://assets/art/backgrounds/snow/bg_far_night.png")
 		var mat := ShaderMaterial.new()
 		mat.shader = preload("res://scenes/levels/backgrounds/aurora_night.gdshader")
 		far.material = mat
