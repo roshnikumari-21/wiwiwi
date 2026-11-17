@@ -111,6 +111,18 @@ func _audit(level: Node) -> Array[String]:
 		for obj in level.get_node("Objects").get_children():
 			if obj.scene_file_path.ends_with("spikes.tscn") and obj.global_position.x > b.global_position.x - 40.0 					and obj.global_position.x < b.global_position.x + b.size.x + 40.0 and absf(obj.global_position.y - b.global_position.y) < 5.0:
 				problems.append("spikes %s sit on ice %s" % [obj.name, b.name])
+	# Quicksand (World 5): even a tired cat walking straight across must never go under, so a stretch
+	# is at most 800 px long (tired, on quicksand she sinks ~71 px of 100 crossing that), and spikes
+	# never sit on it.
+	for b in ground:
+		if b.theme != "quicksand":
+			continue
+		if b.size.x > 800.0:
+			problems.append("quicksand %s is %d px long (max 800: a tired cat walking across would go under)" % [b.name, int(b.size.x)])
+		for obj in level.get_node("Objects").get_children():
+			if obj.scene_file_path.ends_with("spikes.tscn") and obj.global_position.x > b.global_position.x - 40.0 \
+					and obj.global_position.x < b.global_position.x + b.size.x + 40.0 and absf(obj.global_position.y - b.global_position.y) < 5.0:
+				problems.append("spikes %s sit on quicksand %s" % [obj.name, b.name])
 	hazards.sort_custom(func(a, b): return a[0].x < b[0].x)
 	for i in hazards.size() - 1:
 		for j in range(i + 1, hazards.size()):

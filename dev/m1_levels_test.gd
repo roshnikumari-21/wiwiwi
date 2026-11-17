@@ -138,6 +138,7 @@ func _crossings(data) -> void:
 	var probe2 = load(data.scene_path).instantiate()
 	var ices: Array = probe2.get_node("Terrain").get_children().filter(func(b): return b is GroundBlock and b.theme == "ice" and not b.one_way)
 	var ice_names: Array = ices.map(func(b): return String(b.name))
+	var quick_names: Array = probe2.get_node("Terrain").get_children().filter(func(b): return b is GroundBlock and b.theme == "quicksand" and not b.one_way).map(func(b): return String(b.name))
 	var penguins: Array = probe2.get_node("Objects").get_children().filter(func(o): return o.scene_file_path.ends_with("penguin.tscn")).map(func(o): return String(o.name))
 	probe2.free()
 	for p_name in penguins:
@@ -146,6 +147,12 @@ func _crossings(data) -> void:
 		var level = await _load(data.scene_path)
 		await _frames(80)
 		await _ice_crossing(id, level.get_node("Terrain/" + ice_name), level.get_node("Player"))
+		level.queue_free()
+		await _frames(2)
+	for quick_name in quick_names:
+		var level = await _load(data.scene_path)
+		await _frames(80)
+		await _quicksand_crossing(id, level.get_node("Terrain/" + quick_name), level.get_node("Player"))
 		level.queue_free()
 		await _frames(2)
 
@@ -212,6 +219,39 @@ func _ice_crossing(id: String, ice, player) -> void:
 			break
 	var ok: bool = player.is_on_floor() and absf(player.global_position.y - ice.global_position.y) < 6.0 and gs.hearts == 3
 	_check("%s: across the ice at x %d at full speed, slid to a stop on the snow, no heart lost" % [id, int(start)], ok, [player.global_position, gs.hearts])
+
+## World 5: the worst case on quicksand — a TIRED cat walks straight across it without jumping
+## (jumping only over a creature 160-240 px ahead, like a player) and must reach firm sand with no heart lost.
+func _quicksand_crossing(id: String, quick, player) -> void:
+	var gs = root.get_node("GameState")
+	gs.hearts = 3
+	var swallowed := [0]
+	var count := func(): swallowed[0] += 1
+	root.get_node("Events").player_fell_in_water.connect(count)
+	var start: float = quick.global_position.x
+	var end: float = start + quick.size.x
+	await _place(player, Vector2(start - 60.0, quick.global_position.y - 5.0))
+	player.energy = 0.0   # tired: the slowest she can be
+	var deepest := 0.0
+	Input.action_press("move_right")
+	for i in 60 * 12:
+		await physics_frame
+		deepest = maxf(deepest, player.sunk)
+		if player.global_position.x > end + 40.0 or swallowed[0] > 0:
+			break
+		if player.is_on_floor():
+			for e in root.get_tree().get_nodes_in_group("enemies"):
+				var ahead: float = e.global_position.x - player.global_position.x
+				if is_instance_valid(e) and ahead > 160.0 and ahead < 240.0 and absf(e.global_position.y - player.global_position.y) < 40.0:
+					Input.action_press("jump")
+					await _frames(22)
+					Input.action_release("jump")
+					break
+	Input.action_release("move_right")
+	root.get_node("Events").player_fell_in_water.disconnect(count)
+	player.energy = 1.0
+	var ok: bool = swallowed[0] == 0 and player.global_position.x > end and gs.hearts == 3
+	_check("%s: across the quicksand at x %d walking, tired (deepest %d px), no heart lost" % [id, int(start), int(deepest)], ok, [player.global_position, swallowed[0], gs.hearts])
 
 ## Like a player under the icicles: run along the floor; when a shadow grows (or an icicle falls) just
 ## ahead, stop and wait until it has landed; if one starts right above her, keep running (she gets

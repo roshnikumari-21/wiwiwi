@@ -27,6 +27,17 @@ extends CharacterBody2D
 @export var ice_grip: float = 0.2          ## on ice: share of the usual acceleration (slow to get going and to turn)
 @export var ice_slide: float = 0.04        ## on ice: share of the usual braking (she slides ~420 px to a stop; owners 14 Nov 2026: "more slippery")
 var on_ice := false                        ## standing on slippery ice (World 4)
+@export var quicksand_speed: float = 0.5   ## on quicksand: share of her speed (World 5)
+@export var sink_walking: float = 15.0     ## on quicksand: px per second she sinks while walking
+@export var sink_still: float = 50.0       ## ...and while standing still (under in ~2 s)
+const SINK_UNDER := 100.0                  ## sunk this deep = swallowed (like falling in water)
+const SINK_RECOVER := 500.0                ## px per second she comes back up once off the quicksand
+const COVER_WIDTH := 180.0                 ## the patch of quicksand drawn over her as she sinks
+var on_quicksand := false                  ## standing on quicksand
+var sunk := 0.0                            ## how deep she has sunk into it (px)
+var _quick_block: GroundBlock              ## the quicksand under her
+var _dip := 0.0                            ## the tired walk's little dip at each step
+var _cover: Node2D                         ## quicksand drawn over her legs while she sinks
 
 @export_group("Idle")
 @export var breath_amount: float = 0.012   ## how much she rises when breathing (1.2 %)
@@ -59,6 +70,7 @@ var _rise_gravity: float
 
 func _ready() -> void:
 	CatSkins.apply(sprite)   # the colour chosen in the Cat Shop
+	_make_cover()
 	_base_scale = sprite.scale
 	_rise_gravity = 2.0 * jump_height / (time_to_apex * time_to_apex)
 	_jump_speed = -2.0 * jump_height / time_to_apex
@@ -66,6 +78,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_breathe(delta)
 	_trudge(delta)
+	sprite.position.y = _dip + sunk
+	_update_cover()
 
 func _physics_process(delta: float) -> void:
 	_safe_left = max(_safe_left - delta, 0.0)
@@ -80,6 +94,7 @@ func _physics_process(delta: float) -> void:
 	if rising and is_on_ceiling():
 		_bump_head()
 	_after_move()
+	_sink(delta)
 	_use_energy(delta)
 	_update_animation()
 
@@ -126,16 +141,72 @@ func _handle_run(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, slow_down * delta)
 
-## Standing on slippery ice? (a GroundBlock with the "ice" theme under her feet)
+## Standing on slippery ice or on quicksand? (a GroundBlock with that theme under her feet)
 func _check_ice() -> void:
 	if not is_on_floor():
-		return   # keeps the last value in the air: she lands with the same grip she left with
+		on_quicksand = false
+		return   # keeps on_ice in the air: she lands with the same grip she left with
 	on_ice = false
+	on_quicksand = false
 	for i in get_slide_collision_count():
 		var hit := get_slide_collision(i)
 		var block := hit.get_collider() as GroundBlock
-		if hit.get_normal().y < -0.5 and block and block.theme == "ice":
-			on_ice = true
+		if hit.get_normal().y < -0.5 and block:
+			if block.theme == "ice":
+				on_ice = true
+			elif block.theme == "quicksand":
+				on_quicksand = true
+				_quick_block = block
+
+## World 5 quicksand: on it she sinks — slowly while walking, faster standing still. Jumping (or
+## stepping off) brings her straight back up. Sunk all the way: like falling in water.
+func _sink(delta: float) -> void:
+	if frozen:
+		return
+	if on_quicksand:
+		sunk += delta * (sink_walking if absf(velocity.x) > 30.0 else sink_still)
+		if sunk >= SINK_UNDER:
+			sunk = SINK_UNDER
+			AudioManager.play_sfx("sfx_splash", 0.6)
+			Events.player_fell_in_water.emit()
+	else:
+		sunk = maxf(sunk - SINK_RECOVER * delta, 0.0)
+
+## The quicksand over her legs: the block's own top and swirls, lined up with its pattern, so she
+## looks like she's in the sand (only where the quicksand is).
+func _make_cover() -> void:
+	_cover = Node2D.new()
+	_cover.name = "SandCover"
+	_cover.visible = false
+	var kit: Dictionary = GroundBlock.KITS["quicksand"]
+	for part in ["fill", "top"]:   # the top's soft lower edge blends over the swirls, like on the block
+		var piece := Sprite2D.new()
+		piece.name = part
+		piece.texture = kit[part]
+		piece.centered = false
+		piece.region_enabled = true
+		piece.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		_cover.add_child(piece)
+	add_child(_cover)   # after the sprite: drawn over her
+
+func _update_cover() -> void:
+	var show := sunk > 0.5 and _quick_block != null and is_instance_valid(_quick_block)
+	_cover.visible = show
+	if not show:
+		return
+	var kit: Dictionary = GroundBlock.KITS["quicksand"]
+	var block_pos := _quick_block.global_position
+	var left := maxf(global_position.x - COVER_WIDTH * 0.5, block_pos.x)
+	var right := minf(global_position.x + COVER_WIDTH * 0.5, block_pos.x + _quick_block.size.x)
+	var width := maxf(right - left, 0.0)
+	var top: Sprite2D = _cover.get_node("top")
+	var fill: Sprite2D = _cover.get_node("fill")
+	var top_h := float(top.texture.get_height())
+	var fill_top: float = kit.fill_from
+	top.position = Vector2(left, block_pos.y - kit.top_surface) - global_position
+	top.region_rect = Rect2(fposmod(left - block_pos.x, top.texture.get_width()), 0, width, top_h)
+	fill.position = Vector2(left, block_pos.y + fill_top) - global_position
+	fill.region_rect = Rect2(fposmod(left - block_pos.x, fill.texture.get_width()), 0, width, SINK_UNDER + 140.0)
 
 func _after_move() -> void:
 	_check_ice()
@@ -181,10 +252,10 @@ func _trudge(delta: float) -> void:
 	if sprite.animation == "tired_walk" and is_on_floor():
 		_trudge_time += delta * TRUDGE_STEPS * absf(velocity.x) / run_speed
 		var step := absf(sin(_trudge_time * PI))
-		sprite.position.y = step * TRUDGE_DIP
+		_dip = step * TRUDGE_DIP
 	elif _trudge_time != 0.0:
 		_trudge_time = 0.0
-		sprite.position.y = 0.0
+		_dip = 0.0
 		sprite.rotation = 0.0
 
 # Gentle breathing while standing still, done by scaling (no extra frames, so nothing can wobble).
@@ -226,7 +297,10 @@ func _use_energy(delta: float) -> void:
 		energy -= delta / energy_seconds
 
 func _speed_factor() -> float:
-	return tired_speed if is_tired() else 1.0
+	var factor := tired_speed if is_tired() else 1.0
+	if on_quicksand:
+		factor *= quicksand_speed
+	return factor
 
 ## Put the cat back at a point (after a pit fall), with a short blink so the player sees where she is.
 func respawn_at(point: Vector2) -> void:
@@ -235,6 +309,8 @@ func respawn_at(point: Vector2) -> void:
 	_in_jump = false
 	_fall_peak_speed = 0.0
 	frozen = false
+	sunk = 0.0
+	on_quicksand = false
 	_safe_left = safe_time
 	sprite.flip_h = false
 	sprite.modulate.a = 1.0
