@@ -32,6 +32,7 @@ SOUNDS = {
     "mus_world2": ("Sunset_Stroll", "loop", -20.0),
     "mus_world3": ("Sunlit_Woodland_Stroll", "loop", -20.0),
     "mus_world4": ("Snowy_Cabin_Steps", "loop", -20.0),
+    "mus_world5": ("Oasis_Trot", "loop", -20.0),
     "mus_level_complete": ("Level_Complete", "jingle", -17.0),
     "mus_try_again": ("Short_soft", "jingle", -19.0),
     "sfx_coin": ("Bright_cute_coin", "sfx", -21.0),

@@ -7,12 +7,14 @@ extends StaticBody2D
 ## that side (the ground continues); a lower neighbour gets an end cap and a side outline that
 ## stops where the lower ground begins. One-way blocks use the thin floating-platform art.
 ## Theme picks the art kit: "meadow" (World 1), "town" (World 2, cobbles + bricks) or "forest"
-## (World 3, moss + earth), "snow" (World 4) or "ice" (World 4's slippery ground).
+## (World 3, moss + earth), "snow" (World 4) or "ice" (World 4's slippery ground), "sand" (World 5)
+## or "quicksand" (World 5's sinking sand).
 
 const MEADOW := "res://assets/art/tiles/meadow/"
 const TOWN := "res://assets/art/tiles/town/"
 const FOREST := "res://assets/art/tiles/forest/"
 const SNOW := "res://assets/art/tiles/snow/"
+const SAND := "res://assets/art/tiles/sand/"
 # Each kit's pieces and where the walkable line sits in them (printed by make_ground.py / make_town.py).
 const KITS := {
 	"meadow": {
@@ -92,6 +94,34 @@ const KITS := {
 		"fill_from": 22,
 		"deco_gap": Vector2(300, 600), "deco_sink": 0,
 	},
+	"sand": {   # World 5 (tools/art_pipeline/make_sand.py): golden sand over sandstone
+		"top": preload(SAND + "ground_top.png"), "fill": preload(SAND + "ground_fill.png"),
+		"cap_left": preload(SAND + "ground_cap_left.png"), "cap_right": preload(SAND + "ground_cap_right.png"),
+		"thin_left": preload(SAND + "thin_left.png"), "thin_mid": preload(SAND + "thin_mid.png"),
+		"thin_right": preload(SAND + "thin_right.png"),
+		"decos": [
+			preload(SAND + "deco_cactus.png"), preload(SAND + "deco_flowers.png"), preload(SAND + "deco_rock.png"),
+			preload(SAND + "deco_jar.png"), preload(SAND + "deco_lantern.png"), preload(SAND + "deco_sprout.png"),
+			preload(SAND + "deco_aloe.png"),
+		],
+		"top_surface": 69, "cap_surface": 10,
+		"cap_inset_left": 15, "cap_inset_right": 19,
+		"thin_side_surface": 6, "thin_mid_surface": 6,
+		"fill_from": 37,
+		"deco_gap": Vector2(380, 760), "deco_sink": 6,
+	},
+	"quicksand": {   # World 5's sinking sand: dark caramel swirls, sand caps at its ends, no decorations
+		"top": preload(SAND + "quick_top.png"), "fill": preload(SAND + "quick_fill.png"),
+		"cap_left": preload(SAND + "ground_cap_left.png"), "cap_right": preload(SAND + "ground_cap_right.png"),
+		"thin_left": preload(SAND + "thin_left.png"), "thin_mid": preload(SAND + "thin_mid.png"),
+		"thin_right": preload(SAND + "thin_right.png"),
+		"decos": [],
+		"top_surface": 68, "cap_surface": 10,
+		"cap_inset_left": 15, "cap_inset_right": 19,
+		"thin_side_surface": 6, "thin_mid_surface": 6,
+		"fill_from": 38,
+		"deco_gap": Vector2(300, 600), "deco_sink": 0,
+	},
 }
 const OUTLINE_FROM := 40
 const OUTLINE_WIDTH := 6.0
@@ -109,7 +139,7 @@ const OUTLINE_COLOR := Color(0.33, 0.2, 0.12)
 	set(value):
 		decorate = value
 		_rebuild()
-@export_enum("meadow", "town", "forest", "snow", "ice") var theme: String = "meadow":
+@export_enum("meadow", "town", "forest", "snow", "ice", "sand", "quicksand") var theme: String = "meadow":
 	set(value):
 		theme = value
 		_rebuild()
