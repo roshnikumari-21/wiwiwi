@@ -298,7 +298,34 @@ def level_8():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7, level_8]
+def level_9():
+    L = DesertLevel(9, "Sandstorm Pass", 0.65)   # the hardest: through a sandstorm, fewer rests, everything at full strength
+    L.level_props["sky"] = "sandstorm"
+    L.flat(1200, crates=[(650, 200, 2, False)], coins=(330, 450))
+    L.quick_field(3)                                     # straight into a three-pool field
+    L.flat(1600, moles=[(400, 100), (1150, 100)], flag=150)   # a pair, far enough apart to pass one at a time
+    L.crumble_bridge(4)                                  # four crumbling blocks: no stopping
+    L.flat(1700, coconuts=[(420, 1.8, 0), (890, 1.8, 0.9), (1360, 1.8, 0.4)])   # a palm grove on a fast rhythm
+    L.planks(4)
+    L.flat(1300, milk=200, flag=1100, spikes=[(650, True)])
+    L.tree_climb(720, 800, flag=300)                     # the tallest ruin
+    L.flat(1000, moles=[(500, 120)])                     # a mole on the ruin top
+    L.ruins_down(4, 180, 350)
+    L.quicksand(800, coins=(200, 400, 600))              # the longest quicksand allowed
+    L.flat(1350, spikes=[(330, False), (850, True)], milk=1200)
+    L.bobbers(4)
+    L.flat(1400, flag=150, crates=[(700, 200, 3, False)])
+    L.crumble_steps(3, 1000, yarn=(500, 260))            # the crumbling stair: the yarn on top
+    L.ruins_down(4, 170, 350)
+    L.flat(1600, moles=[(400, 100), (1150, 100)], flag=150)   # a pair, far enough apart to pass one at a time
+    L.flat(1300, coconuts=[(650, 2.0, 0.5)], milk=1150)
+    L.gap(240)
+    L.flat(1100, crates=[(400, 200, 2, False), (504, 200, 2, False)])
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7, level_8, level_9]
 
 if __name__ == "__main__":
     for make in LEVELS:

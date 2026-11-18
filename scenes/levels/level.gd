@@ -11,8 +11,8 @@ extends Node2D
 ## The world's look and music. The ground blocks carry the same theme (they're built in the editor).
 @export_enum("meadow", "town", "forest", "snow", "sand") var theme: String = "meadow"
 ## A special sky for one level: "aurora" = World 4's night with the northern lights and heavy snowfall;
-## "sunset" = World 5's warm golden-pink evening.
-@export_enum("day", "aurora", "sunset") var sky: String = "day"
+## "sunset" = World 5's warm golden-pink evening; "sandstorm" = World 5's hazy orange storm, sand blowing.
+@export_enum("day", "aurora", "sunset", "sandstorm") var sky: String = "day"
 
 const THEMES := {
 	"meadow": {"music": "mus_world1", "background": null},   # level_base.tscn already has the meadow
@@ -66,6 +66,8 @@ func _ready() -> void:
 			_aurora_night(background)
 		elif sky == "sunset":
 			_sunset(background)
+		elif sky == "sandstorm":
+			_sandstorm(background)
 		add_child(background)
 	AudioManager.play_music(look.music)
 	var coin_total := get_tree().get_nodes_in_group("coins").size()
@@ -210,4 +212,35 @@ func _sunset(background: Node) -> void:
 	var tint := CanvasModulate.new()
 	tint.name = "SunsetTint"
 	tint.color = Color(1.0, 0.93, 0.86)
+	add_child(tint)
+
+## The sandstorm (5-9): a dusty orange sky, the dunes and palms half lost in the haze, golden sand
+## blowing sideways behind the level and a few faint fast gusts in front; the level a little dusty.
+func _sandstorm(background: Node) -> void:
+	var sky_rect := background.get_node_or_null("Sky")
+	if sky_rect:
+		sky_rect.color = Color(0.93, 0.7, 0.45)
+	var far := background.get_node_or_null("Far")
+	if far:
+		far.modulate = Color(1.0, 0.72, 0.45, 0.55)   # the far dunes fade into the dust
+	var mid := background.get_node_or_null("Mid")
+	if mid:
+		mid.modulate = Color(1.0, 0.8, 0.6, 0.85)
+	var behind := CanvasLayer.new()   # between the background and the level (like the snowfall)
+	behind.layer = -1
+	var sand := CPUParticles2D.new()
+	sand.set_script(preload("res://scenes/levels/backgrounds/sandstorm.gd"))
+	behind.add_child(sand)
+	background.add_child(behind)
+	var front := CanvasLayer.new()   # faint gusts over the level, under the HUD
+	front.layer = 1
+	$Hud.layer = 2
+	var gusts := CPUParticles2D.new()
+	gusts.set_script(preload("res://scenes/levels/backgrounds/sandstorm.gd"))
+	gusts.gust = true
+	front.add_child(gusts)
+	background.add_child(front)
+	var tint := CanvasModulate.new()
+	tint.name = "DustTint"
+	tint.color = Color(1.0, 0.92, 0.82)
 	add_child(tint)
