@@ -61,6 +61,10 @@ func _audit(level: Node) -> Array[String]:
 			span = Vector2(obj.global_position.x - obj.patrol_distance - 100.0, obj.global_position.x + obj.patrol_distance + 100.0)
 			after = SLIME_AFTER_LANDING
 			before = SLIME_BEFORE_EDGE
+		elif obj.scene_file_path.ends_with("mole.tscn"):   # World 5: tunnels along its path, pops up anywhere on it
+			span = Vector2(obj.global_position.x - obj.patrol_distance - 60.0, obj.global_position.x + obj.patrol_distance + 60.0)
+			after = SLIME_AFTER_LANDING
+			before = SLIME_BEFORE_EDGE
 		elif obj.scene_file_path.ends_with("hedgehog.tscn"):   # World 3: like a slime, but it can't be stomped
 			span = Vector2(obj.global_position.x - obj.patrol_distance - 50.0, obj.global_position.x + obj.patrol_distance + 50.0)
 			after = SLIME_AFTER_LANDING

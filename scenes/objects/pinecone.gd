@@ -9,10 +9,14 @@ extends Node2D
 ## it hangs under a snowy ledge, falls straight (no spin) and shatters where it lands (no roll).
 
 const ART := "res://assets/art/objects/"
-## look: hanging, falling, landed pictures; how far down the falling picture starts; spins while falling
+## World 5 uses it as a COCONUT (look = "coconut"): it hangs on its leafy stem, tumbles as it falls and
+## cracks open where it lands (no roll).
+## look: hanging, falling, landed pictures; how far down the falling picture starts; spins while
+## falling; rolls after landing
 const LOOKS := {
-	"cone": [preload(ART + "cone_hanging.png"), preload(ART + "cone_falling.png"), preload(ART + "cone_landed.png"), 30.0, true],
-	"icicle": [preload(ART + "icicle_hanging.png"), preload(ART + "icicle_falling.png"), preload(ART + "icicle_landed.png"), 10.0, false],
+	"cone": [preload(ART + "cone_hanging.png"), preload(ART + "cone_falling.png"), preload(ART + "cone_landed.png"), 30.0, true, true],
+	"icicle": [preload(ART + "icicle_hanging.png"), preload(ART + "icicle_falling.png"), preload(ART + "icicle_landed.png"), 10.0, false, false],
+	"coconut": [preload(ART + "coconut_hanging.png"), preload(ART + "coconut_falling.png"), preload(ART + "coconut_landed.png"), 20.0, true, false],
 }
 const GRAVITY := 2600.0
 const HURT_RADIUS := 34.0     ## around the falling cone's middle
@@ -22,7 +26,7 @@ const WAKE_DISTANCE := 700.0  ## starts its rhythm when the cat is this close (o
 @export var warn_time: float = 1.0   ## shaking + growing shadow before it drops
 @export var every: float = 0.0       ## seconds between drops (0 = drops once)
 @export var first_delay: float = 0.0 ## extra wait before the first drop (to put cones out of step)
-@export_enum("cone", "icicle") var look: String = "cone"
+@export_enum("cone", "icicle", "coconut") var look: String = "cone"
 
 enum State { WAITING, WARNING, FALLING, DONE }
 var state := State.WAITING
@@ -105,7 +109,7 @@ func _land() -> void:
 	cone.texture = landed
 	cone.rotation = 0.0
 	cone.position.y = -landed.get_height() * 0.5
-	var roll := (1.0 if randf() < 0.5 else -1.0) if LOOKS[look][4] else 0.0   # an icicle shatters, no roll
+	var roll := (1.0 if randf() < 0.5 else -1.0) if LOOKS[look][5] else 0.0   # an icicle shatters, a coconut cracks: no roll
 	var t := cone.create_tween().set_parallel()
 	t.tween_property(cone, "position:x", roll * 70.0, 0.7).set_ease(Tween.EASE_OUT)
 	t.tween_property(cone, "rotation", roll * 1.2, 0.7)

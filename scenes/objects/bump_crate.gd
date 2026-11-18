@@ -9,6 +9,7 @@ extends StaticBody2D
 const LOOKS := {
 	"crate": [preload("res://assets/art/objects/crate_full.png"), preload("res://assets/art/objects/crate_used.png")],
 	"gift": [preload("res://assets/art/objects/gift_full.png"), preload("res://assets/art/objects/gift_used.png")],
+	"pot": [preload("res://assets/art/objects/pot_full.png"), preload("res://assets/art/objects/pot_used.png")],   # World 5
 }
 const COIN := preload("res://scenes/objects/coin.tscn")   ## only its spinning sprite is borrowed
 const MILK := preload("res://scenes/objects/milk_bowl.tscn")
@@ -16,7 +17,7 @@ const SIZE := Vector2(104, 104)   ## the solid part (the art is ~110 with its mo
 
 @export_range(0, 10) var coins: int = 1   ## coins it holds (0 with milk = just milk)
 @export var milk: bool = false             ## gives a bowl of milk (after its coins, if any)
-@export_enum("crate", "gift") var look: String = "crate"
+@export_enum("crate", "gift", "pot") var look: String = "crate"
 
 var FULL: Texture2D
 var USED: Texture2D

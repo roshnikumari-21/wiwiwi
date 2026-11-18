@@ -140,9 +140,12 @@ func _crossings(data) -> void:
 	var ice_names: Array = ices.map(func(b): return String(b.name))
 	var quick_names: Array = probe2.get_node("Terrain").get_children().filter(func(b): return b is GroundBlock and b.theme == "quicksand" and not b.one_way).map(func(b): return String(b.name))
 	var penguins: Array = probe2.get_node("Objects").get_children().filter(func(o): return o.scene_file_path.ends_with("penguin.tscn")).map(func(o): return String(o.name))
+	var moles: Array = probe2.get_node("Objects").get_children().filter(func(o): return o.scene_file_path.ends_with("mole.tscn")).map(func(o): return String(o.name))
 	probe2.free()
 	for p_name in penguins:
 		await _penguin_pass(id, data.scene_path, p_name)
+	for m_name in moles:
+		await _mole_pass(id, data.scene_path, m_name)
 	for ice_name in ice_names:
 		var level = await _load(data.scene_path)
 		await _frames(80)
@@ -182,6 +185,49 @@ func _penguin_pass(id: String, path: String, name: String) -> void:
 					Input.action_press("jump")
 					await _frames(22)
 					Input.action_release("jump")
+		Input.action_release("move_right")
+		await _frames(10)
+		if gs.hearts < 3:
+			fails.append(wait)
+		level.queue_free()
+		await _frames(2)
+	_check("%s: past %s (3 timings), no heart lost" % [id, name], fails.is_empty(), fails)
+
+## World 5: walk past a sand mole like a player, at 3 moments of its rhythm. Tunnelling, its mound is
+## safe to walk over. If it starts trembling just ahead she waits for it to pop up; if it trembles right
+## under her she keeps going (she's clear before it pops). Once it's up she jumps it when 120-240 px
+## ahead (over it or onto it). She must get past with no heart lost.
+func _mole_pass(id: String, path: String, name: String) -> void:
+	var fails := []
+	var M = load("res://scenes/actors/enemies/mole.gd")
+	for wait in [10, 80, 150]:
+		var level = await _load(path)
+		await _frames(80 + wait)
+		var player = level.get_node("Player")
+		var mole = level.get_node("Objects/" + name)
+		var gs = root.get_node("GameState")
+		gs.hearts = 3
+		var home: float = mole._home_x
+		var reach: float = mole.patrol_distance + 60.0
+		await _place(player, Vector2(home - reach - 350.0, mole.global_position.y - 5.0))
+		for i in 900:
+			await physics_frame
+			if player.global_position.x > home + reach + 150.0:
+				break
+			var go := true
+			if is_instance_valid(mole) and not mole._squashed:
+				var ahead: float = mole.global_position.x - player.global_position.x
+				if mole.mode == M.Mode.WARN and ahead > 60.0 and ahead < 260.0:
+					go = false   # it's about to pop up just ahead: wait for it
+				elif mole.mode == M.Mode.UP and player.is_on_floor() and ahead > 120.0 and ahead < 240.0:
+					Input.action_press("move_right")
+					Input.action_press("jump")
+					await _frames(22)
+					Input.action_release("jump")
+			if go:
+				Input.action_press("move_right")
+			else:
+				Input.action_release("move_right")
 		Input.action_release("move_right")
 		await _frames(10)
 		if gs.hearts < 3:

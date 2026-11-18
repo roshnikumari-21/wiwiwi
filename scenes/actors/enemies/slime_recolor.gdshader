@@ -3,6 +3,9 @@ shader_type canvas_item;
 // 0..1 = a full turn of the colour wheel); the brown outline, eyes, mouth and pink blush stay.
 
 uniform float hue_shift = 0.0;
+// target_hue >= 0: instead of shifting, every green on the slime (body and its lighter / darker spots)
+// is pulled to this hue, keeping only a little of their differences (World 5's sand-yellow slime).
+uniform float target_hue = -1.0;
 
 vec3 rgb2hsv(vec3 c) {
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -22,6 +25,9 @@ void fragment() {
 	vec3 hsv = rgb2hsv(c.rgb);
 	// green body: hue 55-150 degrees and clearly coloured (the outline is brown, ~25 degrees)
 	float green = smoothstep(0.14, 0.17, hsv.x) * (1.0 - smoothstep(0.40, 0.43, hsv.x)) * smoothstep(0.15, 0.3, hsv.y);
-	vec3 shifted = hsv2rgb(vec3(fract(hsv.x + hue_shift), hsv.y, hsv.z));
+	float hue = target_hue >= 0.0 ? fract(target_hue + (hsv.x - 0.25) * 0.15) : fract(hsv.x + hue_shift);
+	// yellow only looks yellow when it's light: in target mode the colour is lifted a little too
+	float value = target_hue >= 0.0 ? min(1.0, hsv.z * 1.22 + 0.04) : hsv.z;
+	vec3 shifted = hsv2rgb(vec3(hue, hsv.y, value));
 	COLOR.rgb = mix(c.rgb, shifted, green);
 }
