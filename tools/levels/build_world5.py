@@ -65,7 +65,30 @@ class DesertLevel(SnowLevel):
         raise NotImplementedError("World 5 crumbling sandstone comes later (ruins levels)")
 
 
-LEVELS = []
+def level_1():
+    L = DesertLevel(1, "Sunny Dunes", 0.8)   # meet quicksand gently: short patches first, firm sand all around
+    L.flat(1500, crates=[(700, 200, 2, False)], coins=(330, 450))
+    L.quicksand(300, coins=(80, 150, 220))               # the first quicksand: just a short patch, nothing on it
+    L.flat(1300, slimes=[(700, 80)], flag=150)
+    L.gap(220)
+    L.flat(1400, spikes=[(700, False)], coins=(300, 1100))
+    L.quicksand(500, coins=(100, 250, 400))              # a little longer: keep walking (or hop it)
+    L.flat(1500, milk=300, flag=1000, crates=[(600, 200, 3, False)])
+    L.planks(2)                                          # flying carpets over the oasis
+    L.flat(1300, slimes=[(650, 80)])
+    L.hill(2, 150, 1000, crates=[(500, 200, 0, True)])   # milk in a pot on the dune top
+    L.flat(1200, flag=150, spikes=[(800, True)])
+    L.quicksand(700, coins=(150, 350, 550))              # the long one: walking straight across is safe
+    L.flat(1300, milk=400, crates=[(800, 200, 2, False)])
+    L.gap(240)
+    L.flat(1400, slimes=[(700, 80)], flag=150)
+    L.quicksand(400, coins=(100, 200, 300))
+    L.flat(1300, crates=[(400, 200, 3, False)], bridge=(700, 400), yarn=(900, 560))
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1]
 
 if __name__ == "__main__":
     for make in LEVELS:
