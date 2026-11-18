@@ -43,6 +43,7 @@ TILE_GAP = 120   # thin ice: water between the shore and a slab, and between sla
 
 
 class SnowLevel(ForestLevel):
+    CRATE_LOOK = "gift"   # World 4's bump crates are gift boxes (World 5: clay pots)
     RES = {
         **ForestLevel.RES,
         "slime": ("PackedScene", "res://scenes/actors/enemies/blue_slime.tscn"),
@@ -59,7 +60,7 @@ class SnowLevel(ForestLevel):
             self._obj("penguin", x + px, h, patrol_distance=float(patrol))
             self.coins((x + px, h - 330))   # a coin high above: rewards a big jump over it
         for cx, lift, coins, milk in crates:   # World 4's bump crates are gift boxes
-            self._obj("crate", x + cx, h - lift, coins=coins, milk=milk, look="gift")
+            self._obj("crate", x + cx, h - lift, coins=coins, milk=milk, look=self.CRATE_LOOK)
         super().flat(length, **kw)
 
     def ice(self, length, **kw):
@@ -127,7 +128,7 @@ class SnowLevel(ForestLevel):
         self.tags[len(self.blocks)] = f"{tag}_Step"
         self._block(x + 150, h - 180, 220, 40, True)               # a snowy step (one-way)
         for gx, top in ((520, 360), (720, 540)):                   # gift-box stairs (tops 180 px apart)
-            self._obj("crate", x + gx, h - top + 104, coins=1, milk=False, look="gift")
+            self._obj("crate", x + gx, h - top + 104, coins=1, milk=False, look=self.CRATE_LOOK)
         start, end = x + 900, x + length - 350
         pos, n = start, 0
         while pos < end:                                          # walkways with small gaps to hop

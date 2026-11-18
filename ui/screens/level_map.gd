@@ -41,6 +41,14 @@ const WORLDS: Array[Dictionary] = [
 		],
 		"girl": Vector2(1483, 470), "name": "WORLD_4_NAME",   # on the 11th pad, at the cabin's steps
 	},
+	{
+		"picture": preload("res://assets/art/backgrounds/map/map_w5.png"),
+		"spots": [   # the first 10 of the picture's 11 pads (found by tools/art_pipeline/make_map_sand.py)
+			Vector2(109, 458), Vector2(263, 501), Vector2(400, 425), Vector2(522, 377), Vector2(615, 469),
+			Vector2(753, 507), Vector2(857, 417), Vector2(1000, 462), Vector2(1143, 436), Vector2(1306, 499),
+		],
+		"girl": Vector2(1477, 440), "name": "WORLD_5_NAME",   # on the 11th pad, by the little domed house
+	},
 ]
 const OPEN := preload("res://assets/art/ui/menu/level_open.png")
 const LOCKED := preload("res://assets/art/ui/menu/level_locked.png")
