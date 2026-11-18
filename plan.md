@@ -496,7 +496,8 @@ Recorded 11 Nov 2026 from the owners' notes. **Not in the current build**; each 
   - App ID: `ca-app-pub-4636740711495231~8453342025`
   - Rewarded, revive (`wiwiwi_rewarded_revive`): `ca-app-pub-4636740711495231/7531142592`
   - Rewarded, 2× coins (`wiwiwi_rewarded_coins`): `ca-app-pub-4636740711495231/5748508825`
-  - Interstitial (`wiwiwi_interstitial`): ⚠ ID still to note here
+  - Interstitial (`wiwiwi_interstitial`): `ca-app-pub-4636740711495231/9879325523`
+  - Names and IDs confirmed from the AdMob ad units list. Frequency capping in AdMob: none (the game itself limits interstitials to every 2 levels).
   - ⚠ Development and test APKs use Google's **test ad unit IDs** only; the real IDs go in release builds. Never tap our own live ads.
 - **Ad plan (owners, 19 Nov 2026), replaces "after every level":** three placements.
   1. **Interstitial between levels, every 2 finished levels**, shown after the result card, never during play; not in the first few levels of World 1; skipped if a rewarded ad was just watched; never for Premium players.
