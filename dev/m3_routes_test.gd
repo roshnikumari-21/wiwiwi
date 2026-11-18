@@ -16,7 +16,7 @@ func _initialize() -> void:
 func _run() -> void:
 	root.get_node("Events").yarn_collected.connect(func(): _yarn = true)
 	var scenes := ["res://dev/forest_tools_demo.tscn"]
-	for world in [3, 4]:
+	for world in [3, 4, 5]:
 		for data in root.get_node("GameState").catalog.in_world(world):
 			scenes.append(data.scene_path)
 	for path in scenes:
@@ -80,7 +80,7 @@ func _canopy(path: String, id: String, tag: String) -> void:
 		ok = ok and await _hop_to(cat, w.global_position.x + 120.0, w.global_position.y)
 		ok = ok and await _run_to(cat, w.global_position.x + w.size.x - 50.0, w.global_position.y)
 	var high: bool = absf(cat.global_position.y - walks[-1].global_position.y) < 6.0
-	_check("%s: %s — up%s to the walkways and along all %d, no heart lost%s" % [id, tag, " %d gift boxes" % gifts.size() if gifts else "", walks.size(), ", yarn found" if has_yarn else ""],
+	_check("%s: %s — up%s to the walkways and along all %d, no heart lost%s" % [id, tag, " %d box steps" % gifts.size() if gifts else "", walks.size(), ", yarn found" if has_yarn else ""],
 		ok and high and gs.hearts == 3 and (_yarn or not has_yarn), [cat.global_position, gs.hearts, _yarn])
 	level.queue_free()
 	await _frames(2)

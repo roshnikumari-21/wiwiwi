@@ -10,8 +10,9 @@ extends Node2D
 @export_range(0.0, 1.0) var start_energy: float = 1.0  ## the cat's energy at the start (lower = milk matters sooner)
 ## The world's look and music. The ground blocks carry the same theme (they're built in the editor).
 @export_enum("meadow", "town", "forest", "snow", "sand") var theme: String = "meadow"
-## A special sky for one level: "aurora" = World 4's night with the northern lights and heavy snowfall.
-@export_enum("day", "aurora") var sky: String = "day"
+## A special sky for one level: "aurora" = World 4's night with the northern lights and heavy snowfall;
+## "sunset" = World 5's warm golden-pink evening.
+@export_enum("day", "aurora", "sunset") var sky: String = "day"
 
 const THEMES := {
 	"meadow": {"music": "mus_world1", "background": null},   # level_base.tscn already has the meadow
@@ -63,6 +64,8 @@ func _ready() -> void:
 		background.name = "Background"
 		if sky == "aurora":
 			_aurora_night(background)
+		elif sky == "sunset":
+			_sunset(background)
 		add_child(background)
 	AudioManager.play_music(look.music)
 	var coin_total := get_tree().get_nodes_in_group("coins").size()
@@ -188,4 +191,23 @@ func _aurora_night(background: Node) -> void:
 	var tint := CanvasModulate.new()
 	tint.name = "NightTint"
 	tint.color = Color(0.8, 0.84, 1.0)
+	add_child(tint)
+
+## The sunset (World 5's evening levels): the far picture's sky is repainted as a sunset gradient
+## (sunset.gdshader) and its dunes warmed, the palms glow warm orange, and the level itself gets a soft golden light (the cat and HUD stay easy to read).
+func _sunset(background: Node) -> void:
+	var sky_rect := background.get_node_or_null("Sky")
+	if sky_rect:
+		sky_rect.color = Color(0.86, 0.56, 0.72)   # the gradient's top, above the far picture
+	var far := background.get_node_or_null("Far")
+	if far:
+		var mat := ShaderMaterial.new()
+		mat.shader = preload("res://scenes/levels/backgrounds/sunset.gdshader")
+		far.material = mat
+	var mid := background.get_node_or_null("Mid")
+	if mid:
+		mid.modulate = Color(1.0, 0.84, 0.72)
+	var tint := CanvasModulate.new()
+	tint.name = "SunsetTint"
+	tint.color = Color(1.0, 0.93, 0.86)
 	add_child(tint)

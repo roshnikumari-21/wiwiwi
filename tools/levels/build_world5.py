@@ -167,7 +167,31 @@ def level_4():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4]
+def level_5():
+    L = DesertLevel(5, "Sunset Bazaar", 0.75)   # a market at sunset: pots everywhere, a secret route over the awnings
+    L.level_props["sky"] = "sunset"
+    L.flat(1500, crates=[(500, 200, 1, False), (604, 200, 3, False), (708, 200, 1, False)], coins=(330,))
+    L.flat(1300, slimes=[(700, 80)], flag=150)
+    L.sky_route(2600, low={"moles": [(1300, 200)]}, coins=6)   # the first secret way up: pot stairs to the awnings
+    L.gap(220)
+    L.flat(1400, milk=300, flag=1000, crates=[(700, 200, 0, True)])
+    L.quicksand(500, crates=[(250, POT_LIFT, 2, False)])
+    L.flat(1500, crates=[(400, 200, 2, False), (900, 200, 1, False), (1004, 200, 2, False)])
+    L.planks(2)
+    L.flat(1400, flag=150, coconuts=[(700, 2.5, 0)])
+    L.hill(2, 150, 1000, crates=[(500, 200, 3, False)])   # a pot on the dune top
+    L.flat(1300, slimes=[(800, 70)], crates=[(350, 200, 0, True)])
+    L.sky_route(3000, low={"slimes": [(1200, 70)], "moles": [(2100, 150)]}, coins=8, yarn=True)   # the yarn is hidden up here
+    L.flat(1200, flag=150, milk=900)
+    L.quick_field(2)
+    L.flat(1200, crates=[(400, 200, 2, False), (504, 200, 2, False), (608, 200, 2, False)])
+    L.gap(240)
+    L.flat(1000, coins=(300, 500, 700))
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5]
 
 if __name__ == "__main__":
     for make in LEVELS:
