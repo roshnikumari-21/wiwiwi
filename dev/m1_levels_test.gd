@@ -128,6 +128,17 @@ func _crossings(data) -> void:
 					has_icicles = true
 			if has_icicles:
 				arches.append([b.global_position.x - 150.0, last_end + 250.0, b.global_position.y + 180.0])
+	# World 5 palm groves: coconuts close together (within 700 px) form one run along the ground below them
+	var nuts: Array = arch_probe.get_node("Objects").get_children().filter(func(o): return o.scene_file_path.ends_with("pinecone.tscn") and o.look == "coconut")
+	nuts.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+	var grove := []
+	for n in nuts:
+		if not grove.is_empty() and n.global_position.x - grove[-1].global_position.x > 700.0:
+			arches.append([grove[0].global_position.x - 450.0, grove[-1].global_position.x + 300.0, grove[0].global_position.y])
+			grove = []
+		grove.append(n)
+	if not grove.is_empty():
+		arches.append([grove[0].global_position.x - 450.0, grove[-1].global_position.x + 300.0, grove[0].global_position.y])
 	arch_probe.free()
 	for arch in arches:
 		var level = await _load(data.scene_path)
@@ -335,7 +346,8 @@ func _icicle_run(id: String, arch: Array, level) -> void:
 					break
 	Input.action_release("move_right")
 	var ok: bool = player.global_position.x > arch[1] and gs.hearts == 3
-	_check("%s: under the icicles at x %d, watching the shadows (waited %d times), no heart lost" % [id, int(arch[0]), waits], ok, [player.global_position, gs.hearts])
+	var what := "coconuts" if icicles.any(func(c): return c.look == "coconut" and c.global_position.x > arch[0] and c.global_position.x < arch[1]) else "icicles"
+	_check("%s: under the %s at x %d, watching the shadows (waited %d times), no heart lost" % [id, what, int(arch[0]), waits], ok, [player.global_position, gs.hearts])
 
 ## Like a player: from the shore, a jump onto each narrow ledge in turn (steering to its middle), then onto the far shore.
 func _hop_crossing(id: String, ledges: Array, player) -> void:

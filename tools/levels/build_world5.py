@@ -109,7 +109,30 @@ def level_2():
     return L
 
 
-LEVELS = [level_1, level_2]
+def level_3():
+    L = DesertLevel(3, "Palm Oasis", 0.75)   # across the oasis on flying carpets, under the coconut palms
+    L.flat(1400, crates=[(700, 200, 2, False)], coins=(330, 450))
+    L.flat(1600, coconuts=[(550, 0, 0), (1050, 0, 0.6)])   # meet the coconuts: each drops once, watch the shadow
+    L.planks(2)                                          # carpets over the oasis
+    L.flat(1300, slimes=[(700, 80)], flag=150)
+    L.bobbers(2)                                         # carpets bobbing up and down
+    L.flat(450, coins=(225,))                            # a little palm island
+    L.planks(3)
+    L.flat(1500, milk=300, flag=1000, crates=[(600, 200, 3, False)])
+    L.quicksand(400, coins=(100, 200, 300))
+    L.flat(1800, coconuts=[(400, 2.5, 0), (870, 2.5, 1.2), (1340, 2.5, 0.5)])   # a palm grove: coconuts on a rhythm
+    L.diagonal(200, 1300, moles=[(650, 150)])            # a carpet rides up to a higher dune, a mole on top
+    L.down(200, 1200, milk=600)
+    L.bobbers(3)
+    L.flat(1300, flag=150, crates=[(500, 200, 0, True)])
+    L.flat(1600, coconuts=[(400, 2.2, 0.4)], moles=[(1150, 120)])
+    L.gap(240)
+    L.flat(1300, crates=[(500, 200, 2, False)], bridge=(700, 400), yarn=(900, 560))
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3]
 
 if __name__ == "__main__":
     for make in LEVELS:

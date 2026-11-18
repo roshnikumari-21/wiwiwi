@@ -427,6 +427,8 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 
   - ✅ **5-2 Mole Hills (18 Nov 2026):** 21.3k px, 38 coins, 4 flags, 2 milk. Meet the sand moles: the first one alone on a long stretch (watch the mound, the tremble, the pop), then two popping at different times, one up on a dune top, one after quicksand, and the "mole hills" pair along a 2000 px stretch — 7 moles in all, plus 2 quicksand stretches, carpets, pots, slimes and a cactus spike. Fairness moved the spike 50 px away from a slime. First real run of the **mole play check**: all 7 moles passed at 3 timings each, no heart lost (the check now also fails if she never gets past the mole, not only if she's hurt).
 
+  - ✅ **5-3 Palm Oasis (18 Nov 2026):** 22.9k px, 35 coins, 4 flags, 3 milk. Across the oasis on flying carpets: 2 sliding, 2 bobbing, 3 sliding, a carpet that rides up to a higher dune (a mole on top), 3 bobbing. **Coconuts** introduced: first 2 that drop once (watch the shadow), then a palm grove of 3 on a rhythm, then one beside a mole. Also quicksand, pots (one with milk), a slime. Fairness spread the coconuts to 300 px apart. New play check: **every palm grove** (coconuts within 700 px of each other) is run through like a player watching the shadows, no heart lost.
+
 ### M4 — Polish + closed test (≈ 60 h)
 - [ ] Juice, settings (control size/opacity, screen shake), performance pass
 - [ ] Bug bash, save + interruption tests, balance
