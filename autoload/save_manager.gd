@@ -45,11 +45,12 @@ func has_yarn(level_id: String) -> bool:
 ## The first level is always open; every other level opens when the one before it is done.
 ## Play-testing (owners, 14 Nov 2026): in a TEST build on a phone (the debug APK) every level is open,
 ## so the co-founder can jump straight into World 4. Play Store builds are release builds: never open.
-## Turn off by setting TEST_OPEN_ALL to false.
+## Turn off by setting TEST_OPEN_ALL to false. On the computer the same happens only when the game is
+## started with  -- --open-all  (e.g. godot --path . -- --open-all), for trying levels on the PC.
 const TEST_OPEN_ALL := true
 
 func is_unlocked(level_id: String) -> bool:
-	if TEST_OPEN_ALL and OS.is_debug_build() and OS.has_feature("mobile"):
+	if TEST_OPEN_ALL and OS.is_debug_build() and (OS.has_feature("mobile") or "--open-all" in OS.get_cmdline_user_args()):
 		return true
 	var levels: Array = GameState.catalog.levels
 	for i in levels.size():
