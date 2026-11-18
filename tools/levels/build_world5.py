@@ -245,7 +245,35 @@ def level_6():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6]
+def level_7():
+    L = DesertLevel(7, "Carpet Ride", 0.7)   # across a deep canyon river on long chains of flying carpets
+    L.flat(1300, crates=[(650, 200, 2, False)], coins=(330, 450))
+    L.planks(3)
+    L.flat(400, coins=(200,))                            # a tiny ledge of rock between the chains
+    L.bobbers(3)
+    L.flat(1300, slimes=[(700, 80)], flag=150)
+    L.planks(4)
+    L.flat(400, coins=(200,))
+    L.planks(4)                                          # two long chains, one after the other
+    L.flat(1400, moles=[(800, 150)], milk=200, flag=1250)
+    L.diagonal(200, 1200, coconuts=[(600, 2.4, 0)])      # a carpet rides up to a higher rock, a palm on top
+    L.down(200, 1000)
+    L.bobbers(4)
+    L.flat(400, coins=(200,))
+    L.planks(5)                                          # the great carpet ride: five in a row...
+    L._obj("yarn", L.x - 1180, L.h - 260)                # ...with the yarn floating above the middle one
+    L.flat(1400, flag=150, milk=900, crates=[(500, 200, 3, False)])
+    L.lift(360, 1000, moles=[(550, 120)])                 # a carpet lift up the canyon wall
+    L.ruins_down(2, 180, 500)
+    L.quicksand(500, coins=(150, 250, 350))
+    L.flat(1000, slimes=[(500, 70)])
+    L.bobbers(3)
+    L.flat(1300, crates=[(400, 200, 2, False), (504, 200, 2, False)], flag=900)
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7]
 
 if __name__ == "__main__":
     for make in LEVELS:
