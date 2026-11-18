@@ -5,6 +5,9 @@ tiles) in the desert look, plus World 5's own pieces:
   quicksand(length, **flat options)
                  a stretch of QUICKSAND at the current height (at most 800 px — a tired cat walking
                  straight across never goes under; no spikes on it)
+  quick_field(n)  a quicksand valley: n quicksand pools (800 px each, the longest allowed) with small
+                 firm-sand islands between them, clay pots and sandstone ledges above the pools to hop
+                 along (walking straight through is always safe too)
   flat(..., moles=[(x, patrol)], coconuts=[(x, every, delay)])
                  sand moles tunnelling along their path; coconuts hanging above the path (they warn
                  with a shadow, then drop)
@@ -20,6 +23,7 @@ Run:  python tools/levels/build_world5.py
 from build_world4 import SnowLevel
 
 QUICK_MAX = 800   # the fair-play rule (dev/m1_fairness_test.gd)
+POT_LIFT = 140    # quicksand fields: how high the stepping pots float
 
 
 class DesertLevel(SnowLevel):
@@ -57,6 +61,16 @@ class DesertLevel(SnowLevel):
         assert "spikes" not in kw, "no spikes on quicksand (fair-play)"
         self.block_themes[len(self.blocks)] = "quicksand"
         self.flat(length, **kw)
+
+    def quick_field(self, n, island=300):
+        for i in range(n):
+            if i % 2 == 0:   # pots to hop along: 140 px up, so she walks under them (she's 104 tall) and
+                             # their lids (244 px up) are an easy jump (a full jump reaches 312)
+                self.quicksand(QUICK_MAX, crates=[(200, POT_LIFT, 1, False), (430, POT_LIFT, 1, False), (660, POT_LIFT, 1, False)])
+            else:            # a sandstone ledge over the pool, coins along it
+                self.quicksand(QUICK_MAX, bridge=(150, 500))
+            if i < n - 1:
+                self.flat(island, coins=(island // 2,))
 
     def ice(self, *a, **kw):
         raise NotImplementedError("no ice in the desert")
@@ -132,7 +146,28 @@ def level_3():
     return L
 
 
-LEVELS = [level_1, level_2, level_3]
+def level_4():
+    L = DesertLevel(4, "Quicksand Valley", 0.7)   # long quicksand fields: hop pot to pot, or keep walking
+    L.flat(1400, crates=[(700, 200, 2, False)], coins=(330, 450))
+    L.quick_field(2)                                     # the first field: two pools, an island between
+    L.flat(1400, slimes=[(700, 80)], flag=150)
+    L.gap(220)
+    L.flat(1500, moles=[(800, 150)], milk=200)
+    L.quick_field(3)                                     # three pools
+    L.flat(1500, flag=150, crates=[(800, 200, 0, True)])
+    L.planks(2)
+    L.flat(1300, coconuts=[(500, 2.4, 0)], spikes=[(1000, False)])
+    L.hill(2, 150, 1000, slimes=[(500, 60)])
+    L.quick_field(4)                                     # the big valley: four pools in a row
+    L.flat(1400, flag=150, milk=800)
+    L.flat(1700, moles=[(400, 120), (1250, 120)])   # a pair, far enough apart to pass one at a time
+    L.quicksand(600, coins=(150, 300, 450))
+    L.flat(1300, crates=[(500, 200, 2, False)], bridge=(700, 400), yarn=(900, 560))
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4]
 
 if __name__ == "__main__":
     for make in LEVELS:

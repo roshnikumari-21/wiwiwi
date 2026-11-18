@@ -429,6 +429,8 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 
   - ✅ **5-3 Palm Oasis (18 Nov 2026):** 22.9k px, 35 coins, 4 flags, 3 milk. Across the oasis on flying carpets: 2 sliding, 2 bobbing, 3 sliding, a carpet that rides up to a higher dune (a mole on top), 3 bobbing. **Coconuts** introduced: first 2 that drop once (watch the shadow), then a palm grove of 3 on a rhythm, then one beside a mole. Also quicksand, pots (one with milk), a slime. Fairness spread the coconuts to 300 px apart. New play check: **every palm grove** (coconuts within 700 px of each other) is run through like a player watching the shadows, no heart lost.
 
+  - ✅ **5-4 Quicksand Valley (18 Nov 2026):** 26.9k px, 58 coins, 4 flags, 3 milk. **Quicksand fields** (`quick_field(n)`, new): n pools of 800 px (the longest allowed) with small firm islands between, and above each pool either **3 clay pots as stepping stones** or a **sandstone ledge** — hop across dry, or just keep walking (always safe). Fields of 2, 3 and then 4 pools ("the big valley"), plus moles, a coconut, carpets, a hill. Pots float 140 px up: she walks under them (she's 104 tall) and their lids are an easy jump (244 px; at 200 px up they'd have been 304, barely reachable — caught before building). New play check: **every pool with pots is crossed hopping pot to pot, never touching the quicksand**; and every pool is still walked across tired (deepest 70 px of 100). A mole pair was spaced further apart so each can be passed on its own.
+
 ### M4 — Polish + closed test (≈ 60 h)
 - [ ] Juice, settings (control size/opacity, screen shake), performance pass
 - [ ] Bug bash, save + interruption tests, balance

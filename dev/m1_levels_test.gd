@@ -169,6 +169,15 @@ func _crossings(data) -> void:
 		await _quicksand_crossing(id, level.get_node("Terrain/" + quick_name), level.get_node("Player"))
 		level.queue_free()
 		await _frames(2)
+	for quick_name in quick_names:   # pools with stepping pots: also hop across pot to pot
+		var level = await _load(data.scene_path)
+		var pool = level.get_node("Terrain/" + quick_name)
+		var pots: Array = level.get_node("Objects").get_children().filter(func(o): return o.scene_file_path.ends_with("bump_crate.tscn") 			and o.global_position.x > pool.global_position.x and o.global_position.x < pool.global_position.x + pool.size.x and o.global_position.y < pool.global_position.y)
+		if not pots.is_empty():
+			await _frames(80)
+			await _pot_hop(id, pool, pots, level.get_node("Player"))
+		level.queue_free()
+		await _frames(2)
 
 ## World 4: run at a penguin like a player, from before its path, and jump it when it's 150-260 px
 ## ahead (whether it waddles, warns or slides at her). Tried at 3 moments of its rhythm; she must get
@@ -309,6 +318,24 @@ func _quicksand_crossing(id: String, quick, player) -> void:
 	player.energy = 1.0
 	var ok: bool = swallowed[0] == 0 and player.global_position.x > end and gs.hearts == 3
 	_check("%s: across the quicksand at x %d walking, tired (deepest %d px), no heart lost" % [id, int(start), int(deepest)], ok, [player.global_position, swallowed[0], gs.hearts])
+
+## World 5 quicksand fields: from the firm sand before the pool, hop onto each stepping pot in turn
+## (steering to its middle), then onto the far side — never touching the quicksand, no heart lost.
+func _pot_hop(id: String, pool, pots: Array, player) -> void:
+	var gs = root.get_node("GameState")
+	gs.hearts = 3
+	pots.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+	await _place(player, Vector2(pool.global_position.x - 100.0, pool.global_position.y - 5.0))
+	var ok := true
+	var touched := false
+	for p in pots:
+		await _hop_onto(player, p.global_position.x)
+		touched = touched or player.on_quicksand
+		ok = ok and player.is_on_floor() and absf(player.global_position.y - (p.global_position.y - 104.0)) < 6.0
+	await _hop_onto(player, pool.global_position.x + pool.size.x + 100.0)
+	touched = touched or player.on_quicksand
+	ok = ok and not touched and player.global_position.x > pool.global_position.x + pool.size.x and gs.hearts == 3
+	_check("%s: hopped %d pots across the quicksand at x %d, never touching it" % [id, pots.size(), int(pool.global_position.x)], ok, [player.global_position, touched, gs.hearts])
 
 ## Like a player under the icicles: run along the floor; when a shadow grows (or an icicle falls) just
 ## ahead, stop and wait until it has landed; if one starts right above her, keep running (she gets
