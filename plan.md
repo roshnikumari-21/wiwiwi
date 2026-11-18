@@ -497,6 +497,8 @@ Recorded 11 Nov 2026 from the owners' notes. **Not in the current build**; each 
   - Rewarded, revive (`wiwiwi_rewarded_revive`): `ca-app-pub-4636740711495231/7531142592`
   - Rewarded, 2× coins (`wiwiwi_rewarded_coins`): `ca-app-pub-4636740711495231/5748508825`
   - Interstitial (`wiwiwi_interstitial`): `ca-app-pub-4636740711495231/9879325523`
+  - **GDPR consent message "wiwiwi GDPR" published (19 Nov 2026):** English, buttons Consent / Do not consent / Manage options, privacy URL /privacy, fallback consent collection off (the game shows it itself via Google's UMP SDK). ⚠ The game must also get a **"Privacy choices" button in Settings** that reopens the form (required for EEA/UK users). US state regulations message: optional, owners may add it.
+  - **app-ads.txt** (owners, to do): one line `google.com, pub-4636740711495231, DIRECT, f08c47fec0942fa0` at the root of the developer website listed on Google Play (check Play Console → Store settings → Website: wiwiwi.digicraft.one or digicraft.one).
   - Names and IDs confirmed from the AdMob ad units list. Frequency capping in AdMob: none (the game itself limits interstitials to every 2 levels).
   - ⚠ Development and test APKs use Google's **test ad unit IDs** only; the real IDs go in release builds. Never tap our own live ads.
 - **Ad plan (owners, 19 Nov 2026), replaces "after every level":** three placements.
