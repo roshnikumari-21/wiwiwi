@@ -492,7 +492,17 @@ Recorded 11 Nov 2026 from the owners' notes. **Not in the current build**; each 
 
 ### 13.2 Ads and Premium (revenue), "like Duolingo"
 - **Ad network: Google AdMob** (⚠ verify the maintained Godot 4 AdMob plugin and its Android setup when this starts; it needs its own Gradle dependencies next to Play Games).
-- **Interstitial ad after every level** (owners' choice). Shown after the result card, never during play; never when the player is in Premium.
+- **AdMob set up (owners, 19 Nov 2026).** App "wiwiwi" (Android, not yet linked to a store: link it in AdMob → App settings once the game is public on Play, which starts AdMob's app review). IDs (public, not secret):
+  - App ID: `ca-app-pub-4636740711495231~8453342025`
+  - Rewarded, revive (`wiwiwi_rewarded_revive`): `ca-app-pub-4636740711495231/7531142592`
+  - Rewarded, 2× coins (`wiwiwi_rewarded_coins`): `ca-app-pub-4636740711495231/5748508825`
+  - Interstitial (`wiwiwi_interstitial`): ⚠ ID still to note here
+  - ⚠ Development and test APKs use Google's **test ad unit IDs** only; the real IDs go in release builds. Never tap our own live ads.
+- **Ad plan (owners, 19 Nov 2026), replaces "after every level":** three placements.
+  1. **Interstitial between levels, every 2 finished levels**, shown after the result card, never during play; not in the first few levels of World 1; skipped if a rewarded ad was just watched; never for Premium players.
+  2. **Rewarded "revive"**: out of hearts → "Watch an ad to continue" (once per level attempt); plain Retry always stays free.
+  3. **Rewarded "2× coins"**: a button on the level-complete card doubles that level's coins after the ad.
+- **Interstitial ad after every level** (owners' first idea, 11 Nov 2026; superseded by the ad plan above).
 - **Rewarded ad for an extra life:** when the cat loses her last heart, "Try again?" offers **watch an ad → continue from the checkpoint with a heart back**. Owners want a long ad (~1 minute) here. ⚠ AdMob decides the ad length (rewarded ads are often 15–30 s, some longer), so we can't force 1 minute; the reward is only given if the ad is watched to the end. Possibly once per level attempt.
 - **Premium = "Remove ads", one-time lifetime purchase, ~₹250** (⚠ confirm the price and currency; Play sets local prices per country). Uses Google Play Billing (§7.2): removes interstitials; rewarded ads stay optional (the player chooses to watch them) — or Premium gives the extra life free (to decide). Restores automatically on reinstall / new phone via Google Play.
 - **Duolingo-style feel:** friendly, never blocking — a clear "Go Premium" button (home page or after an ad), a small thank-you for Premium players (e.g. a badge or an exclusive cat colour, to decide).
