@@ -273,7 +273,32 @@ def level_7():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7]
+def level_8():
+    L = DesertLevel(8, "Cactus Canyon", 0.7)   # the grand tour: every World 5 idea once more, cactus spikes everywhere
+    L.flat(1300, crates=[(650, 200, 2, False)], coins=(330, 450))
+    L.flat(1500, spikes=[(450, False), (1050, True)])    # the canyon floor bristles with cacti
+    L.hill(2, 150, 1000, moles=[(500, 150)])             # a mole on the dune top
+    L.quicksand(600, coins=(150, 300, 450))
+    L.flat(1300, flag=150, spikes=[(800, True)])
+    L.planks(3)
+    L.flat(1600, coconuts=[(400, 2.4, 0), (900, 2.4, 1.2)])   # a palm grove
+    L.crumble_bridge(3)
+    L.flat(1300, milk=300, flag=1000, crates=[(600, 200, 3, False)])
+    L.tree_climb(540, 900, spikes=[(600, False)])        # a canyon wall, cacti on top
+    L.ruins_down(3, 180, 450)
+    L.quick_field(2)
+    L.flat(1600, moles=[(420, 100), (1100, 100)], flag=150)
+    L.bobbers(3)
+    L.flat(1300, slimes=[(500, 80)], spikes=[(1100, True)], milk=150)
+    L.sky_route(2600, low={"spikes": [(600, True), (2000, True)], "moles": [(1300, 120)]}, coins=7, yarn=True)   # up over the cactus field
+    L.flat(1200, flag=150)
+    L.gap(240)
+    L.flat(1100, crates=[(400, 200, 2, False), (504, 200, 0, True)])
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7, level_8]
 
 if __name__ == "__main__":
     for make in LEVELS:

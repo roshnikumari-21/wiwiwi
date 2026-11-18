@@ -131,14 +131,19 @@ func _crossings(data) -> void:
 	# World 5 palm groves: coconuts close together (within 700 px) form one run along the ground below them
 	var nuts: Array = arch_probe.get_node("Objects").get_children().filter(func(o): return o.scene_file_path.ends_with("pinecone.tscn") and o.look == "coconut")
 	nuts.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+	var ground_start := func(n) -> float:   # start of the ground the coconut stands on (never in water before it)
+		for b in arch_probe.get_node("Terrain").get_children():
+			if b is GroundBlock and not b.one_way and absf(b.global_position.y - n.global_position.y) < 2.0 					and n.global_position.x >= b.global_position.x and n.global_position.x <= b.global_position.x + b.size.x:
+				return b.global_position.x + 40.0
+		return -INF
 	var grove := []
-	for n in nuts:
-		if not grove.is_empty() and n.global_position.x - grove[-1].global_position.x > 700.0:
-			arches.append([grove[0].global_position.x - 450.0, grove[-1].global_position.x + 300.0, grove[0].global_position.y])
+	for n in nuts + [null]:
+		if not grove.is_empty() and (n == null or n.global_position.x - grove[-1].global_position.x > 700.0):
+			var from: float = maxf(grove[0].global_position.x - 450.0, ground_start.call(grove[0]))
+			arches.append([from, grove[-1].global_position.x + 300.0, grove[0].global_position.y])
 			grove = []
-		grove.append(n)
-	if not grove.is_empty():
-		arches.append([grove[0].global_position.x - 450.0, grove[-1].global_position.x + 300.0, grove[0].global_position.y])
+		if n != null:
+			grove.append(n)
 	arch_probe.free()
 	for arch in arches:
 		var level = await _load(data.scene_path)

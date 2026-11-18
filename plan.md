@@ -437,6 +437,8 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 
   - ✅ **5-7 Carpet Ride (18 Nov 2026):** 28.4k px, 52 coins, 5 flags, 3 milk. Across a deep canyon river on **28 flying carpets** in 8 crossings: chains of 3 sliding, 3 bobbing, two 4-chains back to back (tiny rock ledges between), a carpet riding up to a palm rock (coconut), 4 bobbing, **the great carpet ride of 5 with the Golden Yarn floating above the middle one** (checked: it can be grabbed with a jump from the moving carpet), a carpet lift up the canyon wall (mole on top), 3 bobbing to finish; quicksand and a slime between. Fairness moved the lift-top mole 100 px from the landing. All 17 play checks pass.
 
+  - ✅ **5-8 Cactus Canyon (18 Nov 2026):** 29.2k px, 62 coins, 5 flags, 3 milk. The grand tour before the finale, cactus spikes everywhere (7, short and long): a mole on a dune top, quicksand, carpets, a palm grove, a crumbling bridge, a canyon-wall climb with cacti on top, a 2-pool quicksand field, a mole pair, bobbing carpets, and a **sky route over a cactus field** with the yarn. Fairness found 5 spacing problems in the first draft (spikes/moles too close to edges or each other) → fixed; the first draft was also 32k (longer than the hardest level should be) → a crumbling staircase dropped (5-6 has them). The palm-grove play check now always starts on the ground the coconuts stand on (it had started a run in the river before a grove).
+
 ### M4 — Polish + closed test (≈ 60 h)
 - [ ] Juice, settings (control size/opacity, screen shake), performance pass
 - [ ] Bug bash, save + interruption tests, balance
