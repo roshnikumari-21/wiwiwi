@@ -230,7 +230,7 @@ func _mole_pass(id: String, path: String, name: String) -> void:
 				Input.action_release("move_right")
 		Input.action_release("move_right")
 		await _frames(10)
-		if gs.hearts < 3:
+		if gs.hearts < 3 or player.global_position.x < home + reach:   # hurt, or never got past it
 			fails.append(wait)
 		level.queue_free()
 		await _frames(2)

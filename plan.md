@@ -425,6 +425,8 @@ Order agreed 30 Oct 2026: save system → home page → level map → pause / le
 
   - ✅ **5-1 Sunny Dunes (18 Nov 2026):** 20.1k px, 45 coins, 4 flags, 2 milk (+1 in a pot on the dune top). Meet quicksand gently: a short 300 px patch with nothing on it, then 500, the long 700 (walking straight across is safe), then 400 — always firm sand around, coins over each to invite walking or hopping. Also: clay pots, sand-yellow slimes, short + long cactus spikes, flying carpets over the oasis, a dune hill, the yarn on a bridge near the end. Play test: all four quicksand stretches walked across **tired** (deepest 62 px of 100), no heart lost. Note for the owners' playtest: quicksand shows as a deep dark pool through the ground (like water pits) — could become a thin layer over sandstone if they prefer.
 
+  - ✅ **5-2 Mole Hills (18 Nov 2026):** 21.3k px, 38 coins, 4 flags, 2 milk. Meet the sand moles: the first one alone on a long stretch (watch the mound, the tremble, the pop), then two popping at different times, one up on a dune top, one after quicksand, and the "mole hills" pair along a 2000 px stretch — 7 moles in all, plus 2 quicksand stretches, carpets, pots, slimes and a cactus spike. Fairness moved the spike 50 px away from a slime. First real run of the **mole play check**: all 7 moles passed at 3 timings each, no heart lost (the check now also fails if she never gets past the mole, not only if she's hurt).
+
 ### M4 — Polish + closed test (≈ 60 h)
 - [ ] Juice, settings (control size/opacity, screen shake), performance pass
 - [ ] Bug bash, save + interruption tests, balance

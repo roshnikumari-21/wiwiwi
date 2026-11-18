@@ -88,7 +88,28 @@ def level_1():
     return L
 
 
-LEVELS = [level_1]
+def level_2():
+    L = DesertLevel(2, "Mole Hills", 0.75)   # meet the sand moles: one alone, then pairs, one on a hilltop
+    L.flat(1500, crates=[(700, 200, 2, False)], coins=(330, 450))
+    L.flat(1800, moles=[(900, 200)])                     # the first mole, alone: watch the mound, the tremble, the pop
+    L.gap(220)
+    L.flat(1500, slimes=[(700, 80)], flag=150)
+    L.quicksand(400, coins=(100, 200, 300))
+    L.flat(1900, moles=[(500, 120), (1350, 150)])        # two moles, popping at different times
+    L.planks(2)
+    L.flat(1400, milk=300, flag=1000, crates=[(600, 200, 3, False)])
+    L.hill(2, 150, 1100, moles=[(550, 150)])             # a mole up on the dune top
+    L.quicksand(500, coins=(100, 250, 400))
+    L.flat(1600, milk=300, moles=[(1000, 200)])
+    L.flat(1300, slimes=[(650, 70)], flag=150, spikes=[(1150, False)])
+    L.flat(2000, moles=[(600, 150), (1400, 150)])        # the mole hills: a pair along a long stretch
+    L.gap(240)
+    L.flat(1300, crates=[(500, 200, 2, False)], bridge=(700, 400), yarn=(900, 560))
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2]
 
 if __name__ == "__main__":
     for make in LEVELS:
