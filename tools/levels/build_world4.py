@@ -44,6 +44,7 @@ TILE_GAP = 120   # thin ice: water between the shore and a slab, and between sla
 
 class SnowLevel(ForestLevel):
     CRATE_LOOK = "gift"   # World 4's bump crates are gift boxes (World 5: clay pots)
+    CRUMBLE_LOOK = "ice"  # World 4's crumbling tiles are thin ice (World 5: weathered sandstone)
     RES = {
         **ForestLevel.RES,
         "slime": ("PackedScene", "res://scenes/actors/enemies/blue_slime.tscn"),
@@ -150,7 +151,7 @@ class SnowLevel(ForestLevel):
         self._obj("water", self.x, self.h + 100, width=float(width))
         for i in range(n):
             cx = self.x + TILE_GAP + 150 + i * (300 + TILE_GAP)
-            self._obj("crumble", cx, self.h, look="ice")
+            self._obj("crumble", cx, self.h, look=self.CRUMBLE_LOOK)
             self.coins((cx, self.h - 110))
         self.x += width
 

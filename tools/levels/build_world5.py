@@ -8,6 +8,10 @@ tiles) in the desert look, plus World 5's own pieces:
   quick_field(n)  a quicksand valley: n quicksand pools (800 px each, the longest allowed) with small
                  firm-sand islands between them, clay pots and sandstone ledges above the pools to hop
                  along (walking straight through is always safe too)
+  crumble_bridge(n), crumble_steps(n, length)
+                 weathered sandstone blocks that crumble half a second after she lands: a bridge over
+                 the oasis, or a staircase up to a ruin ledge;  ruins_down(steps) comes back down
+  tree_climb(rise, length) (World 3) → a sandstone ruin climbed on zigzag ledges
   flat(..., moles=[(x, patrol)], coconuts=[(x, every, delay)])
                  sand moles tunnelling along their path; coconuts hanging above the path (they warn
                  with a shadow, then drop)
@@ -28,6 +32,7 @@ POT_LIFT = 140    # quicksand fields: how high the stepping pots float
 
 class DesertLevel(SnowLevel):
     CRATE_LOOK = "pot"
+    CRUMBLE_LOOK = "sandstone"
     RES = {
         **SnowLevel.RES,
         "slime": ("PackedScene", "res://scenes/actors/enemies/yellow_slime.tscn"),
@@ -76,7 +81,30 @@ class DesertLevel(SnowLevel):
         raise NotImplementedError("no ice in the desert")
 
     def thin_ice(self, *a, **kw):
-        raise NotImplementedError("World 5 crumbling sandstone comes later (ruins levels)")
+        raise NotImplementedError("in the desert it's crumble_bridge (weathered sandstone)")
+
+    def crumble_bridge(self, n):
+        """Oasis water crossed on n blocks of crumbling sandstone, a short hop apart (World 4's thin ice)."""
+        SnowLevel.thin_ice(self, n)
+
+    def crumble_steps(self, n, length, **kw):
+        """n crumbling sandstone blocks stepping up to a ruin ledge (n + 1) * 170 px higher, over firm
+        sand (World 2's roof-tile staircase): each breaks half a second after she lands."""
+        x, h = self.x, self.h
+        span = 200 + (n - 1) * 330 + 150 + 120   # the last block ends 120 px before the ledge
+        self._block(x, h, span)
+        for i in range(n):
+            cx, top = x + 200 + i * 330, h - 170 * (i + 1)
+            self._obj("crumble", cx, top, look=self.CRUMBLE_LOOK)
+            self.coins((cx, top - 90))
+        self.x += span
+        self.h -= 170 * (n + 1)
+        self.flat(length, **kw)
+
+    def ruins_down(self, steps, step=170, length=500, **kw):
+        """Down the far side of a ruin: `steps` drops of `step` px, each onto a stretch `length` long."""
+        for i in range(steps):
+            self.down(step, length, **(kw if i == steps - 1 else {}))
 
 
 def level_1():
@@ -191,7 +219,33 @@ def level_5():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4, level_5]
+def level_6():
+    L = DesertLevel(6, "Ruins Climb", 0.7)   # up and over the old sandstone ruins, some of it crumbling
+    L.level_props["sky"] = "sunset"
+    L.flat(1300, crates=[(650, 200, 2, False)], coins=(330, 450))
+    L.crumble_bridge(2)                                  # meet crumbling sandstone: pale, cracked, keep moving
+    L.flat(1300, slimes=[(700, 80)], flag=150)
+    L.tree_climb(360, 900, coins=(300, 450, 600))        # the first ruin
+    L.ruins_down(2, 180, 500)
+    L.flat(1300, moles=[(700, 150)], milk=200)
+    L.crumble_steps(2, 1000, coins=(300, 500, 700))      # crumbling steps up to a ruin top
+    L.ruins_down(3, 170, 450, flag=150)
+    L.quicksand(600, coins=(150, 300, 450))
+    L.flat(1300, crates=[(700, 200, 0, True)])
+    L.tree_climb(540, 800, flag=300)                     # the tall ruin
+    L.flat(1000, coconuts=[(500, 2.4, 0)])               # a palm up on the ruin top
+    L.ruins_down(3, 180, 450)
+    L.crumble_bridge(3)
+    L.flat(1500, moles=[(500, 120), (1200, 120)], flag=150, milk=1350)
+    L.crumble_steps(3, 900, yarn=(450, 260))             # the great crumbling stair: the yarn waits on top
+    L.ruins_down(4, 170, 400)
+    L.gap(240)
+    L.flat(1100, crates=[(400, 200, 2, False), (504, 200, 2, False)], flag=800)
+    L.finish(1100)
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6]
 
 if __name__ == "__main__":
     for make in LEVELS:

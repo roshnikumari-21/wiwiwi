@@ -22,10 +22,17 @@ const LOOKS := {
 		"chunk_at": [Vector2(0, 11), Vector2(78, 11), Vector2(160, 11), Vector2(232, 11)],   # make_thin_ice.py
 		"surface": 14.0,
 	},
+	"sandstone": {   # World 5: pale, weathered sandstone (tools/art_pipeline/make_crumble_sand.py)
+		"whole": preload(ART + "crumble_sand_whole.png"), "cracked": preload(ART + "crumble_sand_cracked.png"),
+		"chunks": [preload(ART + "crumble_sand_chunk_0.png"), preload(ART + "crumble_sand_chunk_1.png"),
+			preload(ART + "crumble_sand_chunk_2.png"), preload(ART + "crumble_sand_chunk_3.png")],
+		"chunk_at": [Vector2(0, 0), Vector2(78, 0), Vector2(160, 0), Vector2(232, 0)],
+		"surface": 6.0,
+	},
 }
 const WIDTH := 306.0
 
-@export_enum("roof", "ice") var look: String = "roof"
+@export_enum("roof", "ice", "sandstone") var look: String = "roof"
 @export var shake_time: float = 0.5    ## seconds from landing to breaking
 @export var return_time: float = 3.0   ## seconds until it's back after breaking
 
