@@ -236,7 +236,7 @@ def level_6():
     L.flat(1000, coconuts=[(500, 2.4, 0)])               # a palm up on the ruin top
     L.ruins_down(3, 180, 450)
     L.crumble_bridge(3)
-    L.flat(1500, moles=[(500, 120), (1200, 120)], flag=150, milk=1350)
+    L.flat(1700, moles=[(520, 100), (1270, 100)], flag=150, milk=1550)   # a pair, far enough apart to pass one at a time
     L.crumble_steps(3, 900, yarn=(450, 260))             # the great crumbling stair: the yarn waits on top
     L.ruins_down(4, 170, 400)
     L.gap(240)
@@ -325,7 +325,30 @@ def level_9():
     return L
 
 
-LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7, level_8, level_9]
+def level_10():
+    L = DesertLevel(10, "Oasis Home", 0.8)   # calm finale at sunset: each idea once, gently, then home to her
+    L.level_props["sky"] = "sunset"
+    L.flat(1300, crates=[(600, 200, 3, False)], coins=(330,))
+    L.quicksand(400, coins=(100, 200, 300))              # one short quicksand
+    L.flat(1300, moles=[(700, 150)], flag=150)           # one mole
+    L.planks(2)                                          # carpets over the oasis
+    L.flat(1200, milk=300, crates=[(700, 200, 1, False), (804, 200, 2, False), (908, 200, 1, False)])
+    L.hill(1, 150, 900, coins=(300, 450, 600))
+    L.flat(1200, coconuts=[(600, 0, 0)], flag=1050)      # one coconut, dropping once
+    L.crumble_bridge(2)
+    L.flat(1200, slimes=[(700, 80)])
+    L.sky_route(2400, coins=6, yarn=True)                # the last secret: pot stairs to the yarn
+    L.flat(1000, milk=400)
+    L.quick_field(1)
+    L.flat(1000, crates=[(400, 200, 2, False)], flag=800)
+    L.bobbers(2)
+    L.flat(800)
+    L.gap(220)
+    L.finish(1800, coins=(150, 300, 450, 600, 750, 900, 1050, 1200))   # a calm walk home to her
+    return L
+
+
+LEVELS = [level_1, level_2, level_3, level_4, level_5, level_6, level_7, level_8, level_9, level_10]
 
 if __name__ == "__main__":
     for make in LEVELS:
