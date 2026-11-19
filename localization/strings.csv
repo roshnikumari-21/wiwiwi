@@ -9,6 +9,9 @@ RESULT_COINS,Coins: %d / %d
 RESULT_REPLAY,Replay
 RESULT_RETRY,Retry
 RESULT_REVIVE,Watch an ad to continue
+HOME_BONUS,Watch ad: +%d
+HOME_BONUS_LEFT,%d left today
+HOME_BONUS_TOMORROW,More free coins tomorrow!
 RESULT_DOUBLE,Watch an ad: 2x coins
 RESULT_DOUBLED,Coins doubled! %d x 2 = %d
 RESULT_NEXT,Next

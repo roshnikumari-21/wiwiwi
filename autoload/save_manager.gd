@@ -149,6 +149,29 @@ func _add_stat(key: String, amount: int) -> void:
 	save_game()
 	progress_changed.emit()
 
+# --- Free coins on the home page (owners, 20 Nov 2026) -------------------------------------------
+# "Watch an ad: +25 coins", up to 5 times a day (counted per calendar day on the phone). The coins go
+# into the purse only, like the 2x coins bonus: the lifetime count (leaderboard, Piggy Bank) is for
+# coins picked up in levels.
+
+const BONUS_AD_COINS := 25
+const BONUS_ADS_PER_DAY := 5
+
+func bonus_ads_left() -> int:
+	var daily: Dictionary = _data.get("daily", {})
+	if daily.get("date", "") != _today():
+		return BONUS_ADS_PER_DAY
+	return maxi(BONUS_ADS_PER_DAY - int(daily.get("bonus_ads", 0)), 0)
+
+## A home-page ad was watched to the end: +25 coins, one fewer left today.
+func claim_bonus_ad() -> void:
+	var used := BONUS_ADS_PER_DAY - bonus_ads_left()
+	_data["daily"] = {"date": _today(), "bonus_ads": used + 1}
+	add_coins(BONUS_AD_COINS)   # saves and tells everyone
+
+func _today() -> String:
+	return Time.get_date_string_from_system()
+
 # --- Coin purse -----------------------------------------------------------------------------
 # Every coin picked up in a finished level goes in the purse (replays earn more), to spend in the
 # Cat Shop. Coins from a level that wasn't finished are not kept.
@@ -176,7 +199,7 @@ func _level(level_id: String) -> Dictionary:
 func _fresh() -> Dictionary:
 	# New keys added later (wallet, cosmetics, cat, stats) are filled in by _migrate for old saves.
 	return {"version": VERSION, "levels": {}, "wallet": {"coins": 0}, "cosmetics": [], "cat": "ginger",
-		"stats": {"coins_ever": 0, "slimes": 0, "flawless": 0}}
+		"stats": {"coins_ever": 0, "slimes": 0, "flawless": 0}, "daily": {}}
 
 ## Bring an older save up to the current version, step by step.
 func _migrate(data: Dictionary) -> Dictionary:

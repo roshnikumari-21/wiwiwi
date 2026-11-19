@@ -3,7 +3,8 @@ extends Control
 ## the wooden-sign logo sways gently, and the big Play button opens the level map.
 ## Round buttons beside Play: Achievements (trophy), Settings, Leaderboards and the Cat Shop (paw).
 ## The Play Games ones sign in first if needed and explain kindly when Play Games isn't there (PC).
-## Top-right: stars, Golden Yarns and the coin purse. Tap the kitten to pet her: she closes her
+## Top-right: stars, Golden Yarns and the coin purse, and under it "Watch ad: +25" free coins
+## (5 a day; shown only when an ad is ready). Tap the kitten to pet her: she closes her
 ## eyes, purrs and little hearts float up; she opens her eyes again a moment after the last pat.
 
 const STAGE_SIZE := Vector2(1774, 887)     ## size of the porch picture; Stage children use its pixels
@@ -28,6 +29,8 @@ var menu: GameMenu
 var _stars := StatPill.new(STAR)
 var _yarns := StatPill.new(YARN)
 var _coins := StatPill.new(COIN)
+var _bonus: PillButton        ## "Watch ad: +25" under the purse
+var _bonus_note: Label        ## "5 left today" / "More free coins tomorrow!"
 var _petting := false
 var _pats := 0   ## counts pats, so only the last one's timer wakes her
 
@@ -71,7 +74,15 @@ func _add_top_bar() -> void:
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for pill in [_stars, _yarns, _coins]:
 		bar.add_child(pill)
-	$UI/SafeArea.add_child(bar)
+	var column := VBoxContainer.new()
+	column.name = "TopRight"
+	column.size_flags_horizontal = Control.SIZE_SHRINK_END
+	column.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	column.add_theme_constant_override("separation", 10)
+	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(bar)
+	column.add_child(_make_bonus())
+	$UI/SafeArea.add_child(column)
 	_show_progress()
 	SaveManager.progress_changed.connect(_show_progress)
 
@@ -81,7 +92,64 @@ func _show_progress() -> void:
 	_stars.set_text("%d / %d" % [stars.x, stars.y])
 	_yarns.set_text("%d / %d" % [yarns.x, yarns.y])
 	_coins.set_text(str(SaveManager.purse()))
+	_show_bonus()
 	CatSkins.apply(kitten)   # the cushion kitten wears the colour chosen in the Cat Shop
+
+## "Watch ad: +25" with a coin, and a small note under it, right-aligned under the purse.
+func _make_bonus() -> Control:
+	var box := VBoxContainer.new()
+	box.name = "Bonus"
+	box.size_flags_horizontal = Control.SIZE_SHRINK_END
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_theme_constant_override("separation", 2)
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_bonus = PillButton.new()
+	_bonus.name = "BonusButton"
+	_bonus.colour = "green"
+	_bonus.symbol = "coin"
+	_bonus.text = tr("HOME_BONUS") % SaveManager.BONUS_AD_COINS
+	_bonus.custom_minimum_size = Vector2(330, 86)
+	_bonus.size_flags_horizontal = Control.SIZE_SHRINK_END
+	_bonus.pressed.connect(_on_bonus)
+	box.add_child(_bonus)
+	_bonus_note = Label.new()
+	_bonus_note.name = "BonusNote"
+	_bonus_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_bonus_note.add_theme_font_size_override("font_size", 26)
+	_bonus_note.add_theme_color_override("font_color", Color(1, 0.97, 0.86))
+	_bonus_note.add_theme_color_override("font_outline_color", Color(0.36, 0.2, 0.1))
+	_bonus_note.add_theme_constant_override("outline_size", 8)
+	box.add_child(_bonus_note)
+	var check := Timer.new()   # an ad may finish loading after the page opens
+	check.wait_time = 1.0
+	check.autostart = true
+	check.timeout.connect(_show_bonus)
+	box.add_child(check)
+	return box
+
+## The button only when an ad is ready and some are left today; the note says how many / tomorrow.
+func _show_bonus() -> void:
+	if _bonus == null:
+		return
+	_bonus.add_theme_font_size_override("font_size", 36)   # PillButton sets 50 when it's ready
+	var left := SaveManager.bonus_ads_left()
+	var loaded := Ads.has_rewarded("bonus")
+	_bonus.visible = left > 0 and loaded
+	_bonus_note.visible = left == 0 or loaded
+	_bonus_note.text = tr("HOME_BONUS_TOMORROW") if left == 0 else tr("HOME_BONUS_LEFT") % left
+
+func _on_bonus() -> void:
+	if SaveManager.bonus_ads_left() <= 0:
+		return
+	_bonus.disabled = true
+	Ads.show_rewarded("bonus")
+	var result: Array = await Ads.rewarded_finished
+	_bonus.disabled = false
+	if result[1]:
+		SaveManager.claim_bonus_ad()   # updates the purse (progress_changed -> _show_progress)
+		_coins.pop()
+		AudioManager.play_sfx("sfx_coin", 1.2)
+	_show_bonus()
 
 func _breathe() -> void:
 	var base := kitten.scale

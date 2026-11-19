@@ -19,11 +19,13 @@ const REAL_UNITS := {
 	"interstitial": "ca-app-pub-4636740711495231/9879325523",
 	"revive": "ca-app-pub-4636740711495231/7531142592",
 	"coins": "ca-app-pub-4636740711495231/5748508825",
+	"bonus": "ca-app-pub-4636740711495231/5748508825",   ## home page free coins: shares the 2x coins unit
 }
 const TEST_UNITS := {
 	"interstitial": "ca-app-pub-3940256099942544/1033173712",   ## Google's sample interstitial
 	"revive": "ca-app-pub-3940256099942544/5224354917",         ## Google's sample rewarded
 	"coins": "ca-app-pub-3940256099942544/5224354917",
+	"bonus": "ca-app-pub-3940256099942544/5224354917",
 }
 
 ## "unavailable" (PC or plugin missing), "consent" (asking), "starting", "ready", or "failed".
@@ -33,7 +35,7 @@ var status: String = "unavailable"
 ## a rewarded ad "plays" for a moment and is earned, so the buttons can be tried without a phone.
 var fake := false
 
-const REWARDED := ["revive", "coins"]   ## rewarded placements, kept loaded one at a time
+const REWARDED := ["revive", "coins", "bonus"]   ## rewarded placements, kept loaded one at a time
 const RETRY_LOAD := 30.0                 ## s to wait before trying again when an ad didn't load
 
 var _admob: Admob
