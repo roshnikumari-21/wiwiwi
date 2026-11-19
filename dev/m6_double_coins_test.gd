@@ -48,7 +48,7 @@ func _run() -> void:
 	_check("after the ad: lifetime count still +13 (leaderboard fair)", save.stat("coins_ever") == ever_before + 13, save.stat("coins_ever") - ever_before)
 	_check("after the ad: button gone", hud.menu.find_child("Double", true, false) == null, "")
 	var bonus = hud.menu.find_child("Bonus", true, false)
-	_check("after the ad: '+13 bonus coins!'", bonus != null and "13" in bonus.text, bonus.text if bonus else "none")
+	_check("after the ad: 'Coins doubled! 13 x 2 = 26'", bonus != null and "26" in bonus.text, bonus.text if bonus else "none")
 	_check("after the ad: card still open", hud.menu.visible and hud.menu.current == "complete", hud.menu.current)
 
 	# The ad didn't play to the end: no bonus, the button just goes.

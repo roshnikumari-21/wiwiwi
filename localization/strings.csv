@@ -10,7 +10,7 @@ RESULT_REPLAY,Replay
 RESULT_RETRY,Retry
 RESULT_REVIVE,Watch an ad to continue
 RESULT_DOUBLE,Watch an ad: 2x coins
-RESULT_DOUBLED,+%d bonus coins!
+RESULT_DOUBLED,Coins doubled! %d x 2 = %d
 RESULT_NEXT,Next
 LEVEL_W1_01_TITLE,Meadow Morning
 LEVEL_W1_02_TITLE,Slime Meadow

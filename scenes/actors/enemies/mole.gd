@@ -17,6 +17,8 @@ const POP_TIME := 0.2        ## the "bursting out" picture before it looks aroun
 const POP_REACH := 55.0      ## popping up hurts her if she stands this close above it
 
 enum Mode { TUNNEL, WARN, UP }
+const SINK := 12.0   ## px the mole art sits down into the sand
+
 var mode := Mode.TUNNEL
 var _timer := 0.0
 var _shake: Tween
@@ -25,7 +27,9 @@ func _ready() -> void:
 	super()
 	_timer = randf_range(0.8, tunnel_time)   # moles near each other don't all pop together
 	sprite.play("mound")
-	sprite.offset.y = -sprite.sprite_frames.get_frame_texture("mound", 0).get_height() * 0.5   # the mound's bottom on the sand
+	# the mound's bottom a little INTO the sand strip (owners, 19 Nov 2026: right on the walkable edge it
+	# looked like it floated above the sand)
+	sprite.offset.y = -sprite.sprite_frames.get_frame_texture("mound", 0).get_height() * 0.5 + SINK
 
 func _physics_process(delta: float) -> void:
 	if _squashed:

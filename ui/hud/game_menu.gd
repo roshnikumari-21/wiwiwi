@@ -367,7 +367,7 @@ func _arrow(step: int) -> TextureButton:
 	b.pressed.connect(func(): show_cat_shop(_shop_index + step))
 	return b
 
-## The 2x coins ad was watched: its button turns into "+13 bonus coins!" with a little pop and coin sound.
+## The 2x coins ad was watched: its button turns into "Coins doubled! 13 x 2 = 26" with a pop and coin sound.
 ## Not watched (`bonus` 0): the button just goes.
 func show_doubled(bonus: int) -> void:
 	var double := _box.find_child("Double", true, false)
@@ -378,7 +378,7 @@ func show_doubled(bonus: int) -> void:
 	if bonus > 0:
 		var label := _label("", 620)
 		label.name = "Bonus"
-		label.text = tr("RESULT_DOUBLED") % bonus
+		label.text = tr("RESULT_DOUBLED") % [bonus, bonus * 2]   # "Coins doubled! 55 x 2 = 110"
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.add_theme_font_size_override("font_size", 54)
 		label.add_theme_color_override("font_color", Color(0.25, 0.55, 0.12))
