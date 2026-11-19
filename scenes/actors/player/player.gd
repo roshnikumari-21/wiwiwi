@@ -48,6 +48,10 @@ var _cover: Node2D                         ## quicksand drawn over her legs whil
 var _breath_time := 0.0
 var _trudge_time := 0.0
 const TRUDGE_STEPS := 3.2   ## heavy steps per second at full run speed
+## The cat's art sits this many px down into the ground strip (owners, 19 Nov 2026: standing exactly on
+## the walkable edge her paws looked lifted above the ground, like the mole and milk bowl did). Art only:
+## her collision and jumps are unchanged.
+const ART_SINK := 10.0
 const TRUDGE_DIP := 3.0     ## px the body sinks at each step (a small extra heaviness on the walk)
 var energy := 1.0 : set = set_energy   ## 0..1; drains while moving, milk refills it
 var frozen := false     ## true when the level is over: no input, gravity only
@@ -78,7 +82,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_breathe(delta)
 	_trudge(delta)
-	sprite.position.y = _dip + sunk
+	sprite.position.y = ART_SINK + _dip + sunk
 	_update_cover()
 
 func _physics_process(delta: float) -> void:
