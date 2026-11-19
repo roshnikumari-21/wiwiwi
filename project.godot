@@ -33,6 +33,7 @@ AudioManager="*res://autoload/audio_manager.gd"
 SceneTransition="*res://autoload/scene_transition.tscn"
 GodotPlayGameServices="*uid://b66cpk0eh6mso"
 PlayServices="*res://autoload/play_services.gd"
+Ads="*res://autoload/ads.gd"
 
 [display]
 
@@ -46,7 +47,7 @@ window/handheld/orientation=4
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/GodotPlayGameServices/plugin.cfg")
+enabled=PackedStringArray("res://addons/GodotPlayGameServices/plugin.cfg", "res://addons/AdmobPlugin/plugin.cfg")
 
 [gui]
 
