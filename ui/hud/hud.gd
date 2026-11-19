@@ -23,6 +23,7 @@ const ENERGY_LOW_TINT := Color(1.0, 0.62, 0.35)
 var menu: GameMenu
 var _fps: Label   ## test builds only: frames per second, for the performance check
 var _over := false
+var _leaving := false   ## the between-levels ad is playing: ignore more taps
 var _level_coins := 0   ## coins picked up in the level just finished (what "2x coins" doubles)
 
 func _ready() -> void:
@@ -96,8 +97,16 @@ func is_paused() -> bool:
 	return get_tree().paused
 
 ## Leaving the level (restart / next / map / home): unpause first so the scene change can run.
+## From the Level complete! card, every 3rd finish first plays the between-levels ad (Ads decides).
 func _leave(choice: Signal) -> void:
+	if _leaving:
+		return
 	get_tree().paused = false
+	if menu.current == "complete" and Ads.interstitial_due():
+		_leaving = true
+		Ads.show_interstitial()
+		await Ads.interstitial_finished
+		_leaving = false
 	choice.emit()
 
 func _show_hearts(hearts: int) -> void:
@@ -126,6 +135,7 @@ func _on_yarn() -> void:
 
 func _on_completed(stars: int, coins: int, coin_total: int, has_yarn: bool) -> void:
 	_end("mus_level_complete")
+	Ads.count_finished_level(GameState.current_level_id)
 	var level := GameState.current_level()
 	if level != null and level.is_reunion:   # the world's last level: the save has already counted it
 		var total := 0

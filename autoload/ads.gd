@@ -5,11 +5,13 @@ extends Node
 ## Start-up (Android only): Google's consent check first (the GDPR message "wiwiwi GDPR" made in AdMob
 ## shows only to players in Europe / UK / Switzerland, once), then the Mobile Ads SDK starts.
 ## Ad plan (plan.md §13.2): an interstitial every 3 finished levels, rewarded "revive" when out of
-## hearts (done), rewarded "2x coins" on the level-complete card, interstitial (next steps).
+## hearts, rewarded "2x coins" on the level-complete card (all done).
 
 signal ready_changed(is_ready: bool)
 ## A rewarded ad closed: `earned` is true only if it was watched to the end (only then give the reward).
 signal rewarded_finished(placement: String, earned: bool)
+## The between-levels ad closed (or couldn't show): carry on to wherever the player was going.
+signal interstitial_finished
 
 ## AdMob ad units (owners, 19 Nov 2026). Release builds only: test (debug) builds always use Google's
 ## test ad units below, so we never tap our own live ads.
@@ -40,6 +42,18 @@ var _loading := ""         ## rewarded placement being loaded right now ("" = no
 var _showing := ""         ## rewarded placement on screen right now
 var _earned := false
 
+## Between-levels ad (owners, 19 Nov 2026): after every 3 finished levels, when the player leaves the
+## Level complete! card. Never in the first levels of World 1 (they don't count), and not within a couple
+## of minutes of a rewarded ad (the player just watched one: it waits for the next finish instead).
+const INTERSTITIAL_EVERY := 3
+const NO_ADS_LEVELS := ["w1_01", "w1_02", "w1_03"]
+const QUIET_AFTER_REWARDED := 120.0   ## s
+var _finished_since_ad := 0
+var _last_rewarded_ms := -10000000
+var _interstitial := ""                ## loaded interstitial ad id ("" = none)
+var _interstitial_loading := false
+var _interstitial_showing := false
+
 func _ready() -> void:
 	if OS.is_debug_build() and "--fake-ads" in OS.get_cmdline_user_args():
 		fake = true
@@ -56,6 +70,10 @@ func _ready() -> void:
 	_admob.consent_form_failed_to_load.connect(func(_e): _start())
 	_admob.consent_form_dismissed.connect(func(_e): _start())
 	_admob.initialization_completed.connect(_on_initialized)
+	_admob.interstitial_ad_loaded.connect(_on_interstitial_loaded)
+	_admob.interstitial_ad_failed_to_load.connect(_on_interstitial_failed_to_load)
+	_admob.interstitial_ad_dismissed_full_screen_content.connect(func(_i): _finish_interstitial())
+	_admob.interstitial_ad_failed_to_show_full_screen_content.connect(func(_i, _e): _finish_interstitial())
 	_admob.rewarded_ad_loaded.connect(_on_rewarded_loaded)
 	_admob.rewarded_ad_failed_to_load.connect(_on_rewarded_failed_to_load)
 	_admob.rewarded_ad_user_earned_reward.connect(func(_i, _r): _earned = true)
@@ -88,6 +106,31 @@ func show_rewarded(placement: String) -> void:
 		return
 	_admob.show_rewarded_ad(_rewarded[placement])
 
+## A level was finished (the Level complete! card is up): counts towards the next between-levels ad.
+func count_finished_level(level_id: String) -> void:
+	if level_id not in NO_ADS_LEVELS:
+		_finished_since_ad += 1
+
+## True when the between-levels ad should play as the player leaves the Level complete! card.
+func interstitial_due() -> bool:
+	if _finished_since_ad < INTERSTITIAL_EVERY or _interstitial_showing or _showing != "":
+		return false
+	if Time.get_ticks_msec() - _last_rewarded_ms < QUIET_AFTER_REWARDED * 1000.0:
+		return false
+	return fake or (status == "ready" and _interstitial != "")
+
+## Plays the between-levels ad; await `interstitial_finished`. The count starts again after it.
+func show_interstitial() -> void:
+	if not interstitial_due():
+		interstitial_finished.emit.call_deferred()
+		return
+	_interstitial_showing = true
+	AudioServer.set_bus_mute(0, true)
+	if fake:
+		get_tree().create_timer(0.4, true, false, true).timeout.connect(_finish_interstitial)
+		return
+	_admob.show_interstitial_ad(_interstitial)
+
 ## Settings → "Privacy choices": reopens Google's consent form (players in Europe must be able to
 ## change their answer). Does nothing where the form isn't needed.
 func show_privacy_choices() -> void:
@@ -111,6 +154,32 @@ func _on_initialized(_status) -> void:
 	status = "ready"
 	ready_changed.emit(true)
 	_load_next_rewarded()
+	_load_interstitial()
+
+func _load_interstitial() -> void:
+	if _interstitial != "" or _interstitial_loading or status != "ready":
+		return
+	_interstitial_loading = true
+	_admob.load_interstitial_ad(_admob.create_interstitial_ad_request().set_ad_unit_id(unit_id("interstitial")))
+
+func _on_interstitial_loaded(ad_info: AdInfo, _response) -> void:
+	_interstitial = ad_info.get_ad_id()
+	_interstitial_loading = false
+
+func _on_interstitial_failed_to_load(_ad_info, _error) -> void:
+	_interstitial_loading = false
+	get_tree().create_timer(RETRY_LOAD, true, false, true).timeout.connect(_load_interstitial)
+
+func _finish_interstitial() -> void:
+	if not _interstitial_showing:
+		return
+	_interstitial_showing = false
+	_interstitial = ""
+	_finished_since_ad = 0
+	AudioServer.set_bus_mute(0, false)
+	interstitial_finished.emit()
+	if not fake:
+		_load_interstitial()
 
 ## Loads the next missing rewarded ad (one at a time: in test builds both placements share one unit id,
 ## so the plugin's answer can only be matched to the placement we asked for).
@@ -138,6 +207,7 @@ func _finish_rewarded(earned: bool) -> void:
 	if placement == "":
 		return
 	_showing = ""
+	_last_rewarded_ms = Time.get_ticks_msec()
 	_rewarded.erase(placement)   # a rewarded ad can be shown only once
 	AudioServer.set_bus_mute(0, false)
 	rewarded_finished.emit(placement, earned)
