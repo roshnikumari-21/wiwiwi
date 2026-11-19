@@ -110,6 +110,21 @@ func play_jingle(name: String) -> void:
 
 # --- Sound effects ------------------------------------------------------------------------------
 
+const ON_SCREEN_MARGIN := 120.0   ## px past the screen edge where play_sfx_at still plays
+
+## A sound made by something in the level (a mole popping up, a penguin sliding, a coconut falling):
+## only heard when it's on screen (or just off its edge). Off-screen enemies kept making random
+## "whoosh" sounds with nothing to see (owners, 19 Nov 2026).
+func play_sfx_at(name: String, at: Vector2, pitch := 1.0) -> void:
+	var viewport := get_viewport()
+	var camera := viewport.get_camera_2d()
+	if camera:
+		var seen := Rect2(camera.get_screen_center_position() - viewport.get_visible_rect().size * 0.5,
+			viewport.get_visible_rect().size).grow(ON_SCREEN_MARGIN)
+		if not seen.has_point(at):
+			return
+	play_sfx(name, pitch)
+
 func play_sfx(name: String, pitch := 1.0, bus := "SFX") -> void:
 	var rule: Array = SFX_RULES.get(name, [0.05, 2, 0.0])
 	var now := Time.get_ticks_msec() / 1000.0

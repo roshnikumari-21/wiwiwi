@@ -74,7 +74,7 @@ func _pop_up() -> void:
 	mode = Mode.UP
 	_timer = up_time
 	sprite.play("pop")
-	AudioManager.play_sfx("sfx_jump", 1.3)
+	AudioManager.play_sfx_at("sfx_jump", global_position, 1.3)
 	_do_hop()
 	# standing right on the trembling mound: the mole bumps her from below
 	for cat in get_tree().get_nodes_in_group("player"):

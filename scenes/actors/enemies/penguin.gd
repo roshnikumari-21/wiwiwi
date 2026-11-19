@@ -60,7 +60,7 @@ func _start_warn() -> void:
 	_timer = warn_time
 	var dx := global_position.x - _home_x
 	_dir = -1.0 if dx > 0.0 else 1.0   # slide toward the farther end
-	AudioManager.play_sfx("sfx_jump", 0.6)
+	AudioManager.play_sfx_at("sfx_jump", global_position, 0.6)
 	var t := create_tween()
 	t.tween_property(sprite, "scale", Vector2(1.12, 0.86), warn_time * 0.6)
 	t.tween_property(sprite, "scale", Vector2.ONE, warn_time * 0.4)

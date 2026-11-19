@@ -90,7 +90,7 @@ func _drop() -> void:
 	_cone.texture = LOOKS[look][1]
 	_cone.rotation = 0.0
 	_cone.position.y += LOOKS[look][3]   # the falling picture has no twig / snow: start where it was
-	AudioManager.play_sfx("sfx_jump", 0.7)
+	AudioManager.play_sfx_at("sfx_jump", _cone.global_position, 0.7)
 
 func _hurt_check() -> void:
 	var at := _cone.global_position
@@ -102,7 +102,7 @@ func _hurt_check() -> void:
 ## Thud, a hop and a short roll, then it fades; the shadow goes with it.
 func _land() -> void:
 	state = State.DONE
-	AudioManager.play_sfx("sfx_land", 0.8)
+	AudioManager.play_sfx_at("sfx_land", global_position, 0.8)
 	Fx.spawn(self, &"dust", global_position, 0.6)
 	var cone := _cone
 	var landed: Texture2D = LOOKS[look][2]
