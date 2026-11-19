@@ -54,6 +54,7 @@ func _ready() -> void:
 	hud.next_pressed.connect(_go_next)
 	hud.map_pressed.connect(func(): SceneTransition.change_scene("res://ui/screens/level_map.tscn"))
 	hud.home_pressed.connect(func(): SceneTransition.change_scene("res://ui/screens/main_menu.tscn"))
+	hud.revived.connect(_revive)
 
 	var look: Dictionary = THEMES[theme]
 	if look.background:
@@ -119,6 +120,15 @@ func _fail() -> void:
 	touch_controls.hide()
 	player.give_up()
 	Events.level_failed.emit()
+
+## The revive ad was watched: one heart back, the level music again, and she reappears at the last flag.
+func _revive() -> void:
+	_over = false
+	GameState.hearts = 1
+	Events.hearts_changed.emit(GameState.hearts)
+	touch_controls.show()
+	AudioManager.play_music(THEMES[theme].music)
+	_respawn()
 
 func _on_goal_reached(goal: Node) -> void:
 	if _over:

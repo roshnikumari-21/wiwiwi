@@ -7,6 +7,7 @@ signal restart_pressed
 signal next_pressed
 signal map_pressed
 signal home_pressed
+signal revived   ## the revive ad was watched to the end: the level gives her a heart back
 
 const HEART_FULL := preload("res://assets/art/objects/heart_full.png")
 const HEART_EMPTY := preload("res://assets/art/objects/heart_empty.png")
@@ -44,6 +45,7 @@ func _ready() -> void:
 	menu.next_pressed.connect(_leave.bind(next_pressed))
 	menu.map_pressed.connect(_leave.bind(map_pressed))
 	menu.home_pressed.connect(_leave.bind(home_pressed))
+	menu.revive_pressed.connect(_on_revive_pressed)
 	_pause_button.pressed.connect(pause)
 
 	if OS.is_debug_build():
@@ -134,7 +136,20 @@ func _on_completed(stars: int, coins: int, coin_total: int, has_yarn: bool) -> v
 
 func _on_failed() -> void:
 	_end("mus_try_again")
-	menu.show_fail()
+	menu.show_fail(not GameState.revive_used and Ads.has_rewarded("revive"))
+
+## "Watch an ad to continue": play the rewarded ad; only if it's watched to the end does she come back.
+func _on_revive_pressed() -> void:
+	GameState.revive_used = true
+	Ads.show_rewarded("revive")
+	var result: Array = await Ads.rewarded_finished
+	if result[1]:
+		menu.close()
+		_over = false
+		_pause_button.show()
+		revived.emit()
+	else:
+		menu.drop_revive()
 
 func _end(jingle: String) -> void:
 	AudioManager.play_jingle(jingle)

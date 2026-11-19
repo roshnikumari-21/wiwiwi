@@ -8,6 +8,7 @@ RESULT_FAIL,Try again?
 RESULT_COINS,Coins: %d / %d
 RESULT_REPLAY,Replay
 RESULT_RETRY,Retry
+RESULT_REVIVE,Watch an ad to continue
 RESULT_NEXT,Next
 LEVEL_W1_01_TITLE,Meadow Morning
 LEVEL_W1_02_TITLE,Slime Meadow

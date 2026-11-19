@@ -11,6 +11,7 @@ signal map_pressed
 signal home_pressed
 signal settings_closed
 signal quit_pressed
+signal revive_pressed   ## "Watch an ad to continue" on the Try again? card
 
 ## Which popup is showing: "", "pause", "settings", "complete", "fail", "quit", "notice", "shop", "unlocked".
 var current := ""
@@ -251,11 +252,17 @@ func show_world_unlocked(world: int, name_key: String) -> void:
 	_box.add_child(_row([_button("BTN_LETS_GO", "green", "play", next_pressed, 400)]))
 	_open(0.2)
 
-func show_fail() -> void:
+## Out of hearts. With `can_revive` (a rewarded ad is ready and not used yet in this attempt) a big
+## green "Watch an ad to continue" button comes first; Retry and Map always stay (Retry is free).
+func show_fail(can_revive := false) -> void:
 	current = "fail"
 	_clear()
 	_title("RESULT_FAIL")
 	_box.add_child(_kitten("sleepy"))
+	if can_revive:
+		var revive := _button("RESULT_REVIVE", "green", "none", revive_pressed, 660)
+		revive.name = "Revive"
+		_box.add_child(_row([revive]))
 	_box.add_child(_row([_button("RESULT_RETRY", "yellow", "replay", restart_pressed, 330),
 		_button("RESULT_MAP", "red", "none", map_pressed, 300)]))
 	_open(0.6)
@@ -348,6 +355,13 @@ func _arrow(step: int) -> TextureButton:
 	b.add_child(icon)
 	b.pressed.connect(func(): show_cat_shop(_shop_index + step))
 	return b
+
+## The revive ad didn't play to the end: take its button away (Retry / Map stay).
+func drop_revive() -> void:
+	var revive := _box.find_child("Revive", true, false)
+	if revive:
+		revive.get_parent().queue_free()
+	_focus_first.call_deferred()
 
 func close() -> void:
 	current = ""

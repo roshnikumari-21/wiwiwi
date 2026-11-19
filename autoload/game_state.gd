@@ -19,6 +19,7 @@ var hearts: int = MAX_HEARTS
 var coins: int = 0
 var coin_total: int = 0
 var has_yarn: bool = false
+var revive_used := false   ## "Watch an ad to continue" already used in this attempt (once per attempt)
 
 func _ready() -> void:
 	Events.coin_collected.connect(func(): coins += 1)
@@ -54,6 +55,7 @@ func begin_attempt(level_id: String, coins_in_level: int) -> void:
 	coins = 0
 	coin_total = coins_in_level
 	has_yarn = false
+	revive_used = false
 	Events.hearts_changed.emit(hearts)
 
 ## Returns true if the cat still has hearts left.
