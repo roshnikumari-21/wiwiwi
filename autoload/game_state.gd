@@ -22,6 +22,11 @@ var has_yarn: bool = false
 var revive_used := false   ## "Watch an ad to continue" already used in this attempt (once per attempt)
 
 func _ready() -> void:
+	# Physics interpolation (project setting) draws things BETWEEN physics steps, so on 90/120 Hz phones
+	# the cat doesn't shake (owners' video, 19 Nov 2026: physics moved her 60x a second while the screen
+	# and the camera updated 120x). Off for everything by default; only what moves in physics turns it
+	# on for itself (the cat, enemies, moving platforms), so tweens and menus stay as they were.
+	get_tree().root.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	Events.coin_collected.connect(func(): coins += 1)
 	Events.yarn_collected.connect(func(): has_yarn = true)
 	Events.level_completed.connect(func(_s, _c, _t, _y):

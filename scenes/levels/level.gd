@@ -145,6 +145,7 @@ func _exit_tree() -> void:
 func _respawn() -> void:
 	player.respawn_at(_respawn_point)
 	camera.reset_smoothing()
+	camera.reset_physics_interpolation()
 
 func _go_next() -> void:
 	if GameState.map_walk_from == level_id:   # first time through: the map shows her walking on, then plays it

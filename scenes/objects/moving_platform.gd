@@ -19,6 +19,7 @@ const LOOKS := {
 @export_enum("meadow", "town", "forest", "snow", "sand") var theme: String = "meadow"
 
 func _ready() -> void:
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON   # it moves in physics: smooth with the cat
 	if theme in LOOKS:
 		var look: Array = LOOKS[theme]
 		var tex: Texture2D = look[0]

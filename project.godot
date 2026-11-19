@@ -96,6 +96,10 @@ locale/translations=PackedStringArray("res://localization/strings.en.translation
 2d_physics/layer_4="pickups"
 2d_physics/layer_5="hazards"
 
+[physics]
+
+common/physics_interpolation=true
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

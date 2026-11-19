@@ -22,6 +22,8 @@ var _dir := 1.0
 var _squashed := false
 
 func _ready() -> void:
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON   # smooth on 90/120 Hz screens
+	sprite.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF   # squash / shake tweens
 	_home_x = global_position.x
 	_dir = -1.0 if start_left else 1.0
 

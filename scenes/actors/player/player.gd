@@ -73,6 +73,8 @@ var _jump_speed: float
 var _rise_gravity: float
 
 func _ready() -> void:
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON   # smooth on 90/120 Hz screens
+	sprite.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF   # its bob / dip are set each frame
 	CatSkins.apply(sprite)   # the colour chosen in the Cat Shop
 	_make_cover()
 	_base_scale = sprite.scale
@@ -309,6 +311,7 @@ func _speed_factor() -> float:
 ## Put the cat back at a point (after a pit fall), with a short blink so the player sees where she is.
 func respawn_at(point: Vector2) -> void:
 	global_position = point
+	reset_physics_interpolation()   # a jump to the flag, not a slide across the level
 	velocity = Vector2.ZERO
 	_in_jump = false
 	_fall_peak_speed = 0.0
