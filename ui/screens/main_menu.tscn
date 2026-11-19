@@ -84,9 +84,9 @@ stretch_mode = 5
 [node name="Settings" type="TextureButton" parent="Stage"]
 layout_mode = 0
 offset_left = 560.0
-offset_top = 755.0
+offset_top = 715.0
 offset_right = 670.0
-offset_bottom = 855.0
+offset_bottom = 815.0
 texture_normal = ExtResource("10_round")
 texture_pressed = ExtResource("11_round_p")
 ignore_texture_size = true
@@ -111,9 +111,9 @@ stretch_mode = 5
 [node name="Achievements" type="TextureButton" parent="Stage"]
 layout_mode = 0
 offset_left = 435.0
-offset_top = 755.0
+offset_top = 715.0
 offset_right = 545.0
-offset_bottom = 855.0
+offset_bottom = 815.0
 texture_normal = ExtResource("10_round")
 texture_pressed = ExtResource("11_round_p")
 ignore_texture_size = true
@@ -138,9 +138,9 @@ stretch_mode = 5
 [node name="Leaderboards" type="TextureButton" parent="Stage"]
 layout_mode = 0
 offset_left = 1140.0
-offset_top = 755.0
+offset_top = 715.0
 offset_right = 1250.0
-offset_bottom = 855.0
+offset_bottom = 815.0
 texture_normal = ExtResource("10_round")
 texture_pressed = ExtResource("11_round_p")
 ignore_texture_size = true
@@ -165,9 +165,9 @@ stretch_mode = 5
 [node name="CatShop" type="TextureButton" parent="Stage"]
 layout_mode = 0
 offset_left = 1265.0
-offset_top = 755.0
+offset_top = 715.0
 offset_right = 1375.0
-offset_bottom = 855.0
+offset_bottom = 815.0
 texture_normal = ExtResource("10_round")
 texture_pressed = ExtResource("11_round_p")
 ignore_texture_size = true
