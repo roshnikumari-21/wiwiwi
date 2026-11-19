@@ -131,6 +131,16 @@ func show_interstitial() -> void:
 		return
 	_admob.show_interstitial_ad(_interstitial)
 
+## True where Google's consent form applies (Europe / UK / Switzerland): Settings then shows a
+## "Privacy choices" button. Elsewhere (e.g. India) the consent status is NOT_REQUIRED: no button.
+func privacy_choices_needed() -> bool:
+	if fake:
+		return true
+	if _admob == null or status == "unavailable":
+		return false
+	var consent := _admob.get_consent_status()
+	return consent != null and consent.status in [UserConsent.Status.REQUIRED, UserConsent.Status.OBTAINED]
+
 ## Settings → "Privacy choices": reopens Google's consent form (players in Europe must be able to
 ## change their answer). Does nothing where the form isn't needed.
 func show_privacy_choices() -> void:

@@ -100,9 +100,12 @@ func show_settings(from_pause := false) -> void:
 			"none", settings_closed, 116, _set_controls_size.bind(SIZES[key]))
 		size_row.add_child(b)
 	_box.add_child(size_row)
-	_box.add_child(_row([_button("CREDITS_TITLE", "brown", "none", settings_closed, 260, show_credits),
-		_button("BTN_BACK" if from_pause else "BTN_DONE", "green", "none", settings_closed, 300,
-		show_pause if from_pause else close_settings)]))
+	var bottom := [_button("CREDITS_TITLE", "brown", "none", settings_closed, 260, show_credits)]
+	if Ads.privacy_choices_needed():   # players in Europe / UK / Switzerland: change their ad consent
+		bottom.append(_button("SET_PRIVACY", "brown", "none", settings_closed, 330, Ads.show_privacy_choices))
+	bottom.append(_button("BTN_BACK" if from_pause else "BTN_DONE", "green", "none", settings_closed, 300,
+		show_pause if from_pause else close_settings))
+	_box.add_child(_row(bottom))
 	_open(0.0)
 
 ## Credits and the licence texts the game must ship (Godot MIT + its third-party parts, Fredoka OFL,
@@ -126,6 +129,7 @@ func show_credits() -> void:
 	_credit(text, "Godot Engine", Engine.get_license_text(), 22)
 	_credit(text, "Fredoka", _read("res://assets/fonts/licenses/Fredoka-OFL.txt"), 22)
 	_credit(text, "Godot Play Game Services", _read("res://addons/GodotPlayGameServices/LICENSE"), 22)
+	_credit(text, "Godot AdMob Plugin", _read("res://addons/AdmobPlugin/LICENSE"), 22)
 	var parts := ""
 	for part in Engine.get_copyright_info():
 		parts += "%s
