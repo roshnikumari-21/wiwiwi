@@ -23,6 +23,7 @@ const ENERGY_LOW_TINT := Color(1.0, 0.62, 0.35)
 var menu: GameMenu
 var _fps: Label   ## test builds only: frames per second, for the performance check
 var _over := false
+var _level_coins := 0   ## coins picked up in the level just finished (what "2x coins" doubles)
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS   # the pause button and popups work while paused
@@ -46,6 +47,7 @@ func _ready() -> void:
 	menu.map_pressed.connect(_leave.bind(map_pressed))
 	menu.home_pressed.connect(_leave.bind(home_pressed))
 	menu.revive_pressed.connect(_on_revive_pressed)
+	menu.double_pressed.connect(_on_double_pressed)
 	_pause_button.pressed.connect(pause)
 
 	if OS.is_debug_build():
@@ -132,11 +134,25 @@ func _on_completed(stars: int, coins: int, coin_total: int, has_yarn: bool) -> v
 			total += SaveManager.stars(l.id)
 		menu.show_world_complete(level.world, total, levels.size() * 3)
 	else:
-		menu.show_complete(stars, coins, coin_total, has_yarn, GameState.catalog.next_after(GameState.current_level_id) != null)
+		_level_coins = coins
+		menu.show_complete(stars, coins, coin_total, has_yarn, GameState.catalog.next_after(GameState.current_level_id) != null,
+			coins > 0 and Ads.has_rewarded("coins"))
 
 func _on_failed() -> void:
 	_end("mus_try_again")
 	menu.show_fail(not GameState.revive_used and Ads.has_rewarded("revive"))
+
+## "Watch an ad: 2x coins": watched to the end, the level's coins go into the purse a second time.
+## Only the purse: the lifetime count (leaderboard, Piggy Bank) keeps the coins she really picked up
+## (owners' choice, 19 Nov 2026), so watching ads can't climb the leaderboard.
+func _on_double_pressed() -> void:
+	Ads.show_rewarded("coins")
+	var result: Array = await Ads.rewarded_finished
+	if result[1]:
+		SaveManager.add_coins(_level_coins)
+		menu.show_doubled(_level_coins)
+	else:
+		menu.show_doubled(0)
 
 ## "Watch an ad to continue": play the rewarded ad; only if it's watched to the end does she come back.
 func _on_revive_pressed() -> void:

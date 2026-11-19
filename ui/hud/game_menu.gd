@@ -12,6 +12,7 @@ signal home_pressed
 signal settings_closed
 signal quit_pressed
 signal revive_pressed   ## "Watch an ad to continue" on the Try again? card
+signal double_pressed   ## "Watch an ad: 2x coins" on the Level complete! card
 
 ## Which popup is showing: "", "pause", "settings", "complete", "fail", "quit", "notice", "shop", "unlocked".
 var current := ""
@@ -183,7 +184,8 @@ func _refresh_settings() -> void:
 	show_settings(_settings_from_pause)
 
 
-func show_complete(stars: int, coins: int, coin_total: int, has_yarn: bool, has_next: bool) -> void:
+## With `can_double` (coins picked up and a rewarded ad ready) a green "2x coins" button sits under the score.
+func show_complete(stars: int, coins: int, coin_total: int, has_yarn: bool, has_next: bool, can_double := false) -> void:
 	current = "complete"
 	_clear()
 	for i in 3:
@@ -208,6 +210,11 @@ func show_complete(stars: int, coins: int, coin_total: int, has_yarn: bool, has_
 	var middle := _row([_kitten("cheer"), _score(coins, coin_total, has_yarn)])
 	middle.add_theme_constant_override("separation", 50)
 	_box.add_child(middle)
+	if can_double:
+		var double := _button("RESULT_DOUBLE", "green", "coin", double_pressed, 620)
+		double.name = "Double"
+		double.custom_minimum_size.y = 104
+		_box.add_child(_row([double]))
 	var buttons := [_button("RESULT_MAP", "brown", "none", map_pressed, 230),
 		_button("RESULT_REPLAY", "yellow", "replay", restart_pressed, 260 if has_next else 380)]
 	if has_next:
@@ -355,6 +362,35 @@ func _arrow(step: int) -> TextureButton:
 	b.add_child(icon)
 	b.pressed.connect(func(): show_cat_shop(_shop_index + step))
 	return b
+
+## The 2x coins ad was watched: its button turns into "+13 bonus coins!" with a little pop and coin sound.
+## Not watched (`bonus` 0): the button just goes.
+func show_doubled(bonus: int) -> void:
+	var double := _box.find_child("Double", true, false)
+	if double == null:
+		return
+	var row := double.get_parent()
+	double.queue_free()
+	if bonus > 0:
+		var label := _label("", 620)
+		label.name = "Bonus"
+		label.text = tr("RESULT_DOUBLED") % bonus
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.add_theme_font_size_override("font_size", 54)
+		label.add_theme_color_override("font_color", Color(0.25, 0.55, 0.12))
+		row.add_child(label)
+		label.pivot_offset = Vector2(310, 35)
+		label.scale = Vector2(0.6, 0.6)
+		create_tween().tween_property(label, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		AudioManager.play_sfx("sfx_coin", 1.2)
+		var coins := _box.find_child("Coins", true, false)
+		if coins:
+			var pop := create_tween()
+			pop.tween_property(coins, "scale", Vector2(1.25, 1.25), 0.12)
+			pop.tween_property(coins, "scale", Vector2.ONE, 0.25)
+	else:
+		row.queue_free()
+	_focus_first.call_deferred()
 
 ## The revive ad didn't play to the end: take its button away (Retry / Map stay).
 func drop_revive() -> void:
