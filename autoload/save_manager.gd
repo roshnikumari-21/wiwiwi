@@ -76,6 +76,17 @@ func record_result(level_id: String, star_count: int, coins: int, yarn: bool) ->
 func owns_cat(id: String) -> bool:
 	return id == CatSkins.DEFAULT or id in _data["cosmetics"]
 
+## Who waits for the kitten at the end of each level: "girl" (default) or "boy" (owners, 20 Nov 2026).
+func chosen_owner() -> String:
+	return _data.get("owner", "girl")
+
+func choose_owner(who: String) -> void:
+	if who not in ["girl", "boy"]:
+		return
+	_data["owner"] = who
+	save_game()
+	progress_changed.emit()
+
 func chosen_cat() -> String:
 	return _data.get("cat", CatSkins.DEFAULT)
 

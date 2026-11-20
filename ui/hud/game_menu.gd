@@ -100,6 +100,12 @@ func show_settings(from_pause := false) -> void:
 			"none", settings_closed, 116, _set_controls_size.bind(SIZES[key]))
 		size_row.add_child(b)
 	_box.add_child(size_row)
+	var owner_row := _row([_label("SET_OWNER", 270)])
+	for who in ["girl", "boy"]:
+		var b := _button("OWNER_" + who.to_upper(), "yellow" if SaveManager.chosen_owner() == who else "brown",
+			"none", settings_closed, 190, _set_owner.bind(who))
+		owner_row.add_child(b)
+	_box.add_child(owner_row)
 	var bottom := [_button("CREDITS_TITLE", "brown", "none", settings_closed, 260, show_credits)]
 	if Ads.privacy_choices_needed():   # players in Europe / UK / Switzerland: change their ad consent
 		bottom.append(_button("SET_PRIVACY", "brown", "none", settings_closed, 330, Ads.show_privacy_choices))
@@ -179,6 +185,10 @@ func _toggle(key: String, setting: String, icon_name: String) -> Control:
 			_refresh_settings())
 	button.name = key
 	return _row([icon, _label(key, 300), button])
+
+func _set_owner(who: String) -> void:
+	SaveManager.choose_owner(who)
+	_refresh_settings()
 
 func _set_controls_size(value: float) -> void:
 	SaveManager.set_setting("controls_size", value)

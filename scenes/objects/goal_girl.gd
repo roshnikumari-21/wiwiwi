@@ -1,22 +1,32 @@
 extends Area2D
-## The end of the level: the girl waits for her kitten. Origin = her front (right) shoe, which stays
+## The end of the level: the girl (or the boy, chosen in Settings) waits for the kitten. Origin = her front (right) shoe, which stays
 ## planted in every frame. She bounces with joy when the cat comes near; when the cat reaches her she
 ## kneels down (crouch -> reach -> arms wide), the cat walks into her arms and they hug (3-frame loop).
 
 signal reached
 
 const DIR := "res://assets/art/characters/girl/"
-const KNEEL_DOWN: Array[Texture2D] = [
-	preload(DIR + "girl_crouch.png"),
-	preload(DIR + "girl_kneel_reach.png"),
-	preload(DIR + "girl_kneel_open.png"),
-]
+const BOY := "res://assets/art/characters/boy/"
+## Each owner's pictures: waiting, the 3 kneel-down frames, the 3 hug frames, and where the kitten is
+## inside the hug pictures (UV x, y, w, h) so only she takes the Cat Shop colour, not the hair.
+const OWNERS := {
+	"girl": {
+		"wait": preload(DIR + "girl_wait.png"),
+		"kneel": [preload(DIR + "girl_crouch.png"), preload(DIR + "girl_kneel_reach.png"), preload(DIR + "girl_kneel_open.png")],
+		"hug": [preload(DIR + "girl_hug_0.png"), preload(DIR + "girl_hug_1.png"), preload(DIR + "girl_hug_2.png")],
+		"region": CatSkins.HUG_REGION,
+	},
+	"boy": {   # tools/art_pipeline/make_boy.py
+		"wait": preload(BOY + "boy_wait.png"),
+		"kneel": [preload(BOY + "boy_crouch.png"), preload(BOY + "boy_kneel_reach.png"), preload(BOY + "boy_kneel_open.png")],
+		"hug": [preload(BOY + "boy_hug_0.png"), preload(BOY + "boy_hug_1.png"), preload(BOY + "boy_hug_2.png")],
+		"region": Vector4(0.0, 0.455, 0.34, 0.4),
+	},
+}
+var KNEEL_DOWN: Array = OWNERS.girl.kneel
 const KNEEL_HOLD := 0.11                    ## seconds per kneel-down frame
-const HUG_FRAMES: Array[Texture2D] = [
-	preload(DIR + "girl_hug_0.png"),
-	preload(DIR + "girl_hug_1.png"),
-	preload(DIR + "girl_hug_2.png"),
-]
+var HUG_FRAMES: Array = OWNERS.girl.hug
+var _hug_region: Vector4 = OWNERS.girl.region
 const HUG_LOOP := [0, 1, 2, 1]             ## frame order of the hug loop
 const HUG_HOLD := [0.5, 0.4, 0.7, 0.4]     ## seconds on each step: slow, so it reads as a squeeze, not a jiggle
 const HEART := preload("res://assets/art/objects/heart_full.png")
@@ -34,7 +44,11 @@ var _bounce: Tween
 var _breath: Tween
 
 func _ready() -> void:
-	_pose(girl.texture)
+	var who: Dictionary = OWNERS.get(SaveManager.chosen_owner(), OWNERS.girl)
+	KNEEL_DOWN = who.kneel
+	HUG_FRAMES = who.hug
+	_hug_region = who.region
+	_pose(who.wait)
 	_breath = create_tween().set_loops().set_trans(Tween.TRANS_SINE)
 	_breath.tween_property(girl, "scale:y", girl.scale.y * 1.012, 1.3)
 	_breath.tween_property(girl, "scale:y", girl.scale.y, 1.3)
@@ -71,7 +85,7 @@ func play_reunion(cat: Player, big := false) -> void:
 	cat.walk_to(global_position.x + cat_hug_x)
 	await cat.arrived
 	cat.visible = false
-	CatSkins.apply(girl, "", CatSkins.HUG_REGION)   # the kitten in the hug pictures wears the chosen colour
+	CatSkins.apply(girl, "", _hug_region)   # the kitten in the hug pictures wears the chosen colour
 	_hug_loop()
 	AudioManager.play_sfx("sfx_meow_happy")
 	AudioManager.start_purr()

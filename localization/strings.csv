@@ -30,6 +30,9 @@ SET_PRIVACY,Privacy choices
 SET_MUSIC,Music
 SET_SOUND,Sounds
 SET_BUTTONS,Buttons
+SET_OWNER,Who waits
+OWNER_GIRL,Girl
+OWNER_BOY,Boy
 S,S
 M,M
 L,L

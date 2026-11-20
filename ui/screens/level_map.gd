@@ -56,6 +56,7 @@ const STAR_FULL := preload("res://assets/art/ui/menu/level_star_full.png")
 const STAR_EMPTY := preload("res://assets/art/ui/menu/level_star_empty.png")
 const CAT := preload("res://assets/art/characters/cat/cat_frames.tres")
 const GIRL := preload("res://assets/art/characters/girl/girl_wait.png")
+const BOY := preload("res://assets/art/characters/boy/boy_wait.png")
 const SIGN := preload("res://assets/art/ui/menu/sign_wood.png")
 const ROUND := preload("res://assets/art/ui/menu/round_brown_plain.png")
 const ARROW := preload("res://assets/art/ui/menu/icon_next.png")
@@ -350,9 +351,10 @@ func _place_kitten(spot: Vector2, idle := true) -> AnimatedSprite2D:
 func _place_girl(spot: Vector2) -> void:
 	var girl := Sprite2D.new()
 	girl.name = "Girl"
-	girl.texture = GIRL
+	var picture: Texture2D = BOY if SaveManager.chosen_owner() == "boy" else GIRL
+	girl.texture = picture
 	girl.scale = Vector2(0.2, 0.2)
-	girl.offset = Vector2(0, -GIRL.get_height() * 0.5 + 10)   # her shoe on the spot
+	girl.offset = Vector2(0, -picture.get_height() * 0.5 + 10)   # her shoe on the spot
 	girl.position = spot
 	map.add_child(girl)
 	map.move_child(girl, 1)   # behind the level buttons
