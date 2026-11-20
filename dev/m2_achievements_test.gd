@@ -56,10 +56,12 @@ func _run() -> void:
 	ach.calls.clear()
 	save.add_coins(500)   # purse only, not lifetime coins: no new Piggy Bank steps
 	_check("adding to the purse doesn't count as collected coins", not ach.calls.any(func(c): return c[1] == ID.piggy_bank), ach.calls)
+	for w in [1, 2, 3, 4, 5]:   # cats are locked behind worlds (20 Nov 2026): finish them all
+		save.record_result("w%d_10" % w, 1, 0, false)
 	save.buy_cat("snowy")
 	_check("buying a cat: New Look", ["unlock", ID.new_look] in ach.calls, ach.calls)
 	for skin in ["cocoa", "misty", "tuxedo", "bubblegum"]:
-		save.add_coins(800)
+		save.add_coins(1600)
 		save.buy_cat(skin)
 	_check("all 6 cats: Cat Collector", ["unlock", ID.cat_collector] in ach.calls, ach.calls)
 

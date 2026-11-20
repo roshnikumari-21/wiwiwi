@@ -94,6 +94,8 @@ func chosen_cat() -> String:
 func buy_cat(id: String) -> bool:
 	if owns_cat(id):
 		return true
+	if not CatSkins.world_open(CatSkins.find(id)):   # still locked behind a world
+		return false
 	if not spend_coins(CatSkins.find(id).price):
 		return false
 	_data["cosmetics"].append(id)

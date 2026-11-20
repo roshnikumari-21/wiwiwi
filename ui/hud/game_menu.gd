@@ -347,6 +347,9 @@ func show_cat_shop(index := -1) -> void:
 		main = _button("BTN_CHOOSE", "yellow", "none", settings_closed, 330, func():
 			SaveManager.choose_cat(skin.id)
 			show_cat_shop(_shop_index))
+	elif not CatSkins.world_open(skin):   # locked: finish that world first
+		main = _button(tr("SHOP_LOCKED") % skin.world, "brown", "none", settings_closed, 420, func(): pass)
+		main.disabled = true
 	elif SaveManager.purse() >= skin.price:
 		main = _button(str(skin.price), "green", "coin", settings_closed, 330, func():
 			SaveManager.buy_cat(skin.id)

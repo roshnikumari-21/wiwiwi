@@ -66,6 +66,7 @@ SHOP_TITLE,Cat Shop
 BTN_CHOOSE,Choose
 BTN_CHOSEN,Chosen
 SHOP_NEED,Need %d
+SHOP_LOCKED,Finish World %d
 CAT_GINGER,Ginger
 CAT_SNOWY,Snowy
 CAT_COCOA,Cocoa
