@@ -19,7 +19,11 @@ const LOOKS := {
 @export_enum("meadow", "town", "forest", "snow", "sand") var theme: String = "meadow"
 
 func _ready() -> void:
-	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON   # it moves in physics: smooth with the cat
+	# Drawn smoothly between physics steps, like the cat (physics interpolation). Then it must NOT use
+	# sync_to_physics: the two together left the plank's collision a step behind, and the cat fell
+	# through riding it (w2_03's play-through, 20 Nov 2026). The tween already moves it in physics.
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_ON
+	sync_to_physics = false
 	if theme in LOOKS:
 		var look: Array = LOOKS[theme]
 		var tex: Texture2D = look[0]
